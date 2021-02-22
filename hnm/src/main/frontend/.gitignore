@@ -1,3 +1,5 @@
+ipConfig.js
+
 # OSX
 #
 .DS_Store
@@ -57,5 +59,3 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-
-./ipConfig.js
