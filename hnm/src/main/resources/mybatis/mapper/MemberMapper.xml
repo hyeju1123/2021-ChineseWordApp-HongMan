@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hnm.hnm.mapper.member.MemberMapper">
+    <resultMap id="memberResultMap" type="hnm.hnm.domain.member.Member">
+        <id column="MEMBER_ID" property="memberId" />
+        <result column="USER_NAME" property="userName" />
+        <result column="NICKNAME" property="nickname" />
+        <result column="PASSWORD" property="password" />
+        <result column="EMAIL" property="email" />
+        <collection column="MEMBER_ID" property="privateWords" javaType="java.util.ArrayList"  ofType="PrivateWord" select="selectPrivateWordsList" />
+    </resultMap>
+
+    <insert id="insertMember" parameterType="member">
+       INSERT INTO member(USER_NAME, NICKNAME, PASSWORD, EMAIL)
+       VALUES (#{userName}, #{nickname}, #{password}, #{email})
+    </insert>
+    <select id="selectMemberDetail" parameterType="long" resultMap="memberResultMap">
+        SELECT MEMBER_ID, USER_NAME, NICKNAME, PASSWORD, EMAIL
+        FROM member
+        WHERE MEMBER_ID = #{id}
+    </select>
+    <select id="selectPrivateWordsList" parameterType="long" resultType="privateWord">
+        SELECT * FROM private_word WHERE MEMBER_ID = #{id}
+    </select>
+
+</mapper>

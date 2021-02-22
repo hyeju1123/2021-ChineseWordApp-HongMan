@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hnm.hnm.mapper.words.DefaultWordMapper">
+    <resultMap id="defaultWordResultMap" type="defaultWord">
+        <id column="DEFAULT_WORD_ID" property="defaultWordId" />
+        <result column="CH_CHARACTER" property="chCharacter" />
+        <result column="INTONATION" property="intonation" />
+        <result column="EXPLANATION" property="explanation" />
+        <result column="PICTURE" property="picture" />
+        <result column="PART" property="part" />
+        <result column="DAY" property="day" />
+        <collection column="DEFAULT_WORD_ID" property="meanings" javaType="java.util.ArrayList"  ofType="Meaning" select="selectMeaningsList" />
+    </resultMap>
+
+    <select id="selectDefaultWordDetail" parameterType="long" resultMap="defaultWordResultMap">
+        SELECT * FROM default_word
+        WHERE DEFAULT_WORD_ID = #{id}
+    </select>
+    <select id="selectDefaultWordsList" resultMap="defaultWordResultMap">
+        SELECT * FROM default_word
+    </select>
+    <select id="selectMeaningsList" parameterType="long" resultType="meaning">
+        SELECT * FROM meaning
+        WHERE WORD_ID = #{id}
+    </select>
+</mapper>
