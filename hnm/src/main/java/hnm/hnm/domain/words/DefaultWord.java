@@ -19,11 +19,15 @@ public class DefaultWord {
 
     private String picture;
 
-    /** 1부, 2부, 3부 */
-    private Long part;
+//    /** 1부, 2부, 3부 */
+//    private Long part;
+//
+//    /** day1, day2,,, */
+//    private Long day;
+//
+//    private String dayName;
 
-    /** day1, day2,,, */
-    private Long day;
+    private Long defaultWordDayId;
 
     private List<Meaning> meanings = new ArrayList<>();
 

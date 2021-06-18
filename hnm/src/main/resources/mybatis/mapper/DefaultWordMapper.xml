@@ -10,14 +10,39 @@
         <result column="INTONATION" property="intonation" />
         <result column="EXPLANATION" property="explanation" />
         <result column="PICTURE" property="picture" />
-        <result column="PART" property="part" />
-        <result column="DAY" property="day" />
+<!--        <result column="PART" property="part" />-->
+<!--        <result column="DAY" property="day" />-->
+        <result column="DEFAULT_WORD_DAY_ID" property="defaultWordDayId" />
         <collection column="DEFAULT_WORD_ID" property="meanings" javaType="java.util.ArrayList"  ofType="Meaning" select="selectMeaningsList" />
+    </resultMap>
+    <resultMap id="defaultWordDayResultMap" type="defaultWordDay">
+        <id column="DEFAULT_WORD_DAY_ID" property="defaultWordDayId" />
+        <result column="DAY" property="day" />
+        <result column="DAY_NAME" property="dayName" />
     </resultMap>
 
     <select id="selectDefaultWordDetail" parameterType="long" resultMap="defaultWordResultMap">
         SELECT * FROM default_word
         WHERE DEFAULT_WORD_ID = #{id}
+    </select>
+    <select id="selectDefaultWordDayByPart" parameterType="long" resultMap="defaultWordDayResultMap">
+        SELECT * FROM default_word_day
+        WHERE
+        <choose>
+            <when test="id == 1">
+                day <![CDATA[ >= ]]> 1 AND day <![CDATA[ <= ]]> 10
+            </when>
+            <when test="id == 2">
+                day <![CDATA[ >= ]]> 11 AND day <![CDATA[ <= ]]> 20
+            </when>
+            <when test="id == 3">
+                day <![CDATA[ >= ]]> 21 AND day <![CDATA[ <= ]]> 30
+            </when>
+        </choose>
+    </select>
+    <select id="selectDefaultWordsByDay" resultMap="defaultWordResultMap">
+        SELECT * FROM default_word
+        WHERE default_word_day_id = #{id}
     </select>
     <select id="selectDefaultWordsList" resultMap="defaultWordResultMap">
         SELECT * FROM default_word
