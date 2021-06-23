@@ -7,6 +7,7 @@
     </settings>
     <typeAliases>
         <typeAlias type="hnm.hnm.domain.member.Member" alias="member" />
+        <typeAlias type="hnm.hnm.domain.member.Authority" alias="authority" />
         <typeAlias type="hnm.hnm.domain.words.PrivateWord" alias="privateWord" />
         <typeAlias type="hnm.hnm.domain.words.DefaultWord" alias="defaultWord" />
         <typeAlias type="hnm.hnm.domain.words.DefaultWordDay" alias="defaultWordDay" />

@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 
-const StudyDayCard = (props) => {
+const StudyWordCard = (props) => {
 
     return (
         <View style={styles.card}>
-            <Text style={styles.day}>DAY {props.day}</Text>
-            <Text style={styles.name}>{props.name}</Text>
+            <Text style={styles.hanzi}>{props.hanzi}</Text>
+            <Text style={styles.intonation}>{props.intonation}</Text>
         </View>
     );
 };
@@ -20,7 +20,7 @@ const left = '65%';
 const styles = StyleSheet.create({
     card: {
         width: (width * 84) / 100,
-        height: (height * 19.3) / 100,
+        height: (height * 21.3) / 100,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
@@ -29,22 +29,22 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 30,
+        paddingLeft: (((width * 84) / 100) * 19.6) / 100,
         marginBottom: 20
     },
-    day: {
-        fontSize: 40,
-        fontFamily: 'TmoneyRoundWindExtraBold',
+    hanzi: {
+        fontSize: 70,
+        fontFamily: 'MicrosoftJhengHeiUIBold-02',
         color: '#3F4443'
     },
-    name: {
-        fontSize: 27,
+    intonation: {
+        fontSize: 30,
         fontFamily: 'TmoneyRoundWindRegular',
-        color: '#3F4443',
+        color: '#75787B',
         position: 'absolute',
         left: left,
         top: top
     }
 });
 
-export default StudyDayCard;
+export default StudyWordCard;

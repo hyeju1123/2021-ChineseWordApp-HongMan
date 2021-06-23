@@ -23,8 +23,8 @@ const StudyDayList = ({ route, navigation }) => {
 
     const renderCards = dayList.map((data, index) => {
         return (
-            <TouchableOpacity key={index} onPress={() => {navigation.navigate('StudyWordList')}}>
-                <StudyDayCard day={data.day} name={data.dayName} navigation={navigation} />
+            <TouchableOpacity key={index} onPress={() => {navigation.navigate('StudyWordList', { dayNum: data.day })}}>
+                <StudyDayCard day={data.day} name={data.dayName} />
             </TouchableOpacity>
         )
     })

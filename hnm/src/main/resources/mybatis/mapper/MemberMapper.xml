@@ -5,25 +5,38 @@
 
 <mapper namespace="hnm.hnm.mapper.member.MemberMapper">
     <resultMap id="memberResultMap" type="hnm.hnm.domain.member.Member">
+<!--        <id column="MEMBER_ID" property="memberId" />-->
+<!--        <result column="USER_NAME" property="userName" />-->
+<!--        <result column="NICKNAME" property="nickname" />-->
         <id column="MEMBER_ID" property="memberId" />
-        <result column="USER_NAME" property="userName" />
-        <result column="NICKNAME" property="nickname" />
-        <result column="PASSWORD" property="password" />
         <result column="EMAIL" property="email" />
+        <result column="PASSWORD" property="password" />
         <collection column="MEMBER_ID" property="privateWords" javaType="java.util.ArrayList"  ofType="PrivateWord" select="selectPrivateWordsList" />
     </resultMap>
 
     <insert id="insertMember" parameterType="member">
-       INSERT INTO member(USER_NAME, NICKNAME, PASSWORD, EMAIL)
-       VALUES (#{userName}, #{nickname}, #{password}, #{email})
+       INSERT INTO member(EMAIL, PASSWORD)
+       VALUES (#{email}, #{password})
     </insert>
-    <select id="selectMemberDetail" parameterType="long" resultMap="memberResultMap">
-        SELECT MEMBER_ID, USER_NAME, NICKNAME, PASSWORD, EMAIL
+    <insert id="insertMemberAuthority" parameterType="authority">
+       INSERT INTO authority(AUTHORITY_NAME, EMAIL)
+       VALUES (#{authorityName}, #{email})
+    </insert>
+    <select id="selectMemberById" parameterType="long" resultMap="memberResultMap">
+        SELECT MEMBER_ID, EMAIL, PASSWORD
         FROM member
         WHERE MEMBER_ID = #{id}
     </select>
+    <select id="selectMemberByEmail" parameterType="String" resultMap="memberResultMap">
+        SELECT MEMBER_ID, EMAIL, PASSWORD
+        FROM member
+        WHERE EMAIL = #{email}
+    </select>
     <select id="selectPrivateWordsList" parameterType="long" resultType="privateWord">
-        SELECT * FROM private_word WHERE MEMBER_ID = #{id}
+        SELECT * FROM private_word WHERE MEMBER_ID = #{memberId}
+    </select>
+    <select id="existsByEmail" parameterType="String" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM member WHERE EMAIL = #{email})
     </select>
 
 </mapper>

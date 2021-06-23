@@ -9,6 +9,7 @@
         <result column="CH_CHARACTER" property="chCharacter" />
         <result column="INTONATION" property="intonation" />
         <result column="EXPLANATION" property="explanation" />
+        <result column="SOUND" property="sound" />
         <result column="PICTURE" property="picture" />
 <!--        <result column="PART" property="part" />-->
 <!--        <result column="DAY" property="day" />-->

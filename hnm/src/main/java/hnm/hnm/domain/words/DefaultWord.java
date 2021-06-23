@@ -17,6 +17,8 @@ public class DefaultWord {
 
     private String explanation;
 
+    private String sound;
+
     private String picture;
 
 //    /** 1부, 2부, 3부 */

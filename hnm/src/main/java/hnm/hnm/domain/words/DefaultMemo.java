@@ -15,5 +15,5 @@ public class DefaultMemo {
 
     private Long defaultWordId;
 
-    private Long memberId;
+    private Long email;
 }

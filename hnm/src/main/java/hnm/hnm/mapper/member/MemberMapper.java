@@ -1,5 +1,6 @@
 package hnm.hnm.mapper.member;
 
+import hnm.hnm.domain.member.Authority;
 import hnm.hnm.domain.member.Member;
 import hnm.hnm.domain.words.PrivateWord;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,7 +14,13 @@ public interface MemberMapper {
 
     int insertMember(Member member);
 
-    Member selectMemberDetail(Long id);
+    int insertMemberAuthority(Authority authority);
+
+    Member selectMemberById(Long id);
+
+    Member selectMemberByEmail(String email);
+
+    Boolean existsByEmail(String email);
 
     int updateMember(Member member);
 

@@ -15,13 +15,16 @@ public class Member {
 
     private Long memberId;
 
-    private String userName;
-
-    private String nickname;
+    private String email;
 
     private String password;
 
-    private String email;
+    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
+    private boolean isCredentialsNonExpired;
+    private boolean isEnabled;
+
+    private List<Authority> authorities = new ArrayList<>();
 
     private List<PrivateWord> privateWords = new ArrayList<>();
 
@@ -30,4 +33,25 @@ public class Member {
     private List<Board> boards = new ArrayList<>();
 
     private List<Likes> likes = new ArrayList<>();
+
+    public Member() {
+
+    }
+
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Member(String email, String password,
+                  boolean isAccountNonExpired, boolean isAccountNonLocked,
+                  boolean isCredentialsNonExpired, boolean isEnabled) {
+
+        this.email = email;
+        this.password = password;
+        this.isAccountNonExpired = isAccountNonExpired;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isCredentialsNonExpired = isCredentialsNonExpired;
+        this.isEnabled = isEnabled;
+    }
 }

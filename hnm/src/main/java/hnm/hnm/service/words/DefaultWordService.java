@@ -2,6 +2,7 @@ package hnm.hnm.service.words;
 
 import hnm.hnm.domain.words.DefaultWord;
 import hnm.hnm.domain.words.DefaultWordDay;
+import hnm.hnm.domain.words.Meaning;
 import hnm.hnm.mapper.words.DefaultWordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,9 @@ public class DefaultWordService {
 
     public List<DefaultWord> findDefaultWordsByDay(Long id) {
         return defaultWordMapper.selectDefaultWordsByDay(id);
+    }
+
+    public List<Meaning> findMeaningsByWord(Long id) {
+        return defaultWordMapper.selectMeaningsList(id);
     }
 }
