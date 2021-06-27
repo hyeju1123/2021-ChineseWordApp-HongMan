@@ -21,5 +21,5 @@ public class PrivateWord {
 
     private List<Meaning> meanings = new ArrayList<>();
 
-    private Long email;
+    private Long memberId;
 }

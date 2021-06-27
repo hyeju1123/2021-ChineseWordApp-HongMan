@@ -6,8 +6,12 @@
 <mapper namespace="hnm.hnm.mapper.words.PrivateWordMapper">
 
     <insert id="insertWord" parameterType="privateWord">
-       INSERT INTO private_word(CH_CHARACTER, INTONATION, STORY, SAVED_GROUP, EMAIL)
-       VALUES (#{chCharacter}, #{intonation}, #{story}, #{savedGroup}, #{email})
+       INSERT INTO private_word(CH_CHARACTER, INTONATION, STORY, SAVED_GROUP, MEMBER_ID)
+       VALUES (#{chCharacter}, #{intonation}, #{story}, #{savedGroup}, #{memberId})
+
+       <selectKey keyProperty="privateWordId" resultType="long" order="AFTER">
+           SELECT LAST_INSERT_ID()
+       </selectKey>
     </insert>
     <select id="selectPrivateWordDetail" parameterType="long" resultType="privateWord">
         SELECT * FROM private_word

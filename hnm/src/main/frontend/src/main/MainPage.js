@@ -1,39 +1,26 @@
- import React, { useState, useEffect } from 'react';
- import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+ import React from 'react';
+ import { StyleSheet, View, TouchableOpacity, Text, Alert, Image } from 'react-native';
+ 
  import MainPageCard from './MainPageCard';
-
- import { LOCAL } from '../ipConfig';
  
  const MainPage = ({ navigation }) => {
  
-  //  const [message, setMessage] = useState('');
- 
-  //  useEffect(() => {
-  //    console.log(LOCAL)
-  //    fetch(`http://${LOCAL}:8080/api/hello`)
-  //      .then(res => res.text())
-  //      .then(msg => {
-  //        setMessage(msg);
-  //        })
-  //      .catch(e => {
-  //        console.log(e)
-  //      });
-  //  }, [])
- 
-   return (
-     <View style={styles.container}>
+  return (
+    <View style={styles.container}>
       <View style={styles.cardContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('StudyPartList')}>
+          <TouchableOpacity onPress={() => navigation.navigate('StudyNavigation')}>
             <MainPageCard cardName="학습"  />
           </TouchableOpacity>
-          <MainPageCard cardName="단어장" />
+          <TouchableOpacity onPress={() => navigation.navigate('VocaNavigation')}>
+            <MainPageCard cardName="단어장" />
+          </TouchableOpacity>
           <MainPageCard cardName="시험" />
           <MainPageCard cardName="부수" />
           <MainPageCard cardName="커뮤니티" />
           <MainPageCard />
       </View>
-     </View>
-   );
+    </View>
+  );
  };
  
  const styles = StyleSheet.create({
@@ -42,6 +29,12 @@
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#ffffff'
+   },
+   icon: {
+      position: 'absolute',
+      bottom: 60,
+      width: 30,
+      height: 10
    },
    cardContainer: {
       width: 306,

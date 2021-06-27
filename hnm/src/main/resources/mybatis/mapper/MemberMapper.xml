@@ -11,7 +11,7 @@
         <id column="MEMBER_ID" property="memberId" />
         <result column="EMAIL" property="email" />
         <result column="PASSWORD" property="password" />
-        <collection column="MEMBER_ID" property="privateWords" javaType="java.util.ArrayList"  ofType="PrivateWord" select="selectPrivateWordsList" />
+<!--        <collection column="MEMBER_ID" property="privateWords" javaType="java.util.ArrayList"  ofType="PrivateWord" select="selectPrivateWordsList" />-->
     </resultMap>
 
     <insert id="insertMember" parameterType="member">

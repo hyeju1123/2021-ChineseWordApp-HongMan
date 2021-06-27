@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, View, Text } from 'react-native';
-import axios from 'axios';
-import { LOCAL } from '../../ipConfig';
+import Splash from '../main/Splash';
 import StudyDayCard from './StudyDayCard';
+import customAxios from '../auth/customAxios';
 
 const StudyDayList = ({ route, navigation }) => {
 
@@ -10,15 +10,28 @@ const StudyDayList = ({ route, navigation }) => {
     const [dayList, setDayList] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // const getDayList = () => {
+    //     let config = { params: { partNum: partNum }}
+    //     axios.get(`${LOCAL}/defaultWord/getDayList`, config)
+    //         .then(res => {
+    //             console.log(res.data);
+    //             setDayList(res.data);
+    //             setLoading(false);
+    //         })
+    //         .catch(e => console.log(e))
+    // }
+
     const getDayList = () => {
         let config = { params: { partNum: partNum }}
-        axios.get(`${LOCAL}/defaultWord/getDayList`, config)
+        customAxios().then(res => {
+            res.get('/defaultWord/getDayList', config)
             .then(res => {
                 console.log(res.data);
                 setDayList(res.data);
                 setLoading(false);
             })
             .catch(e => console.log(e))
+        })
     }
 
     const renderCards = dayList.map((data, index) => {
@@ -33,23 +46,30 @@ const StudyDayList = ({ route, navigation }) => {
         getDayList();
     }, [])
 
-    return (
 
-        <ScrollView>
-            <View style={styles.container}>
-                {/* <StudyDayCard day='1' name='사람1' navigation={navigation} />
-                <StudyDayCard day='2' name='사람2' />
-                <StudyDayCard day='3' name='가족' />
-                <StudyDayCard day='4' name='몸 ` 머리' />
-                <StudyDayCard day='5' name='이목구비1' /> */}
-                {
-                    loading ?
-                    <Text>loading...</Text> :
-                    renderCards
-                }
-            </View>
-        </ScrollView>
-    );
+    if (loading) {
+        return <Splash />
+    } else {
+        return (
+            <ScrollView>
+                <View style={styles.container}>
+                    {renderCards}
+                </View>
+            </ScrollView>
+        )
+    }
+
+    // return (
+    //     <ScrollView>
+    //         <View style={styles.container}>
+    //             {
+    //                 loading ?
+    //                 <Splash /> :
+    //                 renderCards
+    //             }
+    //         </View>
+    //     </ScrollView>
+    // );
 };
 
 

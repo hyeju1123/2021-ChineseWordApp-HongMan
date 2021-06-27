@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, TouchableWithoutFeedback, View, Text, Dimensions, Image } from 'react-native';
-import axios from 'axios';
-import { LOCAL } from '../../ipConfig';
+import customAxios from '../auth/customAxios';
 
 import Images from './wordClassImageIndex';
 
@@ -14,14 +13,27 @@ function StudyWordDetail({ route }) {
 
     const getMeaningList = () => {
         let config = { params: { wordNum: wordId }}
-        axios.get(`${LOCAL}/defaultWord/getWordMeanings`, config)
+        customAxios().then(res => {
+            res.get('/defaultWord/getWordMeanings', config)
             .then(res => {
                 console.log(res.data);
                 setMeaningList(res.data);
                 // setLoading(false);
             })
-            .catch(e => console.log(e))
+            .catch(e => console.log(e))    
+        })
     }
+
+    // const getMeaningList = () => {
+    //     let config = { params: { wordNum: wordId }}
+    //     axios.get(`${LOCAL}/defaultWord/getWordMeanings`, config)
+    //         .then(res => {
+    //             console.log(res.data);
+    //             setMeaningList(res.data);
+    //             // setLoading(false);
+    //         })
+    //         .catch(e => console.log(e))
+    // }
 
     const handleMarking = () => {
         setMarking(!marking);
@@ -60,7 +72,6 @@ function StudyWordDetail({ route }) {
         meanings = meaningList.map((data, index) => {
             let wordClassImg = showWordClass(data.wordClass);
             // console.log("src: ", imageSrc)
-            console.log(index)
             return (
                 <View key={index} style={styles.meaningContainer}>
                     {/* <Image style={styles.wordClassIcon} source={Images.wordClass.noun} /> */}

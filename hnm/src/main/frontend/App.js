@@ -1,71 +1,25 @@
 import React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import ReduxThunk from 'redux-thunk';
 
-import MainPage from './src/MainPage';
-// import StudyPartList from './src/study/StudyPartList';
-// import StudyDayList from './src/study/StudyDayList';
-// import StudyWordList from './src/study/StudyWordList';
-import StudyNavigation from './src/navigation/StudyNavigation';
+import rootReducer from './src/_modules';
+import Root from './src/Root';
 
-const Stack = createStackNavigator();
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(ReduxThunk))
+);
 
 const App = () => {
 
-
   return (
-    <StudyNavigation />
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen 
-    //       name="Home" 
-    //       component={MainPage} 
-    //       options={{
-    //         headerTitle: '',
-    //         headerStyle: {
-    //           elevation: 0
-    //         }
-    //       }}
-    //     />
-    //     <Stack.Screen 
-    //       name="StudyPartList" 
-    //       component={StudyPartList} 
-    //       options={{
-    //         headerTitle: '',
-    //         headerTintColor: '#ffffff',
-    //         headerStyle: {
-    //           elevation: 0,
-    //           backgroundColor: '#D14124',
-    //         }
-    //       }}
-    //     />
-    //     <Stack.Screen 
-    //       name="StudyDayList" 
-    //       component={StudyDayList} 
-    //       options={{
-    //         headerTitle: '',
-    //         headerTintColor: '#ffffff',
-    //         headerStyle: {
-    //           elevation: 0,
-    //           backgroundColor: '#D14124',
-    //         }
-    //       }}
-    //     />
-    //     <Stack.Screen 
-    //       name="StudyWordList" 
-    //       component={StudyWordList} 
-    //       options={{
-    //         headerTitle: '',
-    //         headerTintColor: '#ffffff',
-    //         headerStyle: {
-    //           elevation: 0,
-    //           backgroundColor: '#D14124',
-    //         }
-    //       }}
-    //     />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    <Provider store={store}>
+      <Root />
+    </Provider>
+    
   );
 };
 

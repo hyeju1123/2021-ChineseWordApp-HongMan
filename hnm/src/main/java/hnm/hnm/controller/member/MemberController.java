@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -47,16 +49,12 @@ public class MemberController {
 
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        MemberPrincipal memberPrincipal = (MemberPrincipal) authenticate.getPrincipal();
-
         String jwt = jwtTokenUtil.generateToken(authenticate);
 
-//        MemberPrincipal memberPrincipal = memberService.loadUserByUsername(loginRequest.getEmail());
+        MemberPrincipal memberPrincipal = (MemberPrincipal) authenticate.getPrincipal();
+        Long memberId = memberPrincipal.getMemberId();
 
-//        Long memberId = memberPrincipal.getMemberId();
-//        String email = memberPrincipal.getEmail();
-
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        return ResponseEntity.ok(new JwtResponse(jwt, memberId));
     }
 
     private Authentication authenticate(String email, String password) throws Exception {
