@@ -47,9 +47,27 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    public void saveRefreshToken(Long memberId, String refreshToken) {
+        Member member = new Member(memberId, refreshToken);
+        memberMapper.updateRefreshToken(member);
+    }
+
+    public String getRefreshToken(Long memberId) {
+        return memberMapper.selectRefreshToken(memberId);
+    }
+
     public Member save(Member member, Authority authority) {
         memberMapper.insertMember(member);
+        authority.setMemberId(member.getMemberId());
         memberMapper.insertMemberAuthority(authority);
         return member;
+    }
+
+    public String emailCertifiedCheck(Member member) {
+        return memberMapper.selectEmailByEmailToken(member);
+    }
+
+    public void emailCertifiedUpdate(String email) {
+        memberMapper.updateEmailToken(email);
     }
 }

@@ -2,6 +2,7 @@
  import { StyleSheet, View, TouchableOpacity, Text, Alert, Image } from 'react-native';
  
  import MainPageCard from './MainPageCard';
+ import Images from '../ImageIndex';
  
  const MainPage = ({ navigation }) => {
  
@@ -9,15 +10,15 @@
     <View style={styles.container}>
       <View style={styles.cardContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('StudyNavigation')}>
-            <MainPageCard cardName="학습"  />
+            <MainPageCard cardName={Images.mainPage.study}  />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('VocaNavigation')}>
-            <MainPageCard cardName="단어장" />
+            <MainPageCard cardName={Images.mainPage.voca} />
           </TouchableOpacity>
-          <MainPageCard cardName="시험" />
-          <MainPageCard cardName="부수" />
-          <MainPageCard cardName="커뮤니티" />
-          <MainPageCard />
+          <MainPageCard cardName={Images.mainPage.test} />
+          <MainPageCard cardName={Images.mainPage.radical} />
+          <MainPageCard cardName={Images.mainPage.community} />
+          <MainPageCard cardName={Images.mainPage.dumpling} />
       </View>
     </View>
   );
@@ -27,7 +28,7 @@
    container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
+      // justifyContent: 'center',
       backgroundColor: '#ffffff'
    },
    icon: {
@@ -43,7 +44,8 @@
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-between',
-      alignContent: 'space-between'
+      alignContent: 'space-between',
+      marginTop: 30
    }
  });
  

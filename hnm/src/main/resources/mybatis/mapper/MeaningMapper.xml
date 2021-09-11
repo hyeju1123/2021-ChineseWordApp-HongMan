@@ -5,15 +5,15 @@
 
 <mapper namespace="hnm.hnm.mapper.words.MeaningMapper">
 
-    <insert id="insertMeaning" parameterType="meaning">
-       INSERT INTO meaning(MEANINGS, WORD_CLASS, WORD_TYPE, WORD_ID)
-       VALUES (#{meanings}, #{wordClass}, #{wordType}, #{wordId})
-    </insert>
-    <select id="selectMeaningDetail" parameterType="long" resultType="meaning">
-        SELECT * FROM meaning
-        WHERE MEANING_ID = #{id}
-    </select>
-    <select id="selectMeaningsList" resultType="meaning">
-        SELECT * FROM meaning
-    </select>
+<!--    <insert id="insertMeaning" parameterType="meaning">-->
+<!--       INSERT INTO meaning(MEANINGS, WORD_CLASS, WORD_TYPE, WORD_ID)-->
+<!--       VALUES (#{meanings}, #{wordClass}, #{wordType}, #{wordId})-->
+<!--    </insert>-->
+<!--    <select id="selectMeaningDetail" parameterType="long" resultType="meaning">-->
+<!--        SELECT * FROM meaning-->
+<!--        WHERE WORD_ID = #{id}-->
+<!--    </select>-->
+<!--    <select id="selectMeaningsList" resultType="meaning">-->
+<!--        SELECT * FROM meaning-->
+<!--    </select>-->
 </mapper>

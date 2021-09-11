@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import Splash from './main/Splash';
 import StartNavigation from './navigation/StartNaviation';
 import MainNavigation from './navigation/MainNavigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { restoreToken } from './_modules/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from 'react-native-splash-screen';
 
 const Root = () => {
 
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
-  console.log(user);
+  console.log("user: ", user);
 
   useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 2000);
     const bootstrapAsync = async () => {
       let token;
       try {
@@ -40,8 +43,6 @@ const Root = () => {
       <>
       <MainNavigation />
       </>
-      // console.log("user.userToken: ", user.userToken)
-      
     }
     </>
   )

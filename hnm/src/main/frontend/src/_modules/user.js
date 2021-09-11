@@ -1,4 +1,5 @@
 import AuthenticationService from "../auth/AuthenticationService";
+import { Alert } from "react-native";
 
 /* type */
 const RESTORE_TOKEN = 'restore_token';
@@ -20,17 +21,34 @@ export const restoreToken = (token) => {
 }
 
 export const signIn = (email, password) => async dispatch => {
-    dispatch({ type: SIGN_IN });
+    dispatch({ type: SIGN_IN, error: null });
 
     AuthenticationService
         .executeJwtAuthenticationService(email, password)
         .then(res => {
             console.log('res.data: ', res.data)
             const data = res.data;
-            AuthenticationService.registerSuccessfullLoginForJwt(email, data.accessToken, data.memberId);
-            dispatch({ type: SIGN_IN_SUCCESS, payload: res.data })
+            if (data.emailAuth === true) {
+                AuthenticationService.registerSuccessfullLoginForJwt(email, data.accessToken, data.memberId);
+                dispatch({ type: SIGN_IN_SUCCESS, payload: res.data })
+            } else if (data.emailAuth === false) {
+                Alert.alert(`등록한 메일함(${email})에서\n 메일 인증을 완료해주세요.`)
+                dispatch({ type: SIGN_IN_ERROR, error: 'Unauthenticated email.' })
+            }
         })
-        .catch(e => dispatch({ type: SIGN_IN_ERROR, error: e }))
+        .catch(e => {
+            dispatch({ type: SIGN_IN_ERROR, error: e })
+            Alert.alert(
+                "로그인 실패!",
+                "이메일이나 비밀번호를 다시 확인해 주세요",
+                [{
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                }],
+                { cancelable: false }
+            );
+        })
 }
 
 export const signOut = () => async dispatch => {

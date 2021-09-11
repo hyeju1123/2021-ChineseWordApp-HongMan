@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, View, Text } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, View, Dimensions } from 'react-native';
 import Splash from '../main/Splash';
 import StudyDayCard from './StudyDayCard';
 import customAxios from '../auth/customAxios';
@@ -47,35 +47,33 @@ const StudyDayList = ({ route, navigation }) => {
     }, [])
 
 
-    if (loading) {
-        return <Splash />
-    } else {
-        return (
-            <ScrollView>
-                <View style={styles.container}>
-                    {renderCards}
-                </View>
-            </ScrollView>
-        )
-    }
+    // if (loading) {
+    //     return <Splash />
+    // } else {
+    //     return (
+    //         <ScrollView>
+    //             <View style={styles.container}>
+    //                 {renderCards}
+    //             </View>
+    //         </ScrollView>
+    //     )
+    // }
 
-    // return (
-    //     <ScrollView>
-    //         <View style={styles.container}>
-    //             {
-    //                 loading ?
-    //                 <Splash /> :
-    //                 renderCards
-    //             }
-    //         </View>
-    //     </ScrollView>
-    // );
+    return (
+        <ScrollView>
+            <View style={styles.container}>
+                {renderCards}
+            </View>
+        </ScrollView>
+    );
 };
 
+const height = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        minHeight: height,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#D14124',

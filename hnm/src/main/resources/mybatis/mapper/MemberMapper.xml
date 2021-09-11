@@ -5,23 +5,31 @@
 
 <mapper namespace="hnm.hnm.mapper.member.MemberMapper">
     <resultMap id="memberResultMap" type="hnm.hnm.domain.member.Member">
-<!--        <id column="MEMBER_ID" property="memberId" />-->
-<!--        <result column="USER_NAME" property="userName" />-->
-<!--        <result column="NICKNAME" property="nickname" />-->
         <id column="MEMBER_ID" property="memberId" />
         <result column="EMAIL" property="email" />
         <result column="PASSWORD" property="password" />
+        <result column="EMAIL_TOKEN" property="emailToken" />
+        <result column="REFRESH_TOKEN" property="refreshToken" />
+        <result column="CREATE_DATE" property="createDate" />
+        <result column="IS_ACCOUNT_NON_EXPIRED" property="isAccountNonExpired" />
+        <result column="IS_ACCOUNT_NON_LOCKED" property="isAccountNonLocked" />
+        <result column="IS_CREDENTIALS_NON_EXPIRED" property="isCredentialsNonExpired" />
+        <result column="IS_ENABLED" property="isEnabled" />
 <!--        <collection column="MEMBER_ID" property="privateWords" javaType="java.util.ArrayList"  ofType="PrivateWord" select="selectPrivateWordsList" />-->
     </resultMap>
 
     <insert id="insertMember" parameterType="member">
-       INSERT INTO member(EMAIL, PASSWORD)
-       VALUES (#{email}, #{password})
+       <selectKey keyProperty="memberId" resultType="long" order="AFTER">
+           SELECT LAST_INSERT_ID()
+       </selectKey>
+       INSERT INTO member(EMAIL, PASSWORD, EMAIL_TOKEN, CREATE_DATE, IS_ACCOUNT_NON_EXPIRED, IS_ACCOUNT_NON_LOCKED, IS_CREDENTIALS_NON_EXPIRED, IS_ENABLED)
+       VALUES (#{email}, #{password}, #{emailToken}, NOW(), #{isAccountNonExpired}, #{isAccountNonLocked}, #{isCredentialsNonExpired}, #{isEnabled})
     </insert>
     <insert id="insertMemberAuthority" parameterType="authority">
-       INSERT INTO authority(AUTHORITY_NAME, EMAIL)
-       VALUES (#{authorityName}, #{email})
+       INSERT INTO authority(AUTHORITY_NAME, MEMBER_ID)
+       VALUES (#{authorityName}, #{memberId})
     </insert>
+    
     <select id="selectMemberById" parameterType="long" resultMap="memberResultMap">
         SELECT MEMBER_ID, EMAIL, PASSWORD
         FROM member
@@ -32,11 +40,35 @@
         FROM member
         WHERE EMAIL = #{email}
     </select>
+    <select id="selectRefreshToken" parameterType="long" resultType="String">
+        SELECT REFRESH_TOKEN
+        FROM member
+        WHERE MEMBER_ID = #{id}
+    </select>
+    <select id="selectEmailToken" parameterType="String" resultType="String">
+        SELECT EMAIL_TOKEN
+        FROM member
+        WHERE EMAIL=#{email}
+    </select>
+    <select id="selectEmailByEmailToken" parameterType="member" resultType="String">
+        SELECT EMAIL
+        FROM member
+        WHERE EMAIL = #{email} AND EMAIL_TOKEN = #{emailToken}
+    </select>
     <select id="selectPrivateWordsList" parameterType="long" resultType="privateWord">
         SELECT * FROM private_word WHERE MEMBER_ID = #{memberId}
     </select>
     <select id="existsByEmail" parameterType="String" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM member WHERE EMAIL = #{email})
     </select>
-
+    <update id="updateRefreshToken" parameterType="member">
+        UPDATE member
+        SET REFRESH_TOKEN = #{refreshToken}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+    <update id="updateEmailToken" parameterType="String">
+        UPDATE member
+        SET EMAIL_TOKEN = 'Y'
+        WHERE EMAIL = #{email}
+    </update>
 </mapper>

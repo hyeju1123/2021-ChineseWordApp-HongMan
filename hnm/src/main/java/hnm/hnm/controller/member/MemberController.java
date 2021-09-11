@@ -1,7 +1,9 @@
 package hnm.hnm.controller.member;
 
 import hnm.hnm.config.JwtTokenUtil;
+import hnm.hnm.config.Token;
 import hnm.hnm.domain.member.*;
+import hnm.hnm.service.email.EmailService;
 import hnm.hnm.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,12 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin
@@ -29,69 +28,89 @@ public class MemberController {
     final PasswordEncoder passwordEncoder;
     final JwtTokenUtil jwtTokenUtil;
     final MemberService memberService;
+    final EmailService emailService;
+    final HttpSession httpSession;
+
+    @GetMapping("/hello")
+    public void helloController() {
+        System.out.println("say hello");
+    }
 
     @PostMapping("/auth/signIn")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) throws Exception {
-        System.out.println("signIn: " + loginRequest.getEmail());
-        System.out.println("password: " + loginRequest.getPassword());
-
-
-//        Authentication authenticate = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        loginRequest.getEmail(),
-//                        loginRequest.getPassword()
-//                )
-//        );
-
         Authentication authenticate = authenticate(loginRequest.getEmail(), loginRequest.getPassword());
-
-        System.out.println("authenticate: " + authenticate);
 
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        String jwt = jwtTokenUtil.generateToken(authenticate);
-
         MemberPrincipal memberPrincipal = (MemberPrincipal) authenticate.getPrincipal();
-        Long memberId = memberPrincipal.getMemberId();
 
-        return ResponseEntity.ok(new JwtResponse(jwt, memberId));
+        Long memberId = memberPrincipal.getMemberId();
+        Token jwt = jwtTokenUtil.makeToken(memberId);
+        Boolean checkEmailAuth = emailService.checkMailAuth(loginRequest.getEmail());
+
+        memberService.saveRefreshToken(memberId, jwt.getRefreshToken());
+
+        return ResponseEntity.ok(new JwtResponse(jwt.getToken(), checkEmailAuth, memberId));
     }
 
     private Authentication authenticate(String email, String password) throws Exception {
-        Authentication authenticate = null;
+
         try {
-            authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
-        return authenticate;
+    }
+
+    @GetMapping("/auth/token/refresh")
+    public String refreshToken(@RequestParam String memberId) {
+        Long id = Long.parseLong(memberId);
+        String token = memberService.getRefreshToken(id);
+        if (jwtTokenUtil.validateToken(token)) {
+            Token jwt = jwtTokenUtil.makeToken(id);
+            memberService.saveRefreshToken(id, jwt.getRefreshToken());
+            return jwt.getToken();
+        } else {
+            return "expired refresh token";
+        }
     }
 
     @PostMapping("/auth/signUp")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
         if (memberService.checkExistingEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity<>(new ApiResponse(false, "This email is already taken"),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Duplicate account"),
+                    HttpStatus.OK);
         }
 
-        System.out.println("sign up password: " + signUpRequest.getPassword());
-        System.out.println("encoded: " + passwordEncoder.encode(signUpRequest.getPassword()));
+        Authority authority = new Authority(AuthorityName.FREE_USER);
 
+        String emailToken;
+        if (signUpRequest.getOauth().equals("true")) {
+            emailToken = "Y";
+        } else {
+            emailToken = jwtTokenUtil.generateEmailToken(signUpRequest.getEmail());
+        }
 
-        Member member = new Member(signUpRequest.getEmail(), signUpRequest.getPassword(),
+        String password = passwordEncoder.encode(signUpRequest.getPassword());
+        Member member = new Member(signUpRequest.getEmail(), password, emailToken,
                 true, true, true, true);
-
-        System.out.println("member password: " + member.getPassword());
-
-        member.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-
-        Authority authority = new Authority(AuthorityName.FREE_USER, signUpRequest.getEmail());
-
         memberService.save(member, authority);
+        return new ResponseEntity(new ApiResponse(true, emailToken), HttpStatus.OK);
 
-        return new ResponseEntity(new ApiResponse(true, "User registered successfully"), HttpStatus.OK);
+//        String emailToken = jwtTokenUtil.generateEmailToken(signUpRequest.getEmail());
+//
+//
+//        Member member = new Member(signUpRequest.getEmail(), signUpRequest.getPassword(), emailToken,
+//                true, true, true, true);
+//
+//        member.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+//
+//        Authority authority = new Authority(AuthorityName.FREE_USER);
+//
+//        memberService.save(member, authority);
+//
+//        return new ResponseEntity(new ApiResponse(true, emailToken), HttpStatus.OK);
     }
-
 }

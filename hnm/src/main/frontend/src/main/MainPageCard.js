@@ -1,13 +1,19 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
+
+
 
 const MainPageCard = (props) => {
 
+  const dumpling = 'dumpling.png';
+
+  console.log(props.cardName)
   return (
     <>
      
         <View style={styles.container}>
-            <Text style={styles.cardName}>{props.cardName}</Text>
+            {/* <Text style={styles.cardName}>{props.cardName}</Text> */}
+            <Image style={styles.icon} source={props.cardName} />
         </View>
       
     </>
@@ -31,6 +37,10 @@ const styles = StyleSheet.create({
       fontFamily: 'TmoneyRoundWindRegular',
       color: '#ffffff',
     },
+    icon: {
+      width: 109,
+      height: 109
+    }
 });
 
 export default MainPageCard;

@@ -10,6 +10,7 @@
         <typeAlias type="hnm.hnm.domain.member.Authority" alias="authority" />
         <typeAlias type="hnm.hnm.domain.words.PrivateWord" alias="privateWord" />
         <typeAlias type="hnm.hnm.domain.words.DefaultWord" alias="defaultWord" />
+        <typeAlias type="hnm.hnm.domain.words.HskWord" alias="hskWord" />
         <typeAlias type="hnm.hnm.domain.words.DefaultWordDay" alias="defaultWordDay" />
         <typeAlias type="hnm.hnm.domain.words.DefaultMemo" alias="defaultMemo" />
         <typeAlias type="hnm.hnm.domain.words.Meaning" alias="meaning" />

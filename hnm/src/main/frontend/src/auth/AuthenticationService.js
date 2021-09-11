@@ -1,13 +1,15 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { NaverLogin, getProfile } from '@react-native-seoul/naver-login';
 
 import { LOCAL } from '../../ipConfig';
 
 class AuthenticationService {
 
-    executeJwtSignUpService(email, password) {
+    executeJwtSignUpService(email, password, oauth) {
         return axios.post(`${LOCAL}/auth/signUp`, {
-            email, password
+            email, password, oauth
         });
     }
 
@@ -30,6 +32,41 @@ class AuthenticationService {
 
     createJwtToken(token) {
         return 'Bearer ' + token;
+    }
+
+    handleGoogleSignIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log('google email: ', userInfo.user.email);
+            return { email: userInfo.user.email, error: false };
+        } catch (e) {
+            return { email: '', error: true };
+        }
+    }
+
+    handleNaverSignIn = props => {
+        return new Promise((resolve, reject) => {
+            NaverLogin.login(props, (err, token) => {
+                if (err) {
+                    reject(err);
+                }
+                this.getNaverUserProfile(token)
+                    .then(res => {
+                        console.log('naver result: ', res.email)        
+                        resolve(res.email)
+                    })
+            })
+        })
+    }
+
+    getNaverUserProfile = async (token) => {
+        const profileResult = await getProfile(token.accessToken)
+        if (profileResult.resultcode === '024') {
+            return { error: true }
+        }
+        console.log('naver email: ', profileResult.response.email)
+        return { email: profileResult.response.email, error: false }
     }
 
 
@@ -65,6 +102,19 @@ class AuthenticationService {
     //         }
     //     )
     // }
+
+    naverLogout = () => {
+        NaverLogin.logout();
+    }
+
+    googleLogout = async () => {
+        try {
+            await GoogleSignin.signOut();
+            return { error : false }
+        } catch (e) {
+            return { error: true }
+        }
+    }
 
     async logout() {
         try {

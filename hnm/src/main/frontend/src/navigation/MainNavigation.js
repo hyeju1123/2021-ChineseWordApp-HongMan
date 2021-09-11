@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Alert } from 'react-native';
+import { Button, Alert, Image, TouchableWithoutFeedback } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -10,8 +10,6 @@ import VocaNavigation from './VocaNavigation';
 import { signOut } from '../_modules/user';
 
 const Stack = createStackNavigator();
-
-
 
 const MainNavigation = () => {
 
@@ -45,10 +43,22 @@ const MainNavigation = () => {
                     headerStyle: {
                         elevation: 0
                     },
+                    headerLeft: () => (
+                        // <Button
+                        //     onPress={handleLogout}
+                        //     title="로그아웃"
+                        // />
+                        <TouchableWithoutFeedback onPress={handleLogout}>
+                            <Image 
+                                source={require('../../images/mainPage/menu.png')} 
+                                style={{ width: 20, height: 14, marginLeft: 16 }} 
+                            />
+                        </TouchableWithoutFeedback>
+                    ),
                     headerRight: () => (
-                        <Button
-                            onPress={handleLogout}
-                            title="로그아웃"
+                        <Image 
+                            source={require('../../images/mainPage/plus.png')}
+                            style={{ width: 3, height: 14, marginRight: 16 }}
                         />
                     )
                     }}

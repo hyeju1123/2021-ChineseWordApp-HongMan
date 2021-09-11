@@ -12,7 +12,7 @@ public interface PrivateWordMapper {
 
     int insertWord(PrivateWord privateWord);
 
-    PrivateWord selectPrivateWordDetail(Long id);
+    List<PrivateWord> selectPrivateWordDetail(Long id);
 
     int updatePrivateWord(PrivateWord privateWord);
 

@@ -12,13 +12,23 @@ import java.util.List;
 @Mapper
 public interface MemberMapper {
 
-    int insertMember(Member member);
+    long insertMember(Member member);
 
     int insertMemberAuthority(Authority authority);
+
+    int updateRefreshToken(Member member);
 
     Member selectMemberById(Long id);
 
     Member selectMemberByEmail(String email);
+
+    String selectRefreshToken(Long id);
+
+    String selectEmailToken(String email);
+
+    String selectEmailByEmailToken(Member member);
+
+    void updateEmailToken(String email);
 
     Boolean existsByEmail(String email);
 

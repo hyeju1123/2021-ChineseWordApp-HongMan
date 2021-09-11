@@ -1,42 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, View, Text, Dimensions } from 'react-native';
-import axios from 'axios';
-import { LOCAL } from '../../ipConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import customAxios from '../auth/customAxios';
+
+import VocaWordCard from './VocaWordCard';
 
 
 const VocaListPage = ({ route, navigation }) => {
 
-    const [dayList, setDayList] = useState([]);
+    const [vocaList, setVocaList] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // const getDayList = () => {
-    //     let config = { params: { partNum: partNum }}
-    //     axios.get(`${LOCAL}/defaultWord/getDayList`, config)
-    //         .then(res => {
-    //             console.log(res.data);
-    //             setDayList(res.data);
-    //             setLoading(false);
-    //         })
-    //         .catch(e => console.log(e))
-    // }
+    const getPrivateWordList = async () => {
+        let memberId = await AsyncStorage.getItem('memberId');
+        let config = { params: { memberId: memberId }}
+        customAxios().then(res => {
+            res.get('/privateWord/getWordDetailList', config)
+                .then(res => {
+                    console.log(res.data);
+                    setVocaList(res.data);
+                    setLoading(false);
+                })
+                .catch(e => console.log(e))
+        })
+    }
 
-    // const renderCards = dayList.map((data, index) => {
-    //     return (
-    //         <TouchableOpacity key={index} onPress={() => {navigation.navigate('StudyWordList', { dayNum: data.day })}}>
-    //             <StudyDayCard day={data.day} name={data.dayName} />
-    //         </TouchableOpacity>
-    //     )
-    // })
+    const renderCards = vocaList.map((data, index) => {
+        return (
+            <VocaWordCard 
+                key={index} 
+                hanzi={data.chCharacter} 
+                intonation={data.intonation}
+                meanings={data.meanings} 
+                navigation={navigation} 
+            />
+        )
+    })
 
-    // useEffect(() => {
-    //     getDayList();
-    // }, [])
+    useEffect(() => {
+        getPrivateWordList();
+    }, [])
 
     return (
 
         <ScrollView>
             <View style={styles.container}>
-                
+                {renderCards}
             </View>
         </ScrollView>
     );

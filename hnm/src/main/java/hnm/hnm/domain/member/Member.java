@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter @Setter
@@ -18,6 +19,12 @@ public class Member {
     private String email;
 
     private String password;
+
+    private String emailToken;
+
+    private String refreshToken;
+
+    private Date createDate;
 
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
@@ -38,17 +45,23 @@ public class Member {
 
     }
 
-    public Member(String email, String password) {
-        this.email = email;
-        this.password = password;
+    //    public Member(String email, String password) {
+//        this.email = email;
+//        this.password = password;
+//    }
+    // for update refresh token
+    public Member(Long memberId, String refreshToken) {
+        this.memberId = memberId;
+        this.refreshToken = refreshToken;
     }
 
-    public Member(String email, String password,
+    public Member(String email, String password, String emailToken,
                   boolean isAccountNonExpired, boolean isAccountNonLocked,
                   boolean isCredentialsNonExpired, boolean isEnabled) {
 
         this.email = email;
         this.password = password;
+        this.emailToken = emailToken;
         this.isAccountNonExpired = isAccountNonExpired;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;

@@ -35,12 +35,12 @@ const styles = StyleSheet.create({
     day: {
         fontSize: 40,
         fontFamily: 'TmoneyRoundWindExtraBold',
-        color: '#3F4443'
+        color: '#3E3A30'
     },
     name: {
         fontSize: 27,
         fontFamily: 'TmoneyRoundWindRegular',
-        color: '#3F4443',
+        color: '#3E3A30',
         position: 'absolute',
         left: left,
         top: top

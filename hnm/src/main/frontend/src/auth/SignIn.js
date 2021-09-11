@@ -1,36 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Text, TouchableOpacity, TextInput, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Text, 
+         TouchableOpacity, 
+         TextInput, 
+         SafeAreaView, 
+         View, 
+         StyleSheet, 
+         Dimensions, 
+         ScrollView,
+         Image, 
+         Alert} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { signIn } from '../_modules/user';
+import AuthenticationService from './AuthenticationService';
+import googleLogo from '../../images/snsLogo/googleLogo.png';
+import naverLogo from '../../images/snsLogo/naverLogo.png';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { iosKeys, androidKeys, googleClientId } from '../../ipConfig';
+
+const initials = Platform.OS === "ios" ? iosKeys : androidKeys;
 
 function SignIn({ navigation }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const user = useSelector(state => state.user);
+    // const user = useSelector(state => state.user);
     const dispatch = useDispatch();
 
     const handleSignIn = (email, password) => {
         dispatch(signIn(email, password));
-        console.log('user.error: ', user.error)
-        if (user.error) {
-            Alert.alert(
-                "로그인 실패!",
-                "이메일이나 비밀번호를 다시 확인해 주세요",
-                [{
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                }],
-                { cancelable: false }
-            );
-        }
+        // console.log('user.error: ', user.error)
     }
 
+    const handleSnsSignIn = (type) => {
+      if (type === 'google') {
+        AuthenticationService.handleGoogleSignIn()
+          .then(res => {
+            if (res.error) {
+              Alert.alert("정보를 가져오는 데 실패했습니다.")
+              return
+            }
+            dispatch(signIn(res.email, ''));
+          })
+      }
+
+      if (type === 'naver') {
+        AuthenticationService.handleNaverSignIn(initials)
+          .then(email => {
+            dispatch(signIn(email, ''));
+          })
+          .catch(e => {
+            Alert.alert("정보를 가져오는 데 실패했습니다.")
+            return
+          })
+      }
+    }
+
+    useEffect(() => {
+      GoogleSignin.configure({
+        webClientId: googleClientId,
+        forceCodeForRefreshToken: true,
+        offlineAccess: true
+      })
+    }, [])
+
     return (
-        <View style={styles.container}>
-            <ScrollView>
+        <SafeAreaView style={styles.container}>
+            <ScrollView alwaysBounceHorizontal={false} alwaysBounceVertical={false} bounces={false}>
             <View style={styles.topBlock}>
                 <Text style={styles.loginText}>Log In</Text>
             </View>
@@ -47,24 +83,40 @@ function SignIn({ navigation }) {
                     onChangeText={setPassword}
                     placeholder='비밀번호'
                     placeholderTextColor='lightgray'
+                    secureTextEntry={true}
                     style={styles.input}
                 />
-                <View style={styles.bar}></View>
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => {handleSignIn(email, password)}}
                 >
                     <Text style={styles.buttonText}>로그인</Text>
                 </TouchableOpacity>
+                <View style={styles.bar}></View>
+                
                 <TouchableOpacity
                     style={styles.signInButton}
-                    onPress={() => {navigation.navigate('SignUp')}}
+                    onPress={() => {handleSnsSignIn('google')}}
                 >
-                    <Text style={styles.signInText}>회원가입</Text>
+                    <Image source={googleLogo} style={styles.googleLogo} />
+                    <Text style={styles.signInText}>계정으로 로그인</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.signInButton}
+                    onPress={() => {handleSnsSignIn('naver')}}
+                >
+                    <Image source={naverLogo} style={styles.naverLogo} />
+                    <Text style={styles.signInText}>계정으로 로그인</Text>
+                </TouchableOpacity>
+                <View style={styles.signUpContainer}>
+                    <Text style={styles.signUpQuestion}>아직 회원이 아니신가요?</Text>
+                    <Text style={styles.signUpText} onPress={() => {navigation.navigate('SignUp')}}>
+                      회원가입 하기
+                    </Text>
+                </View>
             </View>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -78,7 +130,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
       },
       topBlock: {
-        width: width,
+        width: '100%',
         height: 140,
         backgroundColor: '#D14124',
         alignItems: 'center',
@@ -87,65 +139,98 @@ const styles = StyleSheet.create({
       loginText: {
         fontFamily: 'TmoneyRoundWindRegular',
         color: 'white',
-        fontSize: 40
+        fontSize: width > 500 ? 60 : 40
       },
       inputContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: '5%',
+        marginBottom: '5%'
       }, 
       input: {
         width: (width * 80) / 100,
         height: (height * 7) / 100,
         borderColor: '#D14124',
         borderWidth: 2,
-        borderRadius: 25,
-        paddingTop: 10,
-        paddingLeft: 15,
+        borderRadius: width > 500 ? 40 : 25,
+        paddingLeft: 20,
         marginTop: 20,
+        fontSize: width > 500 ? 27 : 20,
+        paddingBottom: '1%',
         fontFamily: 'TmoneyRoundWindRegular',
         color: '#D14124'
       },
       bar: {
-        width: 30,
-        height: 5,
+        width: width > 500 ? 50 : 30,
+        height: width > 500 ? 7 : 5,
         backgroundColor: '#D14124',
         borderRadius: 50,
         marginTop: 70,
         marginBottom: 30
       },
       button: {
-        width: (width * 80) / 100,
+        width: (width * 81) / 100,
         height: (height * 7) / 100,
-        borderColor: '#D14124',
-        borderWidth: 2,
         backgroundColor: '#D14124',
-        borderRadius: 25,
+        borderRadius: width > 500 ? 43 : 28,
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: 10,
         marginTop: 40
       },
       buttonText: {
-        fontSize: 20,
+        fontSize: width > 500 ? 30 : 20,
         fontFamily: 'TmoneyRoundWindRegular',
         color: '#ffffff'
       },
+      googleLogo: {
+        width: width > 500 ? (width * 18) / 100 : (width * 25) / 100,
+        height: width > 500 ? (height * 4) / 100 : (height * 4.2) / 100,
+        marginRight: width > 500 ? '5%' : '3%',
+        marginBottom: width > 500 ? '2%' : '3.5%'
+      },
+      naverLogo: {
+        width: width > 500 ? (width * 19) / 100 : (width * 27) / 100,
+        height: width > 500 ? (height * 2.3) / 100 : (height * 2.5) / 100,
+        marginRight: width > 500 ? '5%' : '3%',
+        marginBottom: width > 500 ? '2%' : '3.5%'
+      },
       signInButton: {
+        display: 'flex',
+        flexDirection: 'row',
         width: (width * 80) / 100,
         height: (height * 7) / 100,
         borderColor: '#D14124',
         borderWidth: 2,
-        borderRadius: 25,
+        borderRadius: width > 500 ? 40 : 25,
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: 10,
-        marginTop: 15
+        marginTop: 20
       },
       signInText: {
-        fontSize: 20,
+        fontSize: width > 500 ? 30 : 20,
         fontFamily: 'TmoneyRoundWindRegular',
         color: '#D14124'
+      },
+      signUpContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: '7%'
+      },
+      signUpQuestion: {
+        fontSize: width > 500 ? 25 : 18,
+        color: '#3E3A30',
+        fontFamily: 'TmoneyRoundWindRegular',
+        marginRight: '2%'
+      },
+      signUpText: {
+        fontSize: width > 500 ? 25 : 18,
+        fontWeight: 'bold',
+        color: '#D14124',
+        fontFamily: 'TmoneyRoundWindRegular',
+        textDecorationLine: 'underline'
       }
 })
 

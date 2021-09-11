@@ -4,18 +4,30 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="hnm.hnm.mapper.words.PrivateWordMapper">
+    <resultMap id="privateWordResultMap" type="hnm.hnm.domain.words.PrivateWord">
+        <id column="PRIVATE_WORD_ID" property="privateWordId" />
+        <result column="CH_CHARACTER" property="chCharacter" />
+        <result column="INTONATION" property="intonation" />
+        <result column="STORY" property="story" />
+        <result column="SAVED_GROUP" property="savedGroup" />
+        <collection column="PRIVATE_WORD_ID" property="meanings" javaType="java.util.ArrayList"  ofType="Meaning" select="selectMeaningsList" />
+    </resultMap>
 
-    <insert id="insertWord" parameterType="privateWord">
-       INSERT INTO private_word(CH_CHARACTER, INTONATION, STORY, SAVED_GROUP, MEMBER_ID)
-       VALUES (#{chCharacter}, #{intonation}, #{story}, #{savedGroup}, #{memberId})
+<!--    <insert id="insertWord" parameterType="privateWord">-->
+<!--       INSERT INTO private_word(CH_CHARACTER, INTONATION, STORY, SAVED_GROUP, MEMBER_ID)-->
+<!--       VALUES (#{chCharacter}, #{intonation}, #{story}, #{savedGroup}, #{memberId})-->
 
-       <selectKey keyProperty="privateWordId" resultType="long" order="AFTER">
-           SELECT LAST_INSERT_ID()
-       </selectKey>
-    </insert>
-    <select id="selectPrivateWordDetail" parameterType="long" resultType="privateWord">
-        SELECT * FROM private_word
-        WHERE PRIVATE_WORD_ID = #{id}
-    </select>
-
+<!--       <selectKey keyProperty="privateWordId" resultType="long" order="AFTER">-->
+<!--           SELECT LAST_INSERT_ID()-->
+<!--       </selectKey>-->
+<!--    </insert>-->
+<!--    <select id="selectPrivateWordDetail" parameterType="long" resultMap="privateWordResultMap">-->
+<!--        SELECT * FROM private_word-->
+<!--        WHERE MEMBER_ID = #{id}-->
+<!--    </select>-->
+<!--    <select id="selectMeaningsList" parameterType="long" resultType="meaning">-->
+<!--        SELECT * FROM meaning-->
+<!--        WHERE WORD_TYPE = "PRIVATEWORD"-->
+<!--        AND WORD_ID = #{id}-->
+<!--    </select>-->
 </mapper>

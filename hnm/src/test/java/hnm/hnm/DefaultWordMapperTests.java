@@ -3,6 +3,7 @@ package hnm.hnm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hnm.hnm.domain.words.DefaultWord;
+import hnm.hnm.domain.words.DefaultWordDay;
 import hnm.hnm.domain.words.Meaning;
 import hnm.hnm.mapper.words.DefaultWordMapper;
 import org.junit.jupiter.api.Test;
@@ -14,21 +15,36 @@ import java.util.List;
 @SpringBootTest
 public class DefaultWordMapperTests {
 
-    @Autowired
-    private DefaultWordMapper defaultWordMapper;
-
-    @Test
-    public void testOfSelectDetail() {
-        DefaultWord defaultWord = defaultWordMapper.selectDefaultWordDetail((long) 2);
-        try {
-            String defaultWordJson = new ObjectMapper().writeValueAsString(defaultWord);
-
-            System.out.println("=========================");
-            System.out.println(defaultWordJson);
-            System.out.println("=========================");
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Autowired
+//    private DefaultWordMapper defaultWordMapper;
+//
+//    @Test
+//    public void testOfSelectDetail() {
+//        DefaultWord defaultWord = defaultWordMapper.selectDefaultWordDetail((long) 2);
+//        try {
+//            String defaultWordJson = new ObjectMapper().writeValueAsString(defaultWord);
+//
+//            System.out.println("=========================");
+//            System.out.println(defaultWordJson);
+//            System.out.println("=========================");
+//
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void testOfSelectDay() {
+//        List<DefaultWordDay> defaultWordDay = defaultWordMapper.selectDefaultWordDayByPart((long) 3);
+//        try {
+//            String defaultWordJson = new ObjectMapper().writeValueAsString(defaultWordDay);
+//
+//            System.out.println("=========================");
+//            System.out.println(defaultWordJson);
+//            System.out.println("=========================");
+//
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

@@ -35,11 +35,11 @@ const styles = StyleSheet.create({
     hanzi: {
         fontSize: 70,
         fontFamily: 'MicrosoftJhengHeiUIBold-02',
-        color: '#3F4443'
+        color: '#3E3A30'
     },
     intonation: {
         fontSize: 30,
-        fontFamily: 'TmoneyRoundWindRegular',
+        fontFamily: 'KoPubWorld Dotum Medium',
         color: '#75787B',
         position: 'absolute',
         left: left,

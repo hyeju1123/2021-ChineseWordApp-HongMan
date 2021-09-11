@@ -1,0 +1,14 @@
+CREATE TABLE member (
+    member_id INT NOT NULL AUTO_INCREMENT,
+    email VARCHAR(500) NOT NULL,
+    password VARCHAR(500) NULL,
+    sns_type VARCHAR(20) NULL,
+    email_token VARCHAR(500) NULL,
+    refresh_token VARCHAR(500) NULL,
+    create_date DATETIME,
+    is_account_non_expired BOOLEAN NOT NULL,
+    is_account_non_locked BOOLEAN NOT NULL,
+    is_credentials_non_expired BOOLEAN NOT NULL,
+    is_enabled BOOLEAN NOT NULL,
+    PRIMARY KEY (member_id)
+);

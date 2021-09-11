@@ -28,20 +28,20 @@ public class PrivateWordMapperTest {
 //        System.out.println("결과는 " + result + "입니다.");
 //    }
 
-    @Test
-    public void testOfSelectDetail() {
-        PrivateWord privateWord = privateWordMapper.selectPrivateWordDetail((long) 2);
-        try {
-            String privateWordJson = new ObjectMapper().writeValueAsString(privateWord);
-
-            System.out.println("=========================");
-            System.out.println(privateWordJson);
-            System.out.println("=========================");
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+////    public void testOfSelectDetail() {
+////        PrivateWord privateWord = privateWordMapper.selectPrivateWordDetail((long) 2);
+////        try {
+////            String privateWordJson = new ObjectMapper().writeValueAsString(privateWord);
+////
+////            System.out.println("=========================");
+////            System.out.println(privateWordJson);
+////            System.out.println("=========================");
+////
+////        } catch (JsonProcessingException e) {
+////            e.printStackTrace();
+////        }
+////    }
 
 
 }

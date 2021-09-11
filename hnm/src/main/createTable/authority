@@ -1,0 +1,6 @@
+CREATE TABLE authority (
+    authority_id INT NOT NULL AUTO_INCREMENT,
+    authority_name VARCHAR(30) NOT NULL,
+    member_id INT NOT NULL,
+    PRIMARY KEY (authority_id)
+);

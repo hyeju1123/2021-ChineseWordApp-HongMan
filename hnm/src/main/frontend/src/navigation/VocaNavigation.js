@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import VocaListPage from '../voca/VocaListPage';
 import VocaFormPage from '../voca/VocaFormPage';
+import VocaWordDetail from '../voca/VocaWordDetail';
 
 const Stack = createStackNavigator();
 
@@ -41,7 +42,18 @@ const VocaNavigation = ({ navigation }) => {
                         },
                     }}
                 />
-                
+                <Stack.Screen 
+                    name="VocaWordDetail" 
+                    component={VocaWordDetail} 
+                    options={{
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        },
+                    }}
+                />
             </Stack.Navigator>
         
     );

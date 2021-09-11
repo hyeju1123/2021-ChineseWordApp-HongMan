@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, TouchableWithoutFeedback, View, Text, Dimensions, Image } from 'react-native';
 import customAxios from '../auth/customAxios';
 
-import Images from './wordClassImageIndex';
+// import Images from './wordClassImageIndex';
+import Images from '../ImageIndex';
 
 function StudyWordDetail({ route }) {
     const { wordId, hanzi, intonation, sound, explanation } = route.params;
@@ -10,6 +11,7 @@ function StudyWordDetail({ route }) {
 
     const [meaningList, setMeaningList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [hskMeaning, setHskMeaning] = useState('');
 
     const getMeaningList = () => {
         let config = { params: { wordNum: wordId }}
@@ -24,16 +26,16 @@ function StudyWordDetail({ route }) {
         })
     }
 
-    // const getMeaningList = () => {
-    //     let config = { params: { wordNum: wordId }}
-    //     axios.get(`${LOCAL}/defaultWord/getWordMeanings`, config)
-    //         .then(res => {
-    //             console.log(res.data);
-    //             setMeaningList(res.data);
-    //             // setLoading(false);
-    //         })
-    //         .catch(e => console.log(e))
-    // }
+    const getHskMeaning = () => {
+        customAxios().then(res => {
+            res.get('/hskWord/findMeaning')
+                .then(res => {
+                    console.log(res.data);
+                    setHskMeaning(res.data);
+                })
+                .catch((e => console.log(e)))
+        })
+    }
 
     const handleMarking = () => {
         setMarking(!marking);
@@ -86,6 +88,7 @@ function StudyWordDetail({ route }) {
 
     useEffect(() => {
         getMeaningList();
+        getHskMeaning();
     }, [])
 
     return (
@@ -93,12 +96,12 @@ function StudyWordDetail({ route }) {
         <View style={styles.container}>
             <View style={styles.hanziCard}>
                 <TouchableWithoutFeedback onPress={handleMarking}>
-                    <Image
+            <Image
                         style={styles.icon}
                         source={
                             marking ?
-                            require('../../images/lantern/CheckedLantern.png') :
-                            require('../../images/lantern/UncheckedLantern.png')
+                            require('../../images/lantern/Checked.png') :
+                            require('../../images/lantern/UnChecked.png')
                         }
                     />
                 </TouchableWithoutFeedback>
@@ -110,7 +113,8 @@ function StudyWordDetail({ route }) {
                 {meanings}
             </View>
             <View style={styles.explanationCard}>
-                <Text style={styles.explanation}>{explanation}</Text>
+                {/* <Text style={styles.explanation}>{explanation}</Text> */}
+                <Text style={styles.explanation}>{hskMeaning}</Text>
             </View>
         </View>
         </ScrollView>
@@ -150,14 +154,14 @@ const styles = StyleSheet.create({
     hanzi: {
         fontSize: 100,
         fontFamily: 'MicrosoftJhengHeiUIBold-02',
-        color: '#3F4443',
+        color: '#3E3A30',
         marginBottom: -10,
     },
     intonation: {
         fontSize: 30,
-        fontFamily: 'TmoneyRoundWindRegular',
+        fontFamily: 'KoPubWorld Dotum Medium',
         color: '#D14124',
-        marginBottom: -15,
+        marginBottom: 5,
     },
     sound: {
         fontSize: 20,
@@ -192,7 +196,7 @@ const styles = StyleSheet.create({
     meaning: {
         fontSize: 25,
         fontFamily: 'TmoneyRoundWindRegular',
-        color: '#3F4443'
+        color: '#3E3A30'
     },
     explanationCard: {
         width: (width * 84) / 100,
@@ -209,7 +213,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontFamily: 'TmoneyRoundWindRegular',
         lineHeight: 40,
-        color: '#3F4443'
+        color: '#3E3A30'
     }
 
 });

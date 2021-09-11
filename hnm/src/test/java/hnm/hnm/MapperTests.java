@@ -14,33 +14,33 @@ public class MapperTests {
     @Autowired
     private MemberMapper memberMapper;
 
-    @Test
-    public void testOfInsert() {
-        Member member = new Member();
-        member.setUserName("수아");
-        member.setNickname("sooosoo");
-        member.setPassword("sooosoo123");
-        member.setEmail("soo@gmail.com");
-
-        int result = memberMapper.insertMember(member);
-        System.out.println("결과는 " + result + "입니다.");
-
-    }
-
-    @Test
-    public void testOfSelectDetail() {
-        Member member = memberMapper.selectMemberDetail((long) 1);
-        try {
-            String memberJson = new ObjectMapper().writeValueAsString(member);
-
-            System.out.println("=========================");
-            System.out.println(memberJson);
-            System.out.println("=========================");
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void testOfInsert() {
+//        Member member = new Member();
+//        member.setUserName("수아");
+//        member.setNickname("sooosoo");
+//        member.setPassword("sooosoo123");
+//        member.setEmail("soo@gmail.com");
+//
+//        int result = memberMapper.insertMember(member);
+//        System.out.println("결과는 " + result + "입니다.");
+//
+//    }
+//
+//    @Test
+//    public void testOfSelectDetail() {
+//        Member member = memberMapper.selectMemberDetail((long) 1);
+//        try {
+//            String memberJson = new ObjectMapper().writeValueAsString(member);
+//
+//            System.out.println("=========================");
+//            System.out.println(memberJson);
+//            System.out.println("=========================");
+//
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 //    @Test
 //    public void testOfPrivateWord() {

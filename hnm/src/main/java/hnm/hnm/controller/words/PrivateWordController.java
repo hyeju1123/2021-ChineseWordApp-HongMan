@@ -1,16 +1,14 @@
 package hnm.hnm.controller.words;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.core.type.TypeReference;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 import hnm.hnm.domain.words.Meaning;
 import hnm.hnm.domain.words.PrivateWord;
+import hnm.hnm.domain.words.WordType;
 import hnm.hnm.service.words.PrivateWordService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +34,23 @@ public class PrivateWordController {
         }
     }
 
-    @PostMapping("/privateWord/addMeanings")
-    public void addPrivateMeaning(@RequestBody Map params) throws JsonProcessingException {
-        String json = params.get("list").toString();
-        ObjectMapper mapper = new ObjectMapper();
-        List<Meaning> list = mapper.readValue(json, new TypeReference<ArrayList<Meaning>>() {});
-        for (Meaning meaning : list) {
-            System.out.println(meaning.getMeanings());
-        }
+//    @PostMapping("/privateWord/addMeanings")
+//    public void addPrivateMeaning(@RequestBody Map params) throws JsonProcessingException {
+//        String json = params.get("list").toString();
+//        Long wordId = ((Number) params.get("wordId")).longValue();
+//        System.out.println("wordId: " + wordId);
+//        ObjectMapper mapper = new ObjectMapper();
+//        List<Meaning> list = mapper.readValue(json, new TypeReference<ArrayList<Meaning>>() {});
+//        for (Meaning meaning : list) {
+//            System.out.println(meaning.getMeanings());
+//            meaning.setWordId(wordId);
+//            meaning.setWordType(WordType.PRIVATEWORD);
+//            privateWordService.addPrivateMeaning(meaning);
+//        }
+//    }
+
+    @GetMapping("/privateWord/getWordDetailList")
+    public List<PrivateWord> findWordMeanings(@RequestParam("memberId") Long memberId) {
+        return privateWordService.findPrivateWord(memberId);
     }
 }

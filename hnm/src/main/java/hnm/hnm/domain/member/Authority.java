@@ -11,14 +11,13 @@ public class Authority {
 
     private AuthorityName authorityName;
 
-    private String email;
+    private Long memberId;
 
     public Authority() {
 
     }
 
-    public Authority(AuthorityName authorityName, String email) {
+    public Authority(AuthorityName authorityName) {
         this.authorityName = authorityName;
-        this.email = email;
     }
 }
