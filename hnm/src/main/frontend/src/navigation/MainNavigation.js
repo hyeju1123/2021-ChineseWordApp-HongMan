@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Alert, Image, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Dimensions, Alert, Image, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,10 +8,14 @@ import MainPage from '../main/MainPage';
 import StudyNavigation from './StudyNavigation';
 import VocaNavigation from './VocaNavigation';
 import { signOut } from '../_modules/user';
+import customAxios from '../auth/customAxios';
+import AuthenticationService from '../auth/AuthenticationService';
 
 const Stack = createStackNavigator();
 
 const MainNavigation = () => {
+
+    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
 
     const dispatch = useDispatch();
     const handleLogout = () => {
@@ -31,10 +35,38 @@ const MainNavigation = () => {
           ]
         )
       }
+      const testHello = async () => {
+        let checkToken = await AuthenticationService.checkJwtToken();
+        !checkToken && dispatch(signOut())
+        customAxios().then(res => {
+            res.get('/hello')
+                .then(res => {
+                    console.log('test Hello: ', res.data)
+                })
+                .catch(e => {
+                    console.log('testHello error: ', e)
+                })
+        })
+    }
+
+    useEffect(() => {
+        const updateLayout = () => {
+          setAvailableDeviceWidth(Dimensions.get('window').width);
+        }
+        Dimensions.addEventListener('change', updateLayout);
+    
+        return () => {
+          Dimensions.removeEventListener('change', updateLayout)
+        }
+      }, [])
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{
+                    safeAreaInsets: {top: 25}
+                }}
+            >
             <Stack.Screen 
                     name="Home" 
                     component={MainPage} 
@@ -43,24 +75,26 @@ const MainNavigation = () => {
                     headerStyle: {
                         elevation: 0
                     },
-                    headerLeft: () => (
-                        // <Button
-                        //     onPress={handleLogout}
-                        //     title="로그아웃"
-                        // />
-                        <TouchableWithoutFeedback onPress={handleLogout}>
+                    headerRight: () => (
+                        <TouchableOpacity onPress={handleLogout}>
                             <Image 
                                 source={require('../../images/mainPage/menu.png')} 
-                                style={{ width: 20, height: 14, marginLeft: 16 }} 
+                                style={
+                                    availableDeviceWidth > 500 ?
+                                    {width: availableDeviceWidth * 0.05, height: availableDeviceWidth * 0.04, marginRight: availableDeviceWidth * 0.07} :
+                                    {width: availableDeviceWidth * 0.07, height: availableDeviceWidth * 0.07, marginRight: availableDeviceWidth * 0.07}
+                                }
                             />
-                        </TouchableWithoutFeedback>
+                        </TouchableOpacity>
                     ),
-                    headerRight: () => (
-                        <Image 
-                            source={require('../../images/mainPage/plus.png')}
-                            style={{ width: 3, height: 14, marginRight: 16 }}
-                        />
-                    )
+                    // headerRight: () => (
+                    //     <TouchableOpacity onPress={testHello}>
+                    //     <Image 
+                    //         source={require('../../images/mainPage/plus.png')}
+                    //         style={{ width: 3, height: 14, marginRight: 16 }}
+                    //     />
+                    //     </TouchableOpacity>
+                    // )
                     }}
                 />
                 <Stack.Screen 
@@ -88,7 +122,6 @@ const MainNavigation = () => {
         </NavigationContainer>
     );
 };
-
 
 
 export default MainNavigation;

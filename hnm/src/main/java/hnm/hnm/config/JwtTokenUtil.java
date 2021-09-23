@@ -21,8 +21,8 @@ public class JwtTokenUtil implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
-    public static final long TOKEN_PERIOD = 1000L * 60L * 60L * 7L;  // 1주
-    public static final long REFRESH_PERIOD = 1000L * 60L * 60L * 30L * 6L; // 6달
+    public static final long TOKEN_PERIOD = 1000L * 60L * 60L * 24L * 7L;  // 1주
+    public static final long REFRESH_PERIOD = 1000L * 60L * 60L * 24L * 7L * 24L; // 6달
     public static final long EMAIL_PERIOD = 1000L * 60L * 10L * 6L; // 60분
     SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     String secret = Encoders.BASE64.encode(key.getEncoded());

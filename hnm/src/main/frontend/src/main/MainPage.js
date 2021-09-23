@@ -1,5 +1,5 @@
  import React from 'react';
- import { StyleSheet, View, TouchableOpacity, Text, Alert, Image } from 'react-native';
+ import { StyleSheet, View, TouchableOpacity, StatusBar, SafeAreaView, ScrollView, Dimensions } from 'react-native';
  
  import MainPageCard from './MainPageCard';
  import Images from '../ImageIndex';
@@ -7,7 +7,9 @@
  const MainPage = ({ navigation }) => {
  
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent={true} />
+      <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
       <View style={styles.cardContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('StudyNavigation')}>
             <MainPageCard cardName={Images.mainPage.study}  />
@@ -20,32 +22,36 @@
           <MainPageCard cardName={Images.mainPage.community} />
           <MainPageCard cardName={Images.mainPage.dumpling} />
       </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
  };
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
+console.log('height: ', height)
  
- const styles = StyleSheet.create({
+const styles = StyleSheet.create({
    container: {
-      flex: 1,
-      alignItems: 'center',
-      // justifyContent: 'center',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
       backgroundColor: '#ffffff'
    },
-   icon: {
-      position: 'absolute',
-      bottom: 60,
-      width: 30,
-      height: 10
-   },
    cardContainer: {
-      width: 306,
-      height: 469,
+      width: '85%',
+      height: '100%',
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-between',
-      alignContent: 'space-between',
-      marginTop: 30
+      alignContent: 'center',
+      // marginTop: width > 500 ? width * 0.03 : width * 0.1,
+      backgroundColor: '#ffffff'
+      // borderColor: 'black',
+      // borderWidth: 5
    }
  });
  

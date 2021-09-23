@@ -1,20 +1,13 @@
 import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
-import { Platform, StatusBar } from 'react-native'
+import { createStackNavigator } from '@react-navigation/stack';
 
 import StartPage from '../main/StartPage';
 import SignIn from '../auth/SignIn';
 import SignUp from '../auth/SignUp';
 import EmailAuthPage from '../auth/EmailAuthPage';
-// import SignInTest from '../main/SignInTest';
-
-// if (Platform.OS === 'android') {
-//     StatusBar.setTranslucent(true)
-//     StatusBar.setBarStyle('dark-content')
-//     StatusBar.setBackgroundColor('transparent')
-// }
+import Splash from '../main/Splash';
 
 const Stack = createStackNavigator();
 
@@ -39,14 +32,8 @@ const StartNavigation = () => {
                     }}
                 />
                 {/* <Stack.Screen 
-                    name="SignInTest" 
-                    component={SignInTest} 
-                    options={{
-                    headerTitle: '',
-                    headerStyle: {
-                        elevation: 0
-                    }
-                    }}
+                    name="Splash" 
+                    component={Splash} 
                 /> */}
                 <Stack.Screen 
                     name="SignIn" 

@@ -4,6 +4,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { NaverLogin, getProfile } from '@react-native-seoul/naver-login';
 
 import { LOCAL } from '../../ipConfig';
+import { Alert } from 'react-native';
 
 class AuthenticationService {
 
@@ -13,25 +14,53 @@ class AuthenticationService {
         });
     }
 
-    executeJwtAuthenticationService(email, password) {
+    executeJwtAuthenticationService(email, password, snsType) {
         return axios.post(`${LOCAL}/auth/signIn`, {
-            email, password
+            email, password, snsType
         });
     }
 
-    async registerSuccessfullLoginForJwt(email, token, memberId) {
+    async registerSuccessfullLoginForJwt(email, token, memberId, snsType) {
         console.log("===registerSuccessfulLoginForJwt===")
 
         console.log("token ", token);
         const stringId = JSON.stringify(memberId)
+        let date = new Date();
+        date.setDate(date.getDate() + 7);
         await AsyncStorage.setItem('token', token);
         await AsyncStorage.setItem('email', email);
         await AsyncStorage.setItem('memberId', stringId);
+        await AsyncStorage.setItem('snsType', snsType);
+        await AsyncStorage.setItem('jwtValidTime', JSON.stringify(date.getTime()));
         // this.setupAxiosInterceptors();
     }
 
     createJwtToken(token) {
         return 'Bearer ' + token;
+    }
+
+    async checkJwtToken() {
+        let validTime = await AsyncStorage.getItem('jwtValidTime');
+        console.log('유효시간: ', validTime)
+        validTime = new Date(parseInt(validTime))
+        console.log('valid time: ', validTime)
+        if (validTime < new Date()) {
+            console.log('유효한 시간이 지났습니다.')
+            let memberId = await AsyncStorage.getItem('memberId')
+            let newToken = await axios.get(`${LOCAL}/auth/token/refresh`, { params:{ memberId: memberId } })
+            console.log(`새 토큰: `, newToken.data.message, `\n\n성공 여부: `, newToken.data.success)
+            if (newToken.data.success) {
+                let newValidTime= new Date();
+                newValidTime.setDate(newValidTime.getDate() + 7);
+                await AsyncStorage.setItem('token', newToken.data.message)
+                await AsyncStorage.setItem('jwtValidTime', JSON.stringify(newValidTime.getTime()))
+                return true;
+            } else {
+                Alert.alert("로그인 암호가 만료되었습니다. 다시 로그인해주세요.");
+                return false;
+            }
+            
+        } else return true;
     }
 
     handleGoogleSignIn = async () => {
@@ -69,40 +98,6 @@ class AuthenticationService {
         return { email: profileResult.response.email, error: false }
     }
 
-
-    // async setupAxiosInterceptors() {
-    //     console.log('setupAxiosInterceptor')
-    //     const request = axios.create();
-        
-    //     const token = await AsyncStorage.getItem('token');
-    //     request.interceptors.request.use(config => {
-    //         if (token) {
-    //             config.headers['Authorization'] = 'Bearer ' + token;
-    //         }
-    //         return config;
-    //     }, err => {
-    //         console.log(err)
-    //         return Promise.reject(err)
-    //     })
-    //     return request;
-    // }
-
-    // async setupAxiosInterceptors() {
-    //     console.log('setupAxiosInterceptor')
-    //     const token = await AsyncStorage.getItem('token');
-    //     axios.interceptors.request.use(
-    //         config => {
-    //             if (token) {
-    //                 config.headers['Authorization'] = 'Bearer ' + token;
-    //             }
-    //             return config;
-    //         },
-    //         error => {
-    //             Promise.reject(error);
-    //         }
-    //     )
-    // }
-
     naverLogout = () => {
         NaverLogin.logout();
     }
@@ -119,10 +114,16 @@ class AuthenticationService {
     async logout() {
         try {
             let logout = await AsyncStorage.getItem('token')
+            let snsType = await AsyncStorage.getItem('snsType');
+            if (snsType === 'google') await this.googleLogout();
+            if (snsType === 'naver') this.naverLogout();
+            console.log('snsType: ', snsType);
             console.log("logout ", logout)
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('email');
             await AsyncStorage.removeItem('stringId');
+            await AsyncStorage.removeItem('snsType');
+            await AsyncStorage.removeItem('jwtValidTime');
             logout = await AsyncStorage.getItem('token')
             console.log("logout ", logout)
         } catch (e) {

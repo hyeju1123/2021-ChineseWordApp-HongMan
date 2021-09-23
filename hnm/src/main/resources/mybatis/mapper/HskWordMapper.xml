@@ -4,8 +4,45 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="hnm.hnm.mapper.words.HskWordMapper">
-    <select id="selectHskWordMeaning" parameterType="long" resultType="String">
-        SELECT MEANING FROM hsk_word
-        WHERE WORD_ID = #{id}
+    <resultMap id="hskResultMap" type="hsk">
+        <id column="HSK_ID" property="hskId" />
+        <result column="WORD" property="word" />
+        <result column="MEANING" property="meaning" />
+        <result column="INTONATION" property="intonation" />
+        <result column="WORD_CLASS" property="wordClass" />
+        <result column="LEVEL" property="level" />
+        <result column="THEME" property="theme" />
+        <association property="memo" column="{hsk_id, member_id}" javaType="memo" resultMap="memoResultMap" />
+    </resultMap>
+
+    <resultMap id="memoResultMap" type="memo">
+        <id property="memoId" column="memo_id" />
+        <result property="meaning" column="memo_meaning" />
+        <result property="intonation" column="memo_intonation" />
+        <result property="wordClass" column="memo_class" />
+        <result property="explanation" column="explanation" />
+        <result property="includedVocab" column="included_vocab" />
+    </resultMap>
+
+    <select id="selectHskTheme" parameterType="long" resultType="String">
+        SELECT DISTINCT THEME FROM hsk
+        WHERE level = #{hskLevel}
+    </select>
+
+    <select id="selectHskWordsByTheme" resultMap="hskResultMap">
+        SELECT
+            H.word as word,
+            H.meaning as meaning,
+            H.intonation as intonation,
+            H.class as word_class,
+            M.meaning as memo_meaning,
+            M.intonation as memo_intonation,
+            M.class as memo_class,
+            M.explanation as explanation,
+            M.included_vocab as included_vocab
+        FROM
+        (SELECT hsk_id, word, meaning, intonation, class FROM hsk WHERE level=#{level} AND theme=#{theme}) as H
+        LEFT JOIN memo AS M
+        ON H.hsk_id = M.hsk_id AND M.member_id = #{memberId}
     </select>
 </mapper>

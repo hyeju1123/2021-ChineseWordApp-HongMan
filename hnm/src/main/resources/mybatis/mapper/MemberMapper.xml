@@ -9,6 +9,7 @@
         <result column="EMAIL" property="email" />
         <result column="PASSWORD" property="password" />
         <result column="EMAIL_TOKEN" property="emailToken" />
+        <result column="SNS_TYPE" property="snsType" />
         <result column="REFRESH_TOKEN" property="refreshToken" />
         <result column="CREATE_DATE" property="createDate" />
         <result column="IS_ACCOUNT_NON_EXPIRED" property="isAccountNonExpired" />
@@ -22,8 +23,8 @@
        <selectKey keyProperty="memberId" resultType="long" order="AFTER">
            SELECT LAST_INSERT_ID()
        </selectKey>
-       INSERT INTO member(EMAIL, PASSWORD, EMAIL_TOKEN, CREATE_DATE, IS_ACCOUNT_NON_EXPIRED, IS_ACCOUNT_NON_LOCKED, IS_CREDENTIALS_NON_EXPIRED, IS_ENABLED)
-       VALUES (#{email}, #{password}, #{emailToken}, NOW(), #{isAccountNonExpired}, #{isAccountNonLocked}, #{isCredentialsNonExpired}, #{isEnabled})
+       INSERT INTO member(EMAIL, PASSWORD, SNS_TYPE, EMAIL_TOKEN, CREATE_DATE, IS_ACCOUNT_NON_EXPIRED, IS_ACCOUNT_NON_LOCKED, IS_CREDENTIALS_NON_EXPIRED, IS_ENABLED)
+       VALUES (#{email}, #{password}, #{snsType}, #{emailToken}, NOW(), #{isAccountNonExpired}, #{isAccountNonLocked}, #{isCredentialsNonExpired}, #{isEnabled})
     </insert>
     <insert id="insertMemberAuthority" parameterType="authority">
        INSERT INTO authority(AUTHORITY_NAME, MEMBER_ID)

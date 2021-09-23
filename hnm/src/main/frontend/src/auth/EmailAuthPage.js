@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, 
          TouchableOpacity, 
          ActivityIndicator,
@@ -15,6 +15,9 @@ import { useDispatch } from 'react-redux';
 import { signIn } from '../_modules/user';
 
 function EmailAuthPage({ route }) {
+
+
+    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
 
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
@@ -35,12 +38,13 @@ function EmailAuthPage({ route }) {
             .then(res => {
                 console.log('ressss: ', res.data)
                 if (res.data === true) {
-                    dispatch(signIn(email, password));
+                    dispatch(signIn(email, password, ''));
                 } else if (res.data === false) {
                     Alert.alert("메일함에서 '메일 인증' 버튼을 눌러주세요!");
                 }
             })
             .catch(e => {
+                console.log('메일 인증 에러: ', e)
                 Alert.alert('인증에 실패하였습니다.')
             })
         })
@@ -69,7 +73,19 @@ function EmailAuthPage({ route }) {
             })
         })
     }
-    
+
+    useEffect(() => {
+        const updateLayout = () => {
+            console.log('dp: ', Dimensions.get('window').width)
+            setAvailableDeviceWidth(Dimensions.get('window').width);
+          }
+        Dimensions.addEventListener('change', updateLayout);
+      
+        return () => {
+            Dimensions.removeEventListener('change', updateLayout)
+        }
+    }, [])
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView alwaysBounceHorizontal={false} alwaysBounceVertical={false} bounces={false}>
@@ -77,7 +93,8 @@ function EmailAuthPage({ route }) {
                 <Text style={styles.loginText}>Sign Up</Text>
             </View>
             <View style={styles.contentsContainer}>
-                <Image source={emailLogo} style={styles.emailLogo} />
+                {/* <Image source={emailLogo} style={availableDeviceWidth > 350 ? styles.emailLogo : styles.smallEmailLogo} /> */}
+                <Image source={emailLogo} style={{width: availableDeviceWidth * 0.3, height: availableDeviceWidth * 0.3}} />
                 <Text style={styles.completeMent}>인증메일 발송완료</Text>
                 <Text style={styles.emailMent}>{email}</Text>
                 <Text style={styles.announcement}>위의 메일함에서 '메일 인증' 버튼을 눌러주세요.</Text>
@@ -130,14 +147,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: '5%',
         marginRight: '5%',
-        marginTop: '15%',
+        marginTop: width > 500 ? '10%' : '15%',
         marginBottom: '8%'
     },
     emailLogo: {
-        width: width > 500 ? (width * 19) / 100 : (width * 33) / 100,
-        height: width > 500 ? (height * 2.3) / 100 : (height * 15) / 100,
-        marginRight: width > 500 ? '5%' : '3%',
+        width: width > 500 ? (width * 32) / 100 : (width * 40) / 100,
+        height: width > 500 ? (height * 20) / 100 : (height * 19.5) / 100,
+        marginRight: '0%',
         marginBottom: width > 500 ? '2%' : '3.5%'
+    },
+    smallEmailLogo: {
+        width: (width * 32) / 100,
+        height: (height * 20) / 100,
+        marginBottom: '3.5%'
     },
     completeMent: {
         fontFamily: 'TmoneyRoundWindRegular',
@@ -145,12 +167,13 @@ const styles = StyleSheet.create({
         marginBottom: '8%'
     },
     emailMent: {
-        fontSize: width > 500 ? 20 : 17,
-        fontWeight: 'bold'
+        fontSize: width > 500 ? 25 : 17,
+        fontWeight: 'bold',
+        marginBottom: '2%'
     }, 
     announcement: {
         fontFamily: 'TmoneyRoundWindRegular',
-        fontSize: width > 500 ? 20 : 15,
+        fontSize: width > 500 ? 25 : width * 0.039,
         marginTop: '3%',
         color: '#75787B'
     },
@@ -167,7 +190,7 @@ const styles = StyleSheet.create({
     },
     resendMent: {
         fontFamily: 'TmoneyRoundWindRegular',
-        fontSize: width > 500 ? 20 : 15,
+        fontSize: width > 500 ? 25 : width * 0.039,
         textDecorationLine: 'underline',
         marginTop: '3%',
         marginLeft: '2%'

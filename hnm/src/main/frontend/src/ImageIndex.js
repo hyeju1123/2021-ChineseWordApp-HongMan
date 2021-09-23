@@ -10,6 +10,9 @@ const images = {
         quantifier: require('../images/wordClass/quantifier.png'),
         postposition: require('../images/wordClass/postposition.png'),
         auxiliary: require('../images/wordClass/auxiliary.png'),
+        exclamation: require('../images/wordClass/exclamation.png'),
+        idiom: require('../images/wordClass/idiom.png'),
+        numeral: require('../images/wordClass/numeral.png')
     },
     mainPage: {
         study: require('../images/mainPage/learning.png'),

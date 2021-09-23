@@ -15,7 +15,7 @@ const VocaWordCard = (props) => {
                         intonation: props.intonation
                     })}
                 >
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require('../../images/vocaCard/search.png')} />
+                    {/* <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require('../../images/vocaCard/search.png')} /> */}
                 </TouchableOpacity>
             </View>
             {

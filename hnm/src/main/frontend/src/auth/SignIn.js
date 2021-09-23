@@ -9,7 +9,7 @@ import { Text,
          ScrollView,
          Image, 
          Alert} from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { signIn } from '../_modules/user';
 import AuthenticationService from './AuthenticationService';
 import googleLogo from '../../images/snsLogo/googleLogo.png';
@@ -21,15 +21,14 @@ const initials = Platform.OS === "ios" ? iosKeys : androidKeys;
 
 function SignIn({ navigation }) {
 
+    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    // const user = useSelector(state => state.user);
     const dispatch = useDispatch();
 
     const handleSignIn = (email, password) => {
-        dispatch(signIn(email, password));
-        // console.log('user.error: ', user.error)
+        dispatch(signIn(email, password, ''));
     }
 
     const handleSnsSignIn = (type) => {
@@ -40,14 +39,14 @@ function SignIn({ navigation }) {
               Alert.alert("정보를 가져오는 데 실패했습니다.")
               return
             }
-            dispatch(signIn(res.email, ''));
+            dispatch(signIn(res.email, '', type));
           })
       }
 
       if (type === 'naver') {
         AuthenticationService.handleNaverSignIn(initials)
           .then(email => {
-            dispatch(signIn(email, ''));
+            dispatch(signIn(email, '', type));
           })
           .catch(e => {
             Alert.alert("정보를 가져오는 데 실패했습니다.")
@@ -62,6 +61,15 @@ function SignIn({ navigation }) {
         forceCodeForRefreshToken: true,
         offlineAccess: true
       })
+      const updateLayout = () => {
+        console.log('dp: ', Dimensions.get('window').width)
+        setAvailableDeviceWidth(Dimensions.get('window').width);
+      }
+      Dimensions.addEventListener('change', updateLayout);
+  
+      return () => {
+        Dimensions.removeEventListener('change', updateLayout)
+      }
     }, [])
 
     return (
@@ -98,14 +106,14 @@ function SignIn({ navigation }) {
                     style={styles.signInButton}
                     onPress={() => {handleSnsSignIn('google')}}
                 >
-                    <Image source={googleLogo} style={styles.googleLogo} />
+                    <Image source={googleLogo} style={availableDeviceWidth > 350 ? styles.googleLogo : styles.smallGoogleLogo} />
                     <Text style={styles.signInText}>계정으로 로그인</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.signInButton}
                     onPress={() => {handleSnsSignIn('naver')}}
                 >
-                    <Image source={naverLogo} style={styles.naverLogo} />
+                    <Image source={naverLogo} style={availableDeviceWidth > 350 ? styles.naverLogo : styles.smallNaverLogo} />
                     <Text style={styles.signInText}>계정으로 로그인</Text>
                 </TouchableOpacity>
                 <View style={styles.signUpContainer}>
@@ -156,7 +164,7 @@ const styles = StyleSheet.create({
         borderRadius: width > 500 ? 40 : 25,
         paddingLeft: 20,
         marginTop: 20,
-        fontSize: width > 500 ? 27 : 20,
+        fontSize: width > 500 ? 27 : width * 0.035,
         paddingBottom: '1%',
         fontFamily: 'TmoneyRoundWindRegular',
         color: '#D14124'
@@ -190,9 +198,21 @@ const styles = StyleSheet.create({
         marginRight: width > 500 ? '5%' : '3%',
         marginBottom: width > 500 ? '2%' : '3.5%'
       },
+      smallGoogleLogo: {
+        width: (width * 20) / 100,
+        height: (height * 4.5) / 100,
+        marginRight: width > 500 ? '5%' : '3%',
+        marginBottom: width > 500 ? '2%' : '3.5%'
+      },
       naverLogo: {
         width: width > 500 ? (width * 19) / 100 : (width * 27) / 100,
         height: width > 500 ? (height * 2.3) / 100 : (height * 2.5) / 100,
+        marginRight: width > 500 ? '5%' : '3%',
+        marginBottom: width > 500 ? '2%' : '3.5%'
+      },
+      smallNaverLogo: {
+        width: (width * 25) / 100,
+        height: (height * 3.2) / 100,
         marginRight: width > 500 ? '5%' : '3%',
         marginBottom: width > 500 ? '2%' : '3.5%'
       },

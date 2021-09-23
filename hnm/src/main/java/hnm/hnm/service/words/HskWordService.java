@@ -1,5 +1,6 @@
 package hnm.hnm.service.words;
 
+import hnm.hnm.domain.words.Hsk;
 import hnm.hnm.domain.words.PrivateWord;
 import hnm.hnm.mapper.words.HskWordMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,11 @@ public class HskWordService {
 
     final HskWordMapper hskWordMapper;
 
-    public String findPrivateWord(Long id) {
-        return hskWordMapper.selectHskWordMeaning(id);
+    public List<String> findHskTheme(Long hskLevel) {
+        return hskWordMapper.selectHskTheme(hskLevel);
+    }
+
+    public List<Hsk> findHskWordsByLevel(Long hskLevel, String theme, Long memberId) {
+        return hskWordMapper.selectHskWordsByTheme(hskLevel, theme, memberId);
     }
 }

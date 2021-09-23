@@ -1,0 +1,11 @@
+CREATE TABLE memo (
+    memo_id INT NOT NULL AUTO_INCREMENT,
+    meaning VARCHAR(1000) NULL DEFAULT "",
+    intonation VARCHAR(100) NULL DEFAULT "",
+    class VARCHAR(200) NULL DEFAULT "",
+    explanation VARCHAR(2000) NULL DEFAULT "",
+    included_vocab BOOLEAN NOT NULL DEFAULT 0,
+    hsk_id INT NOT NULL DEFAULT 0,
+    member_id INT NOT NULL,
+    PRIMARY KEY (memo_id)
+);

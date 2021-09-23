@@ -20,16 +20,16 @@ export const restoreToken = (token) => {
     }
 }
 
-export const signIn = (email, password) => async dispatch => {
+export const signIn = (email, password, snsType) => async dispatch => {
     dispatch({ type: SIGN_IN, error: null });
 
     AuthenticationService
-        .executeJwtAuthenticationService(email, password)
+        .executeJwtAuthenticationService(email, password, snsType)
         .then(res => {
             console.log('res.data: ', res.data)
             const data = res.data;
             if (data.emailAuth === true) {
-                AuthenticationService.registerSuccessfullLoginForJwt(email, data.accessToken, data.memberId);
+                AuthenticationService.registerSuccessfullLoginForJwt(email, data.accessToken, data.memberId, snsType);
                 dispatch({ type: SIGN_IN_SUCCESS, payload: res.data })
             } else if (data.emailAuth === false) {
                 Alert.alert(`등록한 메일함(${email})에서\n 메일 인증을 완료해주세요.`)

@@ -22,6 +22,8 @@ public class Member {
 
     private String emailToken;
 
+    private String snsType;
+
     private String refreshToken;
 
     private Date createDate;
@@ -55,13 +57,14 @@ public class Member {
         this.refreshToken = refreshToken;
     }
 
-    public Member(String email, String password, String emailToken,
+    public Member(String email, String password, String emailToken, String snsType,
                   boolean isAccountNonExpired, boolean isAccountNonLocked,
                   boolean isCredentialsNonExpired, boolean isEnabled) {
 
         this.email = email;
         this.password = password;
         this.emailToken = emailToken;
+        this.snsType = snsType;
         this.isAccountNonExpired = isAccountNonExpired;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;

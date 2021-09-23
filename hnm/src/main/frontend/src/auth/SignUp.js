@@ -12,15 +12,17 @@ import AuthenticationService from './AuthenticationService';
 import googleLogo from '../../images/snsLogo/googleLogo.png';
 import naverLogo from '../../images/snsLogo/naverLogo.png';
 import customAxios from '../auth/customAxios';
-import Splash from '../main/Splash';
 import { signIn } from '../_modules/user';
 import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { iosKeys, androidKeys, googleClientId } from '../../ipConfig';
+import Splash from '../main/Splash';
 
 const initials = Platform.OS === "ios" ? iosKeys : androidKeys;
 
 function SignUp({ navigation }) {
+
+    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -97,9 +99,9 @@ function SignUp({ navigation }) {
     }
 
     const handleSignUp = (email, password) => {
-        setLoading(true);
+        setLoading(true)
         if (checkPasswordLength() || checkBlank() || checkPassword()) {
-            setLoading(false);
+            setLoading(false)
             return;
         } else {
             AuthenticationService
@@ -107,18 +109,19 @@ function SignUp({ navigation }) {
                     .then(res => {
                         if (res.data.success === false) {
                             checkDuplicateEmail(res.data.message);
-                            setLoading(false);
+                            setLoading(false)
                         } else {
                             console.log("res aa: ", res)
-                            setLoading(false);
+                            setLoading(false)
                             navigation.navigate('EmailAuthPage', { 
                                 email: email, 
                                 emailToken: res.data.message,
                                 password: password
                             })
-                            setEmail('')
-                            setPassword('')
-                            setCheckPw('')
+                            // setEmail('')
+                            // setPassword('')
+                            // setCheckPw('')
+                            // dispatch(loaded())
                             let config = { params: { 
                                 email: email,
                                 emailToken: res.data.message
@@ -147,13 +150,13 @@ function SignUp({ navigation }) {
                         return
                     }
                     const email = res.email;
-                    AuthenticationService.executeJwtSignUpService(email, '', true)
+                    AuthenticationService.executeJwtSignUpService(email, '', type)
                         .then(res => {
                             if (res.data.success === false) {
                                 checkDuplicateEmail(res.data.message);
                             } else {
                                 Alert.alert('success');
-                                dispatch(signIn(email, ''));
+                                dispatch(signIn(email, '', type));
                             }
                         })
                 })
@@ -163,13 +166,13 @@ function SignUp({ navigation }) {
             AuthenticationService.handleNaverSignIn(initials)
                 .then(email => {
 
-                    AuthenticationService.executeJwtSignUpService(email, '', true)
+                    AuthenticationService.executeJwtSignUpService(email, '', type)
                     .then(res => {
                         if (res.data.success === false) {
                             checkDuplicateEmail(res.data.message);
                         } else {
                             Alert.alert('success');
-                            dispatch(signIn(email, ''));
+                            dispatch(signIn(email, '', type));
                         }
                     })
                 })
@@ -186,10 +189,19 @@ function SignUp({ navigation }) {
           forceCodeForRefreshToken: true,
           offlineAccess: true
         })
+        const updateLayout = () => {
+            console.log('dp: ', Dimensions.get('window').width)
+            setAvailableDeviceWidth(Dimensions.get('window').width);
+          }
+        Dimensions.addEventListener('change', updateLayout);
+      
+        return () => {
+            Dimensions.removeEventListener('change', updateLayout)
+        }
       }, [])
 
     return (
-        loading ? <Splash /> :
+        loading ? <Splash navigation={navigation} /> :
         <View style={styles.container}>
             <ScrollView>
             <View style={styles.topBlock}>
@@ -231,21 +243,14 @@ function SignUp({ navigation }) {
                     style={styles.signInButton}
                     onPress={() => {handleSnsSignUp('google')}}
                 >
-                    <Image source={googleLogo} style={styles.googleLogo} />
+                    <Image source={googleLogo} style={availableDeviceWidth > 350 ? styles.googleLogo : styles.smallGoogleLogo} />
                     <Text style={styles.signInText}>계정으로 가입</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.signInButton}
                     onPress={() => {handleSnsSignUp('naver')}}
                 >
-                    <Image source={naverLogo} style={styles.naverLogo} />
-                    <Text style={styles.signInText}>계정으로 가입</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.signInButton}
-                    onPress={() => {AuthenticationService.naverLogout()}}
-                >
-                    <Image source={naverLogo} style={styles.naverLogo} />
+                    <Image source={naverLogo} style={availableDeviceWidth > 350 ? styles.naverLogo : styles.smallNaverLogo} />
                     <Text style={styles.signInText}>계정으로 가입</Text>
                 </TouchableOpacity>
             </View>
@@ -292,7 +297,7 @@ const styles = StyleSheet.create({
         borderRadius: width > 500 ? 40 : 25,
         marginTop: 20,
         paddingBottom: '1%',
-        fontSize: width > 500 ? 27 : 20,
+        fontSize: width > 500 ? 27 : width * 0.035,
         fontFamily: 'TmoneyRoundWindRegular',
         color: '#D14124'
     },
@@ -325,13 +330,25 @@ const styles = StyleSheet.create({
         marginRight: width > 500 ? '5%' : '3%',
         marginBottom: width > 500 ? '2%' : '3.5%'
     },
+    smallGoogleLogo: {
+        width: (width * 20) / 100,
+        height: (height * 4.5) / 100,
+        marginRight: width > 500 ? '5%' : '3%',
+        marginBottom: width > 500 ? '2%' : '3.5%'
+    },
     naverLogo: {
         width: width > 500 ? (width * 19) / 100 : (width * 27) / 100,
         height: width > 500 ? (height * 2.3) / 100 : (height * 2.5) / 100,
         marginRight: width > 500 ? '5%' : '3%',
         marginBottom: width > 500 ? '2%' : '3.5%'
     },
-      signInButton: {
+    smallNaverLogo: {
+        width: (width * 25) / 100,
+        height: (height * 3.2) / 100,
+        marginRight: width > 500 ? '5%' : '3%',
+        marginBottom: width > 500 ? '2%' : '3.5%'
+    },
+    signInButton: {
         display: 'flex',
         flexDirection: 'row',
         width: (width * 80) / 100,

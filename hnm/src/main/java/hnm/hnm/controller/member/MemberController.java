@@ -6,6 +6,8 @@ import hnm.hnm.domain.member.*;
 import hnm.hnm.service.email.EmailService;
 import hnm.hnm.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,13 +33,26 @@ public class MemberController {
     final EmailService emailService;
     final HttpSession httpSession;
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
+
     @GetMapping("/hello")
-    public void helloController() {
+    public String helloController() {
         System.out.println("say hello");
+        return "test hello is successful";
     }
 
     @PostMapping("/auth/signIn")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) throws Exception {
+
+        System.out.println("loginRequest: " + loginRequest.getSnsType());
+
+        if (!(loginRequest.getSnsType().equals(""))) {
+            if (!(memberService.checkExistingEmail(loginRequest.getEmail()))) {
+                SignUpRequest signUpRequest = new SignUpRequest(loginRequest.getEmail(), loginRequest.getPassword(), loginRequest.getSnsType());
+                registerUser(signUpRequest);
+            }
+        }
+
         Authentication authenticate = authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 
         SecurityContextHolder.getContext().setAuthentication(authenticate);
@@ -65,15 +80,16 @@ public class MemberController {
     }
 
     @GetMapping("/auth/token/refresh")
-    public String refreshToken(@RequestParam String memberId) {
+    public ApiResponse refreshToken(@RequestParam String memberId) {
         Long id = Long.parseLong(memberId);
         String token = memberService.getRefreshToken(id);
         if (jwtTokenUtil.validateToken(token)) {
             Token jwt = jwtTokenUtil.makeToken(id);
             memberService.saveRefreshToken(id, jwt.getRefreshToken());
-            return jwt.getToken();
+            System.out.println("new jwt token: " + jwt.getToken());
+            return new ApiResponse(true, jwt.getToken());
         } else {
-            return "expired refresh token";
+            return new ApiResponse(false, "expired refresh token");
         }
     }
 
@@ -87,14 +103,17 @@ public class MemberController {
         Authority authority = new Authority(AuthorityName.FREE_USER);
 
         String emailToken;
-        if (signUpRequest.getOauth().equals("true")) {
-            emailToken = "Y";
-        } else {
+        String snsType;
+        if (signUpRequest.getOauth().equals("false")) {
             emailToken = jwtTokenUtil.generateEmailToken(signUpRequest.getEmail());
+            snsType = "";
+        } else {
+            emailToken = "Y";
+            snsType = signUpRequest.getOauth();
         }
 
         String password = passwordEncoder.encode(signUpRequest.getPassword());
-        Member member = new Member(signUpRequest.getEmail(), password, emailToken,
+        Member member = new Member(signUpRequest.getEmail(), password, emailToken, snsType,
                 true, true, true, true);
         memberService.save(member, authority);
         return new ResponseEntity(new ApiResponse(true, emailToken), HttpStatus.OK);
