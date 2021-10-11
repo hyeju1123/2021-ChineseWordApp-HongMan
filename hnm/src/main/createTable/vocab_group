@@ -1,0 +1,6 @@
+CREATE TABLE vocab_group (
+    vocab_group_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(300) NOT NULL,
+    member_id INT NOT NULL,
+    PRIMARY KEY (vocab_group_id)
+);

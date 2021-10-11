@@ -1,0 +1,11 @@
+CREATE TABLE vocab (
+    vocab_id INT NOT NULL AUTO_INCREMENT,
+    word VARCHAR(30) NOT NULL,
+    meaning VARCHAR(300) NOT NULL,
+    intonation VARCHAR(100) NOT NULL,
+    class VARCHAR(100) NOT NULL,
+    explanation VARCHAR(2000) NULL DEFAULT "",
+    member_id INT NOT NULL,
+    vocab_group_id INT NOT NULL,
+    PRIMARY KEY (vocab_id)
+);

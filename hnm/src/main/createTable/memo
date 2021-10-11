@@ -4,7 +4,8 @@ CREATE TABLE memo (
     intonation VARCHAR(100) NULL DEFAULT "",
     class VARCHAR(200) NULL DEFAULT "",
     explanation VARCHAR(2000) NULL DEFAULT "",
-    included_vocab BOOLEAN NOT NULL DEFAULT 0,
+    vocab_id INT NULL DEFAULT 0,
+    vocab_group_name VARCHAR(300) NULL DEFAULT "",
     hsk_id INT NOT NULL DEFAULT 0,
     member_id INT NOT NULL,
     PRIMARY KEY (memo_id)

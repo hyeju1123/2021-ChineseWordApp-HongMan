@@ -4,25 +4,23 @@ import { StyleSheet, View, Dimensions, Text, TouchableOpacity } from 'react-nati
 
 const HskLevelCard = ({navigation, level}) => {
 
-    // const { level } = route.params;
     const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
 
     useEffect(() => {
         const updateLayout = () => {
-        console.log('dp: ', Dimensions.get('window').width)
         setAvailableDeviceWidth(Dimensions.get('window').width);
         }
         Dimensions.addEventListener('change', updateLayout);
 
         return () => {
-        Dimensions.removeEventListener('change', updateLayout)
+            Dimensions.removeEventListener('change', updateLayout)
         }
     }, [])
 
     
     if (availableDeviceWidth > 1200) {
         return (
-            <TouchableOpacity onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
                 <View 
                     style={styles.container} 
                     width={availableDeviceWidth * 0.25} 
@@ -37,7 +35,7 @@ const HskLevelCard = ({navigation, level}) => {
 
     if (availableDeviceWidth > 750) {
         return (
-            <TouchableOpacity onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
                 <View 
                     style={styles.container} 
                     width={availableDeviceWidth * 0.4} 
@@ -52,7 +50,7 @@ const HskLevelCard = ({navigation, level}) => {
 
     if (availableDeviceWidth > 500) {
         return (
-            <TouchableOpacity onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
                 <View 
                     style={styles.container} 
                     width={availableDeviceWidth * 0.25} 
@@ -66,7 +64,7 @@ const HskLevelCard = ({navigation, level}) => {
     }
 
     return (
-        <TouchableOpacity onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => {navigation.navigate('HskThemePage', { level: level })}}>
             <View 
                 style={styles.container} 
                 width={availableDeviceWidth * 0.4} 
@@ -94,8 +92,6 @@ const styles = StyleSheet.create({
       marginBottom: width * 0.05,
       elevation: 15,
       shadowColor: '#BEBEBE'
-    //   borderBottomColor: '#BEBEBE',
-    //   borderBottomWidth: 15,
     },
     cardText: {
         color: '#655858',

@@ -1,6 +1,7 @@
 package hnm.hnm.service.words;
 
 import hnm.hnm.domain.words.Hsk;
+import hnm.hnm.domain.words.Memo;
 import hnm.hnm.domain.words.PrivateWord;
 import hnm.hnm.mapper.words.HskWordMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,21 @@ public class HskWordService {
 
     public List<Hsk> findHskWordsByLevel(Long hskLevel, String theme, Long memberId) {
         return hskWordMapper.selectHskWordsByTheme(hskLevel, theme, memberId);
+    }
+
+    public void updateHskWord(Memo memo) {
+        if (hskWordMapper.selectMemo(memo.getMemberId(), memo.getHskId()) != null) {
+            hskWordMapper.updateMemo(memo);
+        } else {
+            hskWordMapper.insertMemo(memo);
+        }
+    }
+
+    public void addHskIntoVocab(Memo memo) {
+        hskWordMapper.insertHskIntoVocab(memo);
+    }
+
+    public void updateMemoInVocab(Memo memo) {
+        hskWordMapper.updateMemoInVocab(memo);
     }
 }

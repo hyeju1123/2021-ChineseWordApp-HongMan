@@ -14,7 +14,6 @@ const HskThemePage = ({ route, navigation }) => {
         customAxios().then(res => {
             res.get('/hskWord/getTheme', config)
             .then(res => {
-                console.log(res.data);
                 setThemeList(res.data);
                 setLoading(false);
             })
@@ -24,7 +23,7 @@ const HskThemePage = ({ route, navigation }) => {
 
     const renderCards = themeList.map((data, index) => {
         return (
-            <TouchableOpacity key={index} onPress={() => {navigation.navigate('HskWordPage', { title: data, level: level })}}>
+            <TouchableOpacity activeOpacity={0.9} key={index} onPress={() => {navigation.navigate('HskWordPage', { title: data, level: level })}}>
                 <View style={styles.card}>
                     <Text style={styles.cardText}>{data}</Text>
                 </View>
@@ -33,6 +32,10 @@ const HskThemePage = ({ route, navigation }) => {
     })
 
     useEffect(() => {
+        navigation.setOptions({
+            headerTitle: `HSK ${level}급 단어`,
+            headerTitleAlign: 'center',
+        })
         getThemeList();
     }, [])
 

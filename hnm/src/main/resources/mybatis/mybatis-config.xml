@@ -10,6 +10,8 @@
         <typeAlias type="hnm.hnm.domain.member.Authority" alias="authority" />
         <typeAlias type="hnm.hnm.domain.words.Hsk" alias="hsk" />
         <typeAlias type="hnm.hnm.domain.words.Memo" alias="memo" />
+        <typeAlias type="hnm.hnm.domain.words.VocabGroup" alias="vocabGroup" />
+        <typeAlias type="hnm.hnm.domain.words.Vocab" alias="vocab" />
 
         <typeAlias type="hnm.hnm.domain.words.PrivateWord" alias="privateWord" />
         <typeAlias type="hnm.hnm.domain.words.DefaultWord" alias="defaultWord" />

@@ -17,7 +17,9 @@ public class Memo {
 
     private String explanation;
 
-    private Boolean includedVocab;
+    private Long vocabId;
+
+    private String vocabGroupName;
 
     private Long hskId;
 

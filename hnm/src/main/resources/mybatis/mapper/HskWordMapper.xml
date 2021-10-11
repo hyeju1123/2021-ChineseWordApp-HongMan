@@ -21,7 +21,8 @@
         <result property="intonation" column="memo_intonation" />
         <result property="wordClass" column="memo_class" />
         <result property="explanation" column="explanation" />
-        <result property="includedVocab" column="included_vocab" />
+        <result property="vocabId" column="vocab_id" />
+        <result property="vocabGroupName" column="vocab_group_name" />
     </resultMap>
 
     <select id="selectHskTheme" parameterType="long" resultType="String">
@@ -31,18 +32,70 @@
 
     <select id="selectHskWordsByTheme" resultMap="hskResultMap">
         SELECT
+            H.hsk_id as hsk_id,
             H.word as word,
             H.meaning as meaning,
             H.intonation as intonation,
             H.class as word_class,
+            M.memo_id as memo_id,
             M.meaning as memo_meaning,
             M.intonation as memo_intonation,
             M.class as memo_class,
             M.explanation as explanation,
-            M.included_vocab as included_vocab
+            M.vocab_id as vocab_id,
+            M.vocab_group_name as vocab_group_name
         FROM
-        (SELECT hsk_id, word, meaning, intonation, class FROM hsk WHERE level=#{level} AND theme=#{theme}) as H
-        LEFT JOIN memo AS M
-        ON H.hsk_id = M.hsk_id AND M.member_id = #{memberId}
+            (SELECT hsk_id, word, meaning, intonation, class FROM hsk WHERE level=#{level} AND theme=#{theme}) as H
+            LEFT JOIN memo AS M
+            ON H.hsk_id = M.hsk_id AND M.member_id = #{memberId}
     </select>
+<!--    <select id="selectHskWordsByTheme" resultMap="hskResultMap">-->
+<!--        SELECT-->
+<!--            H.hsk_id as hsk_id,-->
+<!--            H.word as word,-->
+<!--            H.meaning as meaning,-->
+<!--            H.intonation as intonation,-->
+<!--            H.class as word_class,-->
+<!--            M.meaning as memo_meaning,-->
+<!--            M.intonation as memo_intonation,-->
+<!--            M.class as memo_class,-->
+<!--            M.explanation as explanation,-->
+<!--            M.vocab_id as vocab_id,-->
+<!--            M.vocab_group_name as vocab_group_name-->
+<!--        FROM-->
+<!--        (SELECT hsk_id, word, meaning, intonation, class FROM hsk WHERE level=#{level} AND theme=#{theme}) as H-->
+<!--        LEFT JOIN memo AS M-->
+<!--        ON H.hsk_id = M.hsk_id AND M.member_id = #{memberId}-->
+<!--    </select>-->
+    <select id="selectMemo" resultMap="memoResultMap">
+        SELECT * FROM memo
+        WHERE hsk_id = #{hskId} AND member_id = #{memberId}
+    </select>
+
+
+    <insert id="insertHskIntoVocab" parameterType="memo">
+        INSERT INTO memo(VOCAB_ID, VOCAB_GROUP_NAME, HSK_ID, MEMBER_ID)
+        VALUES (#{vocabId}, #{vocabGroupName}, #{hskId}, #{memberId})
+    </insert>
+    <update id="updateMemoInVocab" parameterType="memo">
+        UPDATE memo SET
+        vocab_id = #{vocabId},
+        vocab_group_name = #{vocabGroupName}
+        WHERE hsk_id = #{hskId} AND member_id = #{memberId}
+    </update>
+    <insert id="insertMemo" parameterType="memo">
+        <selectKey keyProperty="memoId" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO memo(MEANING, INTONATION, CLASS, EXPLANATION, HSK_ID, MEMBER_ID)
+        VALUES (#{meaning}, #{intonation}, #{wordClass}, #{explanation}, #{hskId}, #{memberId})
+    </insert>
+    <update id="updateMemo" parameterType="memo">
+        UPDATE memo SET
+        meaning = #{meaning},
+        intonation = #{intonation},
+        class = #{wordClass},
+        explanation = #{explanation}
+        WHERE hsk_id = #{hskId} AND member_id = #{memberId}
+    </update>
 </mapper>

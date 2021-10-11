@@ -8,8 +8,6 @@ import MainPage from '../main/MainPage';
 import StudyNavigation from './StudyNavigation';
 import VocaNavigation from './VocaNavigation';
 import { signOut } from '../_modules/user';
-import customAxios from '../auth/customAxios';
-import AuthenticationService from '../auth/AuthenticationService';
 
 const Stack = createStackNavigator();
 
@@ -35,19 +33,6 @@ const MainNavigation = () => {
           ]
         )
       }
-      const testHello = async () => {
-        let checkToken = await AuthenticationService.checkJwtToken();
-        !checkToken && dispatch(signOut())
-        customAxios().then(res => {
-            res.get('/hello')
-                .then(res => {
-                    console.log('test Hello: ', res.data)
-                })
-                .catch(e => {
-                    console.log('testHello error: ', e)
-                })
-        })
-    }
 
     useEffect(() => {
         const updateLayout = () => {

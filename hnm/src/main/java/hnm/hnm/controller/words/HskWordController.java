@@ -1,13 +1,11 @@
 package hnm.hnm.controller.words;
 
 import hnm.hnm.domain.words.Hsk;
+import hnm.hnm.domain.words.Memo;
 import hnm.hnm.domain.words.PrivateWord;
 import hnm.hnm.service.words.HskWordService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +27,16 @@ public class HskWordController {
         Long hskLevelNum = Long.parseLong(hskLevel);
         Long memberId = Long.parseLong(id);
         return hskWordService.findHskWordsByLevel(hskLevelNum, theme, memberId);
+    }
+
+    @PostMapping("/hskWord/updateHskWord")
+    public void updateHskWord(@RequestBody Memo memo) {
+        System.out.println(memo.getMemberId());
+        System.out.println(memo.getHskId());
+        System.out.println(memo.getMeaning());
+        System.out.println(memo.getExplanation());
+        System.out.println(memo.getWordClass());
+        System.out.println(memo.getIntonation());
+        hskWordService.updateHskWord(memo);
     }
 }

@@ -21,11 +21,6 @@ const HskLevelPage = ({ navigation }) => {
  );
 };
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
-
-console.log('height: ', height)
-
 const styles = StyleSheet.create({
   container: {
      width: '100%',

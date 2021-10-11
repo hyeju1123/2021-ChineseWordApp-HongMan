@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text } from 'react-native';
+import { LogBox, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text } from 'react-native';
 import Splash from '../main/Splash';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,8 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const HskWordPage = ({ route, navigation }) => {
 
     const { title, level } = route.params;
-    const [wordList, setWordList] = useState([{}]);
+    const [wordList, setWordList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [updatedList, setUpdatedList] = useState(false)
 
     const getHskWordsList = async () => {
         let memberId = await AsyncStorage.getItem('memberId');
@@ -16,7 +17,6 @@ const HskWordPage = ({ route, navigation }) => {
         customAxios().then(res => {
             res.get('/hskWord/getWordsByLevel', config)
             .then(res => {
-                console.log(res.data);
                 setWordList(res.data);
                 setLoading(false);
             })
@@ -24,18 +24,45 @@ const HskWordPage = ({ route, navigation }) => {
         })
     }
 
+    const updateHskWordsList = (hskId, memo) => {
+        setWordList(
+            wordList.map(item => 
+                item.hskId === hskId
+                ? {...item, ...memo}
+                : item)
+        )
+        setUpdatedList(!updatedList);
+    }
+
+    const updateHskMarking = (hskId, nonInserted) => {
+        if (nonInserted) {
+            let newMemo = { meaning: '', explanation: '', wordClass: '', intonation: '', vocabId: 1 }
+            setWordList(
+                wordList.map(item =>
+                    item.hskId === hskId
+                    ? {...item, memo: {...newMemo}}
+                    : item)
+            )
+        } else {
+            setWordList(
+                wordList.map(item => 
+                    item.hskId === hskId
+                    ? {...item, memo: {...item.memo, vocabId: 1}}
+                    : item)
+            )
+        }
+        setUpdatedList(!updatedList);
+    }
+
     const renderCards = wordList.map((data, index) => {
         return (
-            <TouchableOpacity key={index} onPress={() => navigation.navigate('HskWordDetail', {
+            <TouchableOpacity activeOpacity={0.9} key={index} onPress={() => navigation.navigate('HskWordDetail', {
+                hskId: data.hskId,
                 list: wordList,
                 wordNum: index,
-                memo: data.memo
-                // word: data.word, 
-                // intonation: data.intonation, 
-                // wordClass: data.wordClass, 
-                // meaning: data.meaning,
-                // newMeaning: data.memo !== null ? data.memo.meaning : '',
-                // explanation: data.memo !== null ? data.memo.explanation : ''
+                memo: data.memo,
+                updateHskWordList: updateHskWordsList,
+                updateHskMarking: updateHskMarking
             })}>
                 <View style={styles.card}>
                     <Text style={styles.hanziText}>{data.word}</Text>
@@ -57,9 +84,11 @@ const HskWordPage = ({ route, navigation }) => {
                 headerTitle: ''
               })
         };
-    }, [])
+    }, [updatedList])
 
-
+    LogBox.ignoreLogs([
+        'Non-serializable values were found in the navigation state',
+    ])
 
     return (
         loading ? <Splash navigation={navigation} /> :

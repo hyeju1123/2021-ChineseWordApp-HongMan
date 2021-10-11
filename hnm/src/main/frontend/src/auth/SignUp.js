@@ -190,7 +190,6 @@ function SignUp({ navigation }) {
           offlineAccess: true
         })
         const updateLayout = () => {
-            console.log('dp: ', Dimensions.get('window').width)
             setAvailableDeviceWidth(Dimensions.get('window').width);
           }
         Dimensions.addEventListener('change', updateLayout);

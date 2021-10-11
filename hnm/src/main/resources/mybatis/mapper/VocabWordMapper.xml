@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hnm.hnm.mapper.words.VocabWordMapper">
+    <resultMap id="vocabGroupResultMap" type="vocabGroup">
+        <id column="VOCAB_GROUP_ID" property="vocabGroupId" />
+        <result column="NAME" property="name" />
+        <result column="MEMBER_ID" property="memberId" />
+    </resultMap>
+    <resultMap id="vocabResultMap" type="vocab">
+        <id column="VOCAB_ID" property="vocabId" />
+        <result column="WORD" property="word" />
+        <result column="MEANING" property="meaning" />
+        <result column="INTONATION" property="intonation" />
+        <result column="CLASS" property="wordClass" />
+        <result column="EXPLANATION" property="explanation" />
+        <result column="MEMBER_ID" property="memberId" />
+        <result column="VOCAB_GROUP_ID" property="vocabGroupId" />
+    </resultMap>
+
+    <insert id="insertVocabGroup" parameterType="vocabGroup">
+        INSERT INTO vocab_group(NAME, MEMBER_ID)
+        VALUES (#{name}, #{memberId})
+    </insert>
+    <insert id="insertVocab" parameterType="vocab">
+        <selectKey keyProperty="vocabId" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO vocab(WORD, MEANING, INTONATION, CLASS, EXPLANATION, MEMBER_ID, VOCAB_GROUP_ID)
+        VALUES (#{word}, #{meaning}, #{intonation}, #{wordClass}, #{explanation}, #{memberId},#{vocabGroupId})
+    </insert>
+    <select id="selectVocabGroupByName" resultMap="vocabGroupResultMap">
+        SELECT * FROM vocab_group
+        WHERE NAME = #{name} AND MEMBER_ID = #{memberId}
+    </select>
+    <select id="selectVocabGroup" resultMap="vocabGroupResultMap">
+        SELECT * FROM vocab_group
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+    <select id="selectVocabByGroup" resultMap="vocabResultMap">
+        SELECT * FROM vocab
+        WHERE MEMBER_ID = #{memberId} AND VOCAB_GROUP_ID = #{vocabGroupId}
+    </select>
+    <update id="updateVocabWord" parameterType="vocab">
+        UPDATE vocab SET
+        word = #{word},
+        meaning = #{meaning},
+        intonation = #{intonation},
+        class = #{wordClass},
+        explanation = #{explanation}
+        WHERE vocab_id = #{vocabId} AND member_id = #{memberId}
+    </update>
+</mapper>

@@ -11,6 +11,12 @@ import HskLevelPage from '../study/HskLevelPage';
 import HskThemePage from '../study/HskThemePage';
 import HskWordPage from '../study/HskWordPage';
 import HskWordDetail from '../study/HskWordDetail';
+// import UpdateVocaPage from '../voca/UpdateVocaPage';
+import UpdateVocabPage from '../block/UpdateVocabPage';
+import AddVocabPage from '../block/AddVocabPage';
+import VocabGroupPage from '../voca/VocabGroupPage';
+import SelectGroupPage from '../block/SelectGroupPage';
+import MakeGroupPage from '../block/MakeGroupPage';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +24,11 @@ const StudyNavigation = () => {
 
     return (
         
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                safeAreaInsets: {top: 25}
+            }}
+        >
             <Stack.Screen 
                 name="HskLevelPage" 
                 component={HskLevelPage} 
@@ -66,6 +76,54 @@ const StudyNavigation = () => {
                         backgroundColor: '#D14124',
                     }
                 }}
+            />
+            <Stack.Screen 
+                    name="MakeGroupPage" 
+                    component={MakeGroupPage} 
+                    options={{
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        },
+                    }}
+            />
+            <Stack.Screen 
+                    name="AddVocabPage" 
+                    component={AddVocabPage} 
+                    options={{
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        },
+                    }}
+            />
+            <Stack.Screen 
+                    name="SelectGroupPage" 
+                    component={SelectGroupPage} 
+                    options={{
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        },
+                    }}
+                />
+            <Stack.Screen 
+                    name="UpdateVocabPage" 
+                    component={UpdateVocabPage} 
+                    options={{
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        },
+                    }}
             />
             <Stack.Screen 
                 name="StudyPartList" 
