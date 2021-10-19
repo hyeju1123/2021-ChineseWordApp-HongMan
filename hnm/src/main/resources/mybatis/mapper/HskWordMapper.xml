@@ -72,17 +72,21 @@
         WHERE hsk_id = #{hskId} AND member_id = #{memberId}
     </select>
 
-
+    <!--hsk 단어를 단어장에 추가-->
     <insert id="insertHskIntoVocab" parameterType="memo">
         INSERT INTO memo(VOCAB_ID, VOCAB_GROUP_NAME, HSK_ID, MEMBER_ID)
         VALUES (#{vocabId}, #{vocabGroupName}, #{hskId}, #{memberId})
     </insert>
+
+    <!--사용자가 수정한 hsk 단어를 단어장에 추가-->
     <update id="updateMemoInVocab" parameterType="memo">
         UPDATE memo SET
         vocab_id = #{vocabId},
         vocab_group_name = #{vocabGroupName}
         WHERE hsk_id = #{hskId} AND member_id = #{memberId}
     </update>
+
+    <!--hsk 단어를 사용자가 수정-->
     <insert id="insertMemo" parameterType="memo">
         <selectKey keyProperty="memoId" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
@@ -90,6 +94,8 @@
         INSERT INTO memo(MEANING, INTONATION, CLASS, EXPLANATION, HSK_ID, MEMBER_ID)
         VALUES (#{meaning}, #{intonation}, #{wordClass}, #{explanation}, #{hskId}, #{memberId})
     </insert>
+
+    <!--수정된 hsk 단어를 다시 수정하고 싶을 때-->
     <update id="updateMemo" parameterType="memo">
         UPDATE memo SET
         meaning = #{meaning},

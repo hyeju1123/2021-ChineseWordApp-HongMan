@@ -73,6 +73,9 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
                 }   
             }).then(res => {
                 setPredicted(res.data)
+                RNFS.unlink(path)
+                    .then(() => {console.log('FILE DELETED')})
+                    .catch((err) => console.log(err.message))
             })
         })
         .catch(err => {

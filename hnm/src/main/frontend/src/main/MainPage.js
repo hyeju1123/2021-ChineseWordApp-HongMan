@@ -1,5 +1,5 @@
  import React from 'react';
- import { StyleSheet, View, TouchableOpacity, StatusBar, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+ import { StyleSheet, View, TouchableOpacity, StatusBar, SafeAreaView, ScrollView, Image } from 'react-native';
  
  import MainPageCard from './MainPageCard';
  import Images from '../ImageIndex';
@@ -11,16 +11,17 @@
       <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent={true} />
       <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
       <View style={styles.cardContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('StudyNavigation')}>
-            <MainPageCard cardName={Images.mainPage.study}  />
+        {/* <Image source={Images.mainPage.newStudy} /> */}
+          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('StudyNavigation')}>
+            <MainPageCard cardName={Images.mainPage.study} name="학습"  />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('VocaNavigation')}>
-            <MainPageCard cardName={Images.mainPage.voca} />
+          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('VocaNavigation')}>
+            <MainPageCard cardName={Images.mainPage.voca} name="단어장" />
           </TouchableOpacity>
-          <MainPageCard cardName={Images.mainPage.test} />
-          <MainPageCard cardName={Images.mainPage.radical} />
-          <MainPageCard cardName={Images.mainPage.community} />
-          <MainPageCard cardName={Images.mainPage.dumpling} />
+          <MainPageCard cardName={Images.mainPage.test} name="시험" />
+          <MainPageCard cardName={Images.mainPage.radical} name="부수" />
+          <MainPageCard cardName={Images.mainPage.community} name="커뮤니티" />
+          <MainPageCard cardName={Images.mainPage.dumpling} name="Project-HM" />
       </View>
       </ScrollView>
     </SafeAreaView>

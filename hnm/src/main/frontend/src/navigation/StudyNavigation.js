@@ -11,7 +11,6 @@ import HskLevelPage from '../study/HskLevelPage';
 import HskThemePage from '../study/HskThemePage';
 import HskWordPage from '../study/HskWordPage';
 import HskWordDetail from '../study/HskWordDetail';
-// import UpdateVocaPage from '../voca/UpdateVocaPage';
 import UpdateVocabPage from '../block/UpdateVocabPage';
 import AddVocabPage from '../block/AddVocabPage';
 import VocabGroupPage from '../voca/VocabGroupPage';

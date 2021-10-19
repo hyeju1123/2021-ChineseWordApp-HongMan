@@ -32,12 +32,18 @@ const images = {
         기타: require('../images/deletedWordClass/other_delete.png')
     },
     mainPage: {
-        study: require('../images/mainPage/learning.png'),
-        voca: require('../images/mainPage/voca.png'),
-        test: require('../images/mainPage/test.png'),
-        radical: require('../images/mainPage/radical.png'),
-        community: require('../images/mainPage/community.png'),
-        dumpling: require('../images/mainPage/dumpling.png')
+        study: require('../images/mainPage/newLearning.png'),
+        voca: require('../images/mainPage/newVoca.png'),
+        test: require('../images/mainPage/newTest.png'),
+        radical: require('../images/mainPage/newRadical.png'),
+        community: require('../images/mainPage/newCommunity.png'),
+        dumpling: require('../images/mainPage/newDumpling.png')
+        // study: require('../images/mainPage/learning.png'),
+        // voca: require('../images/mainPage/voca.png'),
+        // test: require('../images/mainPage/test.png'),
+        // radical: require('../images/mainPage/radical.png'),
+        // community: require('../images/mainPage/community.png'),
+        // dumpling: require('../images/mainPage/dumpling.png')
     }
 };
 

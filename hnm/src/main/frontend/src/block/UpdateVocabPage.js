@@ -77,7 +77,9 @@ const UpdateVocabPage = ({ route, navigation }) => {
         customAxios().then(res => {
             res.post('/vocabWord/updateVocabWord', config)
             .then(res => {
-                Alert.alert('수정되었습니다.')                
+                Alert.alert('수정되었습니다.')       
+                navigation.goBack();
+                navigation.goBack();
             })
             .catch(e => console.log(e))
         })

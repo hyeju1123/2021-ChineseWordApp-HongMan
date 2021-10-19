@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View, Text, Dimensions, Image, TextInput } from 'react-native';
-import customAxios from '../auth/customAxios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Edit_White from '../../images/module/edit_white.png';
 import LanternOn from '../../images/lantern/lanternOn.png';
@@ -39,7 +37,7 @@ function HskWordDetail({ route, navigation }) {
             return 
         } else {
             navigation.navigate('HskWordDetail', {
-                hskId: hskId + 1,
+                hskId: hskId !== 0 ? hskId + 1 : 0,
                 list: list,
                 wordNum: wordNum + 1,
                 memo: updateHskMarking !== null ? list[wordNum + 1].memo : null
@@ -51,7 +49,7 @@ function HskWordDetail({ route, navigation }) {
             return
         } else {
             navigation.navigate('HskWordDetail', {
-                hskId: hskId - 1,
+                hskId: hskId !== 0 ? hskId - 1 : 0,
                 list: list,
                 wordNum: wordNum - 1,
                 memo: updateHskMarking !== null ? list[wordNum - 1].memo : null
@@ -76,7 +74,7 @@ function HskWordDetail({ route, navigation }) {
                 })}}>
                     <Image style={styles.editIcon} source={Edit_White}/>
                 </TouchableOpacity>
-              ),
+            ),
         })
         setMarking(
             memo !== null ?
@@ -97,12 +95,20 @@ function HskWordDetail({ route, navigation }) {
                 <View style={styles.cardContainer}>
                     <View style={styles.wordCard}>
                         <Text style={styles.wordText}>{list[wordNum].word}</Text>
-                        <Text style={styles.intonationText}>{list[wordNum].intonation}</Text>
+                        <Text style={styles.intonationText}>
+                            {
+                                (memo !== null && memo.intonation !== '')
+                                ? memo.intonation
+                                : list[wordNum].intonation
+                            }
+                        </Text>
                     </View>
                     <View style={styles.wordClassCard}>
-                        {list[wordNum].wordClass.split(', ').map((data, index) => {
-                            return showWordClass(data, index)
-                        })}
+                        {
+                            (memo !== null && memo.wordClass !== '')
+                            ? memo.wordClass.split(', ').map((data, index) => {return showWordClass(data, index)})
+                            : list[wordNum].wordClass.split(', ').map((data, index) => {return showWordClass(data, index)})
+                        }
                     </View>
                     <View style={styles.meaningCard}>
                         <Text style={styles.meaningText}>

@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import VocaListPage from '../voca/VocaListPage';
 import VocaFormPage from '../voca/VocaFormPage';
 import VocaWordDetail from '../voca/VocaWordDetail';
-// import UpdateVocaPage from '../voca/UpdateVocaPage';
 import UpdateVocabPage from '../block/UpdateVocabPage';
 
 import MakeGroupPage from '../block/MakeGroupPage';
