@@ -69,8 +69,8 @@ const MainPageCard = (props) => {
   return (
     <View style={styles.container} width={availableDeviceWidth * 0.4} height={availableDeviceWidth * 0.4}>
       <View style={styles.smallContainer} width={availableDeviceWidth * 0.4} height={availableDeviceWidth * 0.38}>
-        <Image style={{ width: availableDeviceWidth * 0.26, height: availableDeviceWidth * 0.26 }} source={props.cardName} />
-        <Text style={{ fontFamily: 'TmoneyRoundWindRegular', fontSize: availableDeviceWidth * 0.035, color: '#ffffff', marginBottom: '-7%' }}>{props.name}</Text>
+        <Image style={{ width: availableDeviceWidth * 0.28, height: availableDeviceWidth * 0.28 }} source={props.cardName} />
+        <Text style={{ fontFamily: 'TmoneyRoundWindRegular', fontSize: availableDeviceWidth * 0.045, color: '#ffffff', marginBottom: '-6%' }}>{props.name}</Text>
       </View>
     </View>
   );

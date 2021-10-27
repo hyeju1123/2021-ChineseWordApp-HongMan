@@ -104,4 +104,18 @@
         explanation = #{explanation}
         WHERE hsk_id = #{hskId} AND member_id = #{memberId}
     </update>
+
+    <!--삭제된 단어장 단어를 hsk memo 에서 삭제-->
+    <update id="updateForDeletedVocab">
+        UPDATE memo SET
+        vocab_id = 0,
+        vocab_group_name = ""
+        WHERE
+        MEMBER_ID = #{memberId} AND
+        VOCAB_ID IN
+        <foreach collection="vocabIdList" item="item"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
 </mapper>

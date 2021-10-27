@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text, Image, Alert } from 'react-native';
 import Splash from '../main/Splash';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Search from '../../images/module/search.png';
 import EditMenu from '../../images/module/menu_w.png';
+import Check from '../../images/module/check.png';
+import CheckedCheck from '../../images/module/checkedCheck.png';
 
 const VocabList = ({ route, navigation }) => {
 
@@ -14,10 +16,9 @@ const VocabList = ({ route, navigation }) => {
     const [loading, setLoading] = useState(false);
     const [showMeaning, setShowMeaning] = useState([]);
     const [showEditBox, setShowEditBox] = useState(false);
-    const isVisible = useIsFocused();
+    const [updateMode, setUpdateMode] = useState(false);
+    const [check, setCheck] = useState([]);
     const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width);
-
-    console.log('showEditBox: ', showEditBox)
 
     const getVocabList = async () => {
         let memberId = await AsyncStorage.getItem('memberId');
@@ -25,11 +26,33 @@ const VocabList = ({ route, navigation }) => {
         customAxios().then(res => {
             res.get('/vocabWord/findVocabByGroup', config)
             .then(res => {
+                console.log('vocabList:: ', res.data)
                 setWordList(res.data.reverse());
                 let arr = Array.from({length: res.data.length}, () => false)
+                let checkArr = Array.from({length: res.data.length}, () => 0)
                 setShowMeaning(arr);
+                setCheck(checkArr);
             })
             .catch(e => console.log(e))
+        })
+    }
+
+    const deleteVocab = async () => {
+        
+
+        let memberId = await AsyncStorage.getItem('memberId');
+        let vocabIdList = check.filter((item) => {
+            return item !== 0
+        });
+        let stringVocabIdList = vocabIdList.join(',')
+        console.log(stringVocabIdList)
+        let config = { params: { memberId: memberId, vocabIdList: stringVocabIdList }}
+        
+        customAxios().then(res => {
+            res.post('/vocabWord/deleteVocabWord', null, config)
+            .then(() => {
+                Alert.alert("삭제되었습니다.")
+            })
         })
     }
 
@@ -41,20 +64,46 @@ const VocabList = ({ route, navigation }) => {
         setShowMeaning(newMeaningState);
     }
 
+    const handleCheckIcon = (index, vocabId) => {
+        let newCheckState = check.map((item, i) => {
+            if (i === index) return item = vocabId;
+            else return item;
+        })
+        setCheck(newCheckState);
+    }
+
+    const resetCheckIcon = () => {
+        let newCheck = Array.from({length: check.length}, () => 0);
+        setCheck(newCheck);
+    }
+
     const renderCards = wordList.map((data, index) => {
         return (
             <View activeOpacity={0.8} key={index}>
                 <View style={styles.card}>
-                    <TouchableOpacity style={styles.searchIconWrapper} onPress={() => navigation.navigate('HskWordDetail', {
-                        hskId: 0,
-                        list: wordList,
-                        wordNum: index,
-                        memo: null,
-                        updateHskWordList: null,
-                        updateHskMarking: null
-                    })}>
-                        <Image source={Search} style={styles.searchIcon} />
-                    </TouchableOpacity>
+                    { !updateMode && 
+                        <TouchableOpacity style={styles.searchIconWrapper} onPress={() => navigation.navigate('HskWordDetail', {
+                            hskId: 0,
+                            list: wordList,
+                            wordNum: index,
+                            memo: null,
+                            updateHskWordList: null,
+                            updateHskMarking: null
+                        })}>
+                            <Image source={Search} style={styles.searchIcon} /> 
+                        </TouchableOpacity>
+                    } 
+                    { updateMode && 
+                        (
+                            check[index] !== 0
+                            ? <TouchableOpacity onPress={() => handleCheckIcon(index, 0)} style={styles.searchIconWrapper}>
+                                <Image source={CheckedCheck} style={styles.searchIcon} /> 
+                            </TouchableOpacity>
+                            : <TouchableOpacity onPress={() => handleCheckIcon(index, data.vocabId)} style={styles.searchIconWrapper}>
+                                <Image source={Check} style={styles.searchIcon} /> 
+                            </TouchableOpacity>
+                        )
+                    }
                     <Text style={styles.cardText}>{data.word}</Text>
                     {
                         showMeaning[index]
@@ -81,29 +130,14 @@ const VocabList = ({ route, navigation }) => {
                 </TouchableOpacity>
             ),
         })
-        getVocabList();
-        if (isVisible) {
+        const unsubscribe = navigation.addListener('focus', () => {
             getVocabList();
             setShowEditBox(false);
-            console.log('vocablist is mounted')
-        }
-    }, [isVisible])
-    // useEffect(() => {
-    //     navigation.setOptions({
-    //         headerTitle: groupName,
-    //         headerTitleAlign: 'center',
-    //         headerRight: () => (
-    //             <TouchableOpacity>
-    //                 <Image style={styles.editMenuIcon} source={EditMenu}/>
-    //             </TouchableOpacity>
-    //         ),
-    //     })
-    //     getVocabList();
-    //     if (isVisible) {
-    //         getVocabList();
-    //         console.log('vocablist is mounted')
-    //     }
-    // }, [isVisible])
+            console.log('vocablist is mounted');
+        })
+
+        return unsubscribe;
+    }, [navigation])
 
     return (
         loading ? <Splash navigation={navigation} /> :
@@ -126,7 +160,7 @@ const VocabList = ({ route, navigation }) => {
                     <Text style={styles.editMenuText}>단어 추가</Text>
                     <View style={styles.editMenuBar} />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ alignItems: 'center' }}>
+                <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {setUpdateMode(true); setShowEditBox(false)}}>
                     <Text style={styles.editMenuText}>단어 삭제</Text>
                     <View style={styles.editMenuBar} />
                 </TouchableOpacity>
@@ -135,13 +169,13 @@ const VocabList = ({ route, navigation }) => {
                 </TouchableOpacity>
             </View>) : <></>}
             <ScrollView>
-                <TouchableOpacity style={{ flexGrow: 1, alignItems: 'center' }} activeOpacity={1} onPress={() => setShowEditBox(false)}>
+                <TouchableOpacity style={{ flexGrow: 1, alignItems: 'center' }} activeOpacity={1} onPress={() => {setShowEditBox(false);}}>
                 <View style={styles.cardContainer}>    
                     {renderCards}
                 </View>    
                 </TouchableOpacity>
             </ScrollView>
-            <TouchableOpacity style={styles.plusButton} onPress={() => {navigation.navigate('AddVocabPage', {
+            {/* <TouchableOpacity style={styles.plusButton} onPress={() => {navigation.navigate('AddVocabPage', {
                     hskId: 0,
                     word: '',
                     intonation: '',
@@ -155,7 +189,19 @@ const VocabList = ({ route, navigation }) => {
                 })
             }}>
                     <Text style={styles.plusButtonText}>+</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            {
+                updateMode &&  
+                <View style={styles.bottomUpdateBox}>
+                    <TouchableOpacity onPress={() => deleteVocab()}>
+                        <Text style={styles.bottomUpdateText}>삭제</Text>
+                    </TouchableOpacity>
+                    <View style={styles.bottomUpdateBar} />
+                    <TouchableOpacity onPress={() => {setUpdateMode(false); resetCheckIcon();}}>
+                        <Text style={styles.bottomUpdateText}>취소</Text>
+                    </TouchableOpacity>
+                </View>
+            }
         </SafeAreaView>
     );
 };
@@ -293,6 +339,29 @@ const styles = StyleSheet.create({
         color: '#D14124',
         fontSize: width * 0.1,
         marginTop: width * 0.01
+    },
+    bottomUpdateBox: {
+        width: '100%',
+        height: width * 0.15,
+        backgroundColor: '#D14124',
+        position: 'absolute',
+        bottom: 0,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        elevation: 10
+    },
+    bottomUpdateBar: {
+        width: width * 0.003,
+        height: width * 0.12,
+        backgroundColor: '#ffffff'
+    },
+    bottomUpdateText: {
+        fontFamily: 'TmoneyRoundWindRegular',
+        color: '#ffffff',
+        fontSize: width * 0.07,
+        marginBottom: -(width * 0.03)
     }
 });
 

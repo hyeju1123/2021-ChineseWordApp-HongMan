@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -66,5 +67,15 @@ public class VocabWordController {
     @PostMapping("/vocabWord/updateVocabWord")
     public void updateVocabWord(@RequestBody Vocab vocab) {
         vocabWordService.updateVocabWord(vocab);
+    }
+
+    @PostMapping("/vocabWord/deleteVocabWord")
+    public void deleteVocabWord(@RequestParam("memberId") String memberId, @RequestParam("vocabIdList") List<String> vocabIdList) {
+        Long memberIdNum = Long.parseLong(memberId);
+        List<Long> vocabIdLongList = vocabIdList.stream().map(Long::parseLong).collect(Collectors.toList());
+        for (Long item : vocabIdLongList) {
+            System.out.println(item);
+        }
+        vocabWordService.deleteVocabWord(memberIdNum, vocabIdLongList);
     }
 }

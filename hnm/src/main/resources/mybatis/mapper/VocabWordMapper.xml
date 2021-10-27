@@ -52,4 +52,14 @@
         explanation = #{explanation}
         WHERE vocab_id = #{vocabId} AND member_id = #{memberId}
     </update>
+
+    <delete id="deleteVocabWord">
+        DELETE FROM vocab WHERE
+        MEMBER_ID = #{memberId} AND
+        VOCAB_ID IN
+            <foreach collection="vocabIdList" item="item"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+    </delete>
 </mapper>

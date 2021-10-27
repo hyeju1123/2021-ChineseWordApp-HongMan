@@ -1,5 +1,5 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import axios from 'axios';
 import SignatureScreen from 'react-native-signature-canvas';
 import * as RNFS from 'react-native-fs'
@@ -13,11 +13,16 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
     const ref = useRef();
     const { wordObj, handleWordObj } = props
     const [showCanvas, setShowCanvas] = useState(false)
+    const [predictHanzi, setPredictHanzi] = useState(false)
     const [predicted, setPredicted] = useState('')
 
     useImperativeHandle(forRef, () => ({
         showCanvas(onOff) {
             setShowCanvas(onOff)
+        },
+        setPredictedOne(hanzi) {
+            setPredicted('')
+            setPredictHanzi(hanzi)
         }
     }));
 
@@ -34,7 +39,10 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
 
     /* 캔버스 펜 사이즈 조정 */
     const handlePenSizeChange = () => {
-        ref.current.changePenSize(10, 10)
+        predictHanzi 
+        ? ref.current.changePenSize(3, 3)
+        : ref.current.changePenSize(10, 10)
+        
     }
 
     /* 한 획 지우기 */
@@ -67,16 +75,30 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
                 type: 'image/png',
                 name: 'myImage.png'
             })
-            axios.post(`${LOCAL_FLASK}/predict`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }   
-            }).then(res => {
-                setPredicted(res.data)
-                RNFS.unlink(path)
-                    .then(() => {console.log('FILE DELETED')})
-                    .catch((err) => console.log(err.message))
-            })
+            if (predictHanzi) {
+                axios.post(`${LOCAL_FLASK}/predictHanzi`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }   
+                }).then(res => {
+                    setPredicted(res.data)
+                    RNFS.unlink(path)
+                        .then(() => {console.log('FILE DELETED')})
+                        .catch((err) => console.log(err.message))
+                })
+            } else {
+                axios.post(`${LOCAL_FLASK}/predict`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }   
+                }).then(res => {
+                    setPredicted(res.data)
+                    RNFS.unlink(path)
+                        .then(() => {console.log('FILE DELETED')})
+                        .catch((err) => console.log(err.message))
+                })
+            }
+            
         })
         .catch(err => {
             console.log(err.message)
@@ -84,17 +106,30 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
     }
 
     const backspaceInput = () => {
-        let backspaced = wordObj.pinyin;
-        backspaced = backspaced.slice(0,-1)
-        handleWordObj({...wordObj, pinyin: backspaced});
+        if (predictHanzi) {
+            let backspaced = wordObj.hanzi;
+            backspaced = backspaced.slice(0,-1)
+            handleWordObj({...wordObj, hanzi: backspaced});
+        } else {
+            let backspaced = wordObj.pinyin;
+            backspaced = backspaced.slice(0,-1)
+            handleWordObj({...wordObj, pinyin: backspaced});
+        }
     }
 
     /* 성조 선택 및 입력 */
     const addPinyinInput = (input) => {
-        let inputed = wordObj.pinyin;
-        inputed = inputed + input;
-        handleClearSignature();
-        handleWordObj({...wordObj, pinyin: inputed});
+        if (predictHanzi) {
+            let inputed = wordObj.hanzi;
+            inputed = inputed + input;
+            handleClearSignature();
+            handleWordObj({...wordObj, hanzi: inputed});
+        } else {
+            let inputed = wordObj.pinyin;
+            inputed = inputed + input;
+            handleClearSignature();
+            handleWordObj({...wordObj, pinyin: inputed});
+        }
     }
 
     const handleCanvasBarContents = () => {
@@ -114,7 +149,9 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
         showCanvas &&
         <View style={styles.canvasContainer}>
             <View style={styles.canvasBar}>
-                {handleCanvasBarContents()}
+                <ScrollView horizontal={true} contentContainerStyle={{ flexGrow: 1 }}>
+                    {handleCanvasBarContents()}
+                </ScrollView>
             </View>
             <View style={styles.canvasBox}>
                 <View style={styles.canvasWrapper}>
@@ -127,8 +164,8 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
                         clearText="Clear"
                         webStyle={style}
                         backgroundColor='#ffffff'
-                        minWidth={10}
-                        maxWidth={10}
+                        minWidth={predictHanzi ? 3 : 10}
+                        maxWidth={predictHanzi ? 3 : 10}
                     />
                 </View>
                 <View style={styles.canvasButtonContainer}>
@@ -178,7 +215,7 @@ const styles = StyleSheet.create({
         marginTop: width * 0.03
     },
     canvasBar: {
-        width: '100%',
+        // width: '100%',
         height: width * 0.15,
         display: 'flex',
         flexDirection: 'row',
@@ -188,18 +225,12 @@ const styles = StyleSheet.create({
     canvasBarTextWrapper: {
         borderRightWidth: 1,
         borderRightColor: '#C0C0C0',
-        paddingRight: '4%',
-        paddingLeft: '4%',
       },
     canvasBarText: {
         fontFamily: 'TmoneyRoundWindRegular',
         fontSize: width * 0.05,
-    },
-    canvasBarPillar: {
-        fontFamily: 'TmoneyRoundWindRegular',
-        fontSize: width * 0.055,
-        color: '#C0C0C0',
-        marginTop: '3%',
+        marginLeft: width * 0.035,
+        marginRight: width * 0.035
     },
       canvasWrapper: {
         width: width * 0.7,

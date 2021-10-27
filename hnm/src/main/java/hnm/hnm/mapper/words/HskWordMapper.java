@@ -27,4 +27,7 @@ public interface HskWordMapper {
     void insertHskIntoVocab(Memo memo);
 
     void updateMemoInVocab(Memo memo);
+
+    void updateForDeletedVocab(@Param("memberId") Long memberId,
+                               @Param("vocabIdList") List<Long> vocabIdList);
 }

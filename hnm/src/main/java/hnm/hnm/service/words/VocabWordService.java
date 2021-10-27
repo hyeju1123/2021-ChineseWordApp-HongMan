@@ -2,6 +2,7 @@ package hnm.hnm.service.words;
 
 import hnm.hnm.domain.words.Vocab;
 import hnm.hnm.domain.words.VocabGroup;
+import hnm.hnm.mapper.words.HskWordMapper;
 import hnm.hnm.mapper.words.VocabWordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.List;
 public class VocabWordService {
 
     final VocabWordMapper vocabWordMapper;
+    final HskWordMapper hskWordMapper;
 
     public String makeVocabGroup(VocabGroup vocabGroup) {
         if (vocabWordMapper.selectVocabGroupByName(vocabGroup) != null) {
@@ -36,5 +38,10 @@ public class VocabWordService {
 
     public void updateVocabWord(Vocab vocab) {
         vocabWordMapper.updateVocabWord(vocab);
+    }
+
+    public void deleteVocabWord(Long memberId, List<Long> vocabIdList) {
+        vocabWordMapper.deleteVocabWord(memberId, vocabIdList);
+        hskWordMapper.updateForDeletedVocab(memberId, vocabIdList);
     }
 }

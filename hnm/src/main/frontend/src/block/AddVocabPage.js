@@ -146,7 +146,7 @@ const AddVocabPage = ({ route, navigation }) => {
                                 placeholder="단어를 입력하세요"
                                 placeholderTextColor="#8E8E8E"
                             />
-                            <TouchableOpacity activeOpacity={1} style={styles.pencilWrapper} onPress={() => {canvasRef.current.showCanvas(true); setShowWordClassInput(false);}}>
+                            <TouchableOpacity activeOpacity={1} style={styles.pencilWrapper} onPress={() => {canvasRef.current.showCanvas(true); canvasRef.current.setPredictedOne(true); setShowWordClassInput(false);}}>
                                 <Image source={HanziPencil} style={styles.pencilIcon} />
                             </TouchableOpacity>
                         </View>
@@ -159,7 +159,7 @@ const AddVocabPage = ({ route, navigation }) => {
                                 placeholder="발음을 입력하세요"
                                 placeholderTextColor="#8E8E8E"
                             />
-                            <TouchableOpacity activeOpacity={1} style={styles.pencilWrapper} onPress={() => {canvasRef.current.showCanvas(true); setShowWordClassInput(false);}}>
+                            <TouchableOpacity activeOpacity={1} style={styles.pencilWrapper} onPress={() => {canvasRef.current.showCanvas(true); canvasRef.current.setPredictedOne(false); setShowWordClassInput(false);}}>
                                 <Image source={PinyinPencil} style={styles.pencilIcon} />
                             </TouchableOpacity>
                         </View>
