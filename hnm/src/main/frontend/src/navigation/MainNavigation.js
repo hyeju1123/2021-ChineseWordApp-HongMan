@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MainPage from '../main/MainPage';
 import StudyNavigation from './StudyNavigation';
 import VocaNavigation from './VocaNavigation';
+import QuizNavigation from './QuizNavigation';
 import { signOut } from '../_modules/user';
 
 const Stack = createStackNavigator();
@@ -98,6 +99,13 @@ const MainNavigation = () => {
                 <Stack.Screen 
                     name="VocaNavigation" 
                     component={VocaNavigation} 
+                    options={{
+                        headerShown: false
+                    }}
+                />
+                <Stack.Screen 
+                    name="QuizNavigation" 
+                    component={QuizNavigation} 
                     options={{
                         headerShown: false
                     }}

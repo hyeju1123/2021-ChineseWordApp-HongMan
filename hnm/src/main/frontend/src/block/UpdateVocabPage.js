@@ -35,8 +35,13 @@ const UpdateVocabPage = ({ route, navigation }) => {
     const canvasRef = useRef()
 
     const editHskVocab = async () => {
+
+        if (wordObj.hanzi === '') {
+            Alert.alert("단어를 입력해주세요")
+            return
+        }
+
         let memberId = await AsyncStorage.getItem('memberId');
-        
         let config = { 
                 hskId: hskId,
                 memberId: memberId,
@@ -63,8 +68,13 @@ const UpdateVocabPage = ({ route, navigation }) => {
     }
 
     const editVocab = async () => {
+
+        if (wordObj.hanzi === '') {
+            Alert.alert("단어를 입력해주세요")
+            return
+        }
+
         let memberId = await AsyncStorage.getItem('memberId');
-        
         let config = { 
                 vocabId: vocabId,
                 memberId: memberId,
@@ -111,6 +121,8 @@ const UpdateVocabPage = ({ route, navigation }) => {
 
     useEffect(() => {
         navigation.setOptions({
+            headerTitle: '단어 수정',
+            headerTitleAlign: 'center',
             headerRight: () => (
                 <TouchableOpacity onPress={() => {
                     if (hskId === 0) editVocab();
@@ -131,19 +143,27 @@ const UpdateVocabPage = ({ route, navigation }) => {
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
                     <View style={styles.inputConatiner}>
-                        <View style={styles.inputWrapper}>
-                            <TextInput 
-                                value={wordObj.hanzi}
-                                onChangeText={text => setWordObj({...wordObj, hanzi: text})}
-                                onFocus={() => {canvasRef.current.showCanvas(false); setShowWordClassInput(false);}}
-                                style={styles.textInputCard}
-                                placeholder="단어를 입력하세요"
-                                placeholderTextColor="#8E8E8E"
-                            />
-                            <TouchableOpacity activeOpacity={1} style={styles.pencilWrapper} onPress={() => {canvasRef.current.showCanvas(true); canvasRef.current.setPredictedOne(true); setShowWordClassInput(false);}}>
-                                <Image source={HanziPencil} style={styles.pencilIcon} />
-                            </TouchableOpacity>
-                        </View>
+                        {
+                            hskId === 0 ?
+                            (<View style={styles.inputWrapper}>
+                                <TextInput 
+                                    value={wordObj.hanzi}
+                                    onChangeText={text => setWordObj({...wordObj, hanzi: text})}
+                                    onFocus={() => {canvasRef.current.showCanvas(false); setShowWordClassInput(false);}}
+                                    style={styles.textInputCard}
+                                    placeholder="단어를 입력하세요 (필수)"
+                                    placeholderTextColor="#8E8E8E"
+                                />
+                                <TouchableOpacity activeOpacity={1} style={styles.pencilWrapper} onPress={() => {canvasRef.current.showCanvas(true); canvasRef.current.setPredictedOne(true); setShowWordClassInput(false);}}>
+                                    <Image source={HanziPencil} style={styles.pencilIcon} />
+                                </TouchableOpacity>
+                            </View>)    :
+                            (<View style={styles.inputWrapper}>
+                                <View style={styles.hskWordCard}>
+                                    <Text style={styles.hskWordText}>{wordObj.hanzi} (수정 불가)</Text>
+                                </View>
+                            </View>)
+                        }
                         <View style={styles.inputWrapper}>
                             <TextInput 
                                 value={wordObj.pinyin}
@@ -216,8 +236,8 @@ const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     editIcon: {
-        width: width * 0.08,
-        height: width * 0.08,
+        width: width > 500 ? width * 0.04 : width * 0.08,
+        height: width > 500 ? width * 0.04 : width * 0.08,
         marginTop: width * 0.028,
         marginBottom: width * 0.028,
         marginRight: width * 0.03
@@ -235,6 +255,25 @@ const styles = StyleSheet.create({
     inputWrapper: {
         display: 'flex',
         flexDirection: 'row'
+    },
+    hskWordCard: {
+        display: 'flex',
+        justifyContent:'center',
+        width: '100%',
+        height: width * 0.2,  
+        backgroundColor: '#ffffff',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        marginBottom: width * 0.05,
+        paddingLeft: width * 0.03,
+        paddingRight: width * 0.03,
+    },
+    hskWordText: {
+        fontFamily: 'TmoneyRoundWindRegular',
+        fontSize: width * 0.05,
+        color: '#8E8E8E',
     },
     textInputCard: {
         width: '85%',

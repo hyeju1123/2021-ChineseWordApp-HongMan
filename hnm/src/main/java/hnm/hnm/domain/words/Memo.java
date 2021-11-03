@@ -19,8 +19,6 @@ public class Memo {
 
     private Long vocabId;
 
-    private String vocabGroupName;
-
     private Long hskId;
 
     private Long memberId;

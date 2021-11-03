@@ -55,6 +55,9 @@ const HskWordPage = ({ route, navigation }) => {
     }
 
     const renderCards = wordList.map((data, index) => {
+        let intonation = (data.memo !== null && data.memo.intonation !== '')
+                        ? data.memo.intonation
+                        : data.intonation
         return (
             <TouchableOpacity activeOpacity={0.9} key={index} onPress={() => navigation.navigate('HskWordDetail', {
                 hskId: data.hskId,
@@ -66,7 +69,7 @@ const HskWordPage = ({ route, navigation }) => {
             })}>
                 <View style={styles.card}>
                     <Text style={styles.hanziText}>{data.word}</Text>
-                    <Text style={styles.intonationText}>{data.intonation}</Text>
+                    <Text style={styles.intonationText}>{intonation}</Text>
                 </View>
             </TouchableOpacity>
         )

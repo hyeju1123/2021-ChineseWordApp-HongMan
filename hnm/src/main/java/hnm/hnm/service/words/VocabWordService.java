@@ -40,6 +40,10 @@ public class VocabWordService {
         vocabWordMapper.updateVocabWord(vocab);
     }
 
+    public void moveVocabGroup(Long memberId, List<Long> vocabIdList, Long groupId) {
+        vocabWordMapper.updateByMovingVocabGroup(memberId, vocabIdList, groupId);
+    }
+
     public void deleteVocabWord(Long memberId, List<Long> vocabIdList) {
         vocabWordMapper.deleteVocabWord(memberId, vocabIdList);
         hskWordMapper.updateForDeletedVocab(memberId, vocabIdList);

@@ -53,6 +53,18 @@
         WHERE vocab_id = #{vocabId} AND member_id = #{memberId}
     </update>
 
+    <update id="updateByMovingVocabGroup">
+        UPDATE vocab SET
+        vocab_group_id = #{groupId}
+        WHERE
+        MEMBER_ID = #{memberId} AND
+        VOCAB_ID IN
+        <foreach collection="vocabIdList" item="item"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
     <delete id="deleteVocabWord">
         DELETE FROM vocab WHERE
         MEMBER_ID = #{memberId} AND

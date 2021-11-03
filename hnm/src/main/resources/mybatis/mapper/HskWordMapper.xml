@@ -22,7 +22,6 @@
         <result property="wordClass" column="memo_class" />
         <result property="explanation" column="explanation" />
         <result property="vocabId" column="vocab_id" />
-        <result property="vocabGroupName" column="vocab_group_name" />
     </resultMap>
 
     <select id="selectHskTheme" parameterType="long" resultType="String">
@@ -42,31 +41,13 @@
             M.intonation as memo_intonation,
             M.class as memo_class,
             M.explanation as explanation,
-            M.vocab_id as vocab_id,
-            M.vocab_group_name as vocab_group_name
+            M.vocab_id as vocab_id
         FROM
             (SELECT hsk_id, word, meaning, intonation, class FROM hsk WHERE level=#{level} AND theme=#{theme}) as H
             LEFT JOIN memo AS M
             ON H.hsk_id = M.hsk_id AND M.member_id = #{memberId}
     </select>
-<!--    <select id="selectHskWordsByTheme" resultMap="hskResultMap">-->
-<!--        SELECT-->
-<!--            H.hsk_id as hsk_id,-->
-<!--            H.word as word,-->
-<!--            H.meaning as meaning,-->
-<!--            H.intonation as intonation,-->
-<!--            H.class as word_class,-->
-<!--            M.meaning as memo_meaning,-->
-<!--            M.intonation as memo_intonation,-->
-<!--            M.class as memo_class,-->
-<!--            M.explanation as explanation,-->
-<!--            M.vocab_id as vocab_id,-->
-<!--            M.vocab_group_name as vocab_group_name-->
-<!--        FROM-->
-<!--        (SELECT hsk_id, word, meaning, intonation, class FROM hsk WHERE level=#{level} AND theme=#{theme}) as H-->
-<!--        LEFT JOIN memo AS M-->
-<!--        ON H.hsk_id = M.hsk_id AND M.member_id = #{memberId}-->
-<!--    </select>-->
+
     <select id="selectMemo" resultMap="memoResultMap">
         SELECT * FROM memo
         WHERE hsk_id = #{hskId} AND member_id = #{memberId}
@@ -74,15 +55,14 @@
 
     <!--hsk 단어를 단어장에 추가-->
     <insert id="insertHskIntoVocab" parameterType="memo">
-        INSERT INTO memo(VOCAB_ID, VOCAB_GROUP_NAME, HSK_ID, MEMBER_ID)
-        VALUES (#{vocabId}, #{vocabGroupName}, #{hskId}, #{memberId})
+        INSERT INTO memo(VOCAB_ID, HSK_ID, MEMBER_ID)
+        VALUES (#{vocabId}, #{hskId}, #{memberId})
     </insert>
 
     <!--사용자가 수정한 hsk 단어를 단어장에 추가-->
     <update id="updateMemoInVocab" parameterType="memo">
         UPDATE memo SET
-        vocab_id = #{vocabId},
-        vocab_group_name = #{vocabGroupName}
+        vocab_id = #{vocabId}
         WHERE hsk_id = #{hskId} AND member_id = #{memberId}
     </update>
 
@@ -108,8 +88,7 @@
     <!--삭제된 단어장 단어를 hsk memo 에서 삭제-->
     <update id="updateForDeletedVocab">
         UPDATE memo SET
-        vocab_id = 0,
-        vocab_group_name = ""
+        vocab_id = 0
         WHERE
         MEMBER_ID = #{memberId} AND
         VOCAB_ID IN

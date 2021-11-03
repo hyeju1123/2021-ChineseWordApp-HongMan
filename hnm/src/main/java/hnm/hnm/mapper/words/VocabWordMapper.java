@@ -26,6 +26,10 @@ public interface VocabWordMapper {
 
     void updateVocabWord(Vocab vocab);
 
+    void updateByMovingVocabGroup(@Param("memberId") Long memberId,
+                                  @Param("vocabIdList") List<Long> vocabIdList,
+                                  @Param("groupId") Long groupId);
+
     void deleteVocabWord(@Param("memberId") Long memberId,
                          @Param("vocabIdList") List<Long> vocabIdList);
 }

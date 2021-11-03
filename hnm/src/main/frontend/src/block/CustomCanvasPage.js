@@ -176,7 +176,7 @@ const CustomCanvasPage = forwardRef((props, forRef) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleClearSignature}>
                         <View style={styles.canvasButtonWrapper}>
-                            <Text style={styles.clearText}>전체 지우기</Text>
+                            <Text style={styles.clearText}>전체{"\n"} 지우기</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleUndo}>

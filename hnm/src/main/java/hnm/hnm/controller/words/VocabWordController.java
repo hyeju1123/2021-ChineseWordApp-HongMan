@@ -31,10 +31,9 @@ public class VocabWordController {
 
     @PostMapping("/vocabWord/makeHskVocab")
     public void makeHskVocab(@RequestBody Vocab vocab,
-                             @RequestParam String hskId, @RequestParam String groupName, @RequestParam Boolean nonInserted) {
+                             @RequestParam String hskId, @RequestParam Boolean nonInserted) {
         System.out.println(vocab.getMemberId());
         System.out.println(vocab.getWord());
-        System.out.println(groupName);
         vocabWordService.addVocab(vocab);
         System.out.println("vocabId: " + vocab.getVocabId());
         Memo memo = new Memo();
@@ -42,7 +41,6 @@ public class VocabWordController {
         memo.setVocabId(vocab.getVocabId());
         memo.setMemberId(vocab.getMemberId());
         memo.setHskId(hskIdNum);
-        memo.setVocabGroupName(groupName);
         if (nonInserted) {
             hskWordService.addHskIntoVocab(memo);
         } else {
@@ -67,6 +65,19 @@ public class VocabWordController {
     @PostMapping("/vocabWord/updateVocabWord")
     public void updateVocabWord(@RequestBody Vocab vocab) {
         vocabWordService.updateVocabWord(vocab);
+    }
+
+    @PostMapping("/vocabWord/moveVocabGroup")
+    public void moveVocabGroup(@RequestParam("memberId") String memberId, @RequestParam("vocabIdList") List<String> vocabIdList, @RequestParam("groupId") String groupId) {
+        Long memberIdNum = Long.parseLong(memberId);
+        Long groupIdNum = Long.parseLong(groupId);
+        System.out.println("memberId" + memberId);
+        System.out.println("groupId" + groupId);
+        List<Long> vocabIdLongList = vocabIdList.stream().map(Long::parseLong).collect(Collectors.toList());
+        for (Long item : vocabIdLongList) {
+            System.out.println(item);
+        }
+        vocabWordService.moveVocabGroup(memberIdNum, vocabIdLongList, groupIdNum);
     }
 
     @PostMapping("/vocabWord/deleteVocabWord")

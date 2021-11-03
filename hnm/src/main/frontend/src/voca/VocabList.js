@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text, Image, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text, Image, Alert, LogBox } from 'react-native';
 import Splash from '../main/Splash';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from '@react-navigation/native';
 import Search from '../../images/module/search.png';
 import EditMenu from '../../images/module/menu_w.png';
 import Check from '../../images/module/check.png';
@@ -13,25 +12,26 @@ const VocabList = ({ route, navigation }) => {
 
     const { groupId, groupName } = route.params;
     const [wordList, setWordList] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [showMeaning, setShowMeaning] = useState([]);
     const [showEditBox, setShowEditBox] = useState(false);
     const [updateMode, setUpdateMode] = useState(false);
+    const [deleteState, setDeleteState] = useState(false);
     const [check, setCheck] = useState([]);
-    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width);
 
     const getVocabList = async () => {
+        setLoading(true)
         let memberId = await AsyncStorage.getItem('memberId');
         let config = { params: { memberId: memberId, groupId: groupId }}
         customAxios().then(res => {
             res.get('/vocabWord/findVocabByGroup', config)
             .then(res => {
-                console.log('vocabList:: ', res.data)
                 setWordList(res.data.reverse());
                 let arr = Array.from({length: res.data.length}, () => false)
                 let checkArr = Array.from({length: res.data.length}, () => 0)
                 setShowMeaning(arr);
                 setCheck(checkArr);
+                setLoading(false);
             })
             .catch(e => console.log(e))
         })
@@ -39,7 +39,6 @@ const VocabList = ({ route, navigation }) => {
 
     const deleteVocab = async () => {
         
-
         let memberId = await AsyncStorage.getItem('memberId');
         let vocabIdList = check.filter((item) => {
             return item !== 0
@@ -51,7 +50,8 @@ const VocabList = ({ route, navigation }) => {
         customAxios().then(res => {
             res.post('/vocabWord/deleteVocabWord', null, config)
             .then(() => {
-                Alert.alert("삭제되었습니다.")
+                Alert.alert("삭제되었습니다.");
+                getVocabList();
             })
         })
     }
@@ -75,6 +75,23 @@ const VocabList = ({ route, navigation }) => {
     const resetCheckIcon = () => {
         let newCheck = Array.from({length: check.length}, () => 0);
         setCheck(newCheck);
+    }
+
+    const selectGroup = async (id, groupName) => {
+        
+        let memberId = await AsyncStorage.getItem('memberId');
+        let vocabIdList = check.filter((item) => {
+            return item !== 0
+        });
+        let stringVocabIdList = vocabIdList.join(',');
+        let config = { params: { memberId: memberId, vocabIdList: stringVocabIdList, groupId: id }}
+        customAxios().then(res => {
+            res.post('/vocabWord/moveVocabGroup', null, config)
+            .then(() => {
+                Alert.alert("이동하였습니다.")
+                getVocabList();
+            })
+        })
     }
 
     const renderCards = wordList.map((data, index) => {
@@ -139,8 +156,13 @@ const VocabList = ({ route, navigation }) => {
         return unsubscribe;
     }, [navigation])
 
+    LogBox.ignoreLogs([
+        'Non-serializable values were found in the navigation state',
+    ])
+
     return (
         loading ? <Splash navigation={navigation} /> :
+        <TouchableOpacity activeOpacity={1} onPress={() => setShowEditBox(false)}>
         <SafeAreaView style={styles.container}>
             {showEditBox ?
             (<View style={styles.editMenuContainer}>
@@ -160,11 +182,11 @@ const VocabList = ({ route, navigation }) => {
                     <Text style={styles.editMenuText}>단어 추가</Text>
                     <View style={styles.editMenuBar} />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {setUpdateMode(true); setShowEditBox(false)}}>
+                <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {setUpdateMode(true); setDeleteState(true); setShowEditBox(false)}}>
                     <Text style={styles.editMenuText}>단어 삭제</Text>
                     <View style={styles.editMenuBar} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity  style={{ alignItems: 'center' }} onPress={() => {setUpdateMode(true); setDeleteState(false); setShowEditBox(false)}}>
                     <Text style={styles.editMenuText}>그룹 이동</Text>
                 </TouchableOpacity>
             </View>) : <></>}
@@ -193,9 +215,15 @@ const VocabList = ({ route, navigation }) => {
             {
                 updateMode &&  
                 <View style={styles.bottomUpdateBox}>
-                    <TouchableOpacity onPress={() => deleteVocab()}>
-                        <Text style={styles.bottomUpdateText}>삭제</Text>
-                    </TouchableOpacity>
+                    {
+                        deleteState 
+                        ? <TouchableOpacity onPress={() => deleteVocab()}>
+                            <Text style={styles.bottomUpdateText}>삭제</Text>
+                        </TouchableOpacity>
+                        : <TouchableOpacity onPress={() => {navigation.navigate('SelectGroupPage', {selectGroup: selectGroup})}}>
+                            <Text style={styles.bottomUpdateText}>그룹이동</Text>
+                        </TouchableOpacity>
+                    }
                     <View style={styles.bottomUpdateBar} />
                     <TouchableOpacity onPress={() => {setUpdateMode(false); resetCheckIcon();}}>
                         <Text style={styles.bottomUpdateText}>취소</Text>
@@ -203,6 +231,7 @@ const VocabList = ({ route, navigation }) => {
                 </View>
             }
         </SafeAreaView>
+        </TouchableOpacity>
     );
 };
 
@@ -210,8 +239,8 @@ const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     editMenuIcon: {
-        width: width * 0.08,
-        height: width * 0.08,
+        width: width > 500 ? width * 0.05 : width * 0.08,
+        height: width > 500 ? width * 0.05 : width * 0.08,
         marginTop: width * 0.028,
         marginBottom: width * 0.028,
         marginRight: width * 0.03

@@ -35,6 +35,10 @@ const SelectGroupPage = ({ navigation, route }) => {
     })
 
     useEffect(() => {
+        navigation.setOptions({
+            headerTitle: '그룹 선택',
+            headerTitleAlign: 'center',
+        })
         getGroupList();
     }, [])
 
@@ -73,6 +77,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 15,
         borderBottomRightRadius: 15,
+        display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
         marginBottom: width * 0.05,
         elevation: 8
@@ -81,7 +87,6 @@ const styles = StyleSheet.create({
         fontFamily: 'TmoneyRoundWindRegular',
         fontSize: width * 0.1,
         color: '#3E3A39',
-        marginBottom: width * 0.05,
     },
     plusButton: {
         width: width * 0.15,

@@ -18,7 +18,9 @@
           <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('VocaNavigation')}>
             <MainPageCard cardName={Images.mainPage.voca} name="단어장" />
           </TouchableOpacity>
-          <MainPageCard cardName={Images.mainPage.test} name="시험" />
+          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('QuizNavigation')}>
+            <MainPageCard cardName={Images.mainPage.test} name="시험" />
+          </TouchableOpacity>
           <MainPageCard cardName={Images.mainPage.radical} name="부수" />
           <MainPageCard cardName={Images.mainPage.community} name="커뮤니티" />
           <MainPageCard cardName={Images.mainPage.dumpling} name="Project-HM" />

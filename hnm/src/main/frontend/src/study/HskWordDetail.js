@@ -66,8 +66,12 @@ function HskWordDetail({ route, navigation }) {
                     hskId: hskId,
                     vocabId: list[wordNum].vocabId,
                     word: list[wordNum].word,
-                    intonation: list[wordNum].intonation.substr(1, list[wordNum].intonation.length - 2),
-                    wordC: list[wordNum].wordClass.split(', '),
+                    intonation: (memo !== null && memo.intonation !== '')
+                                ? memo.intonation.substr(1, memo.intonation.length - 2)
+                                : list[wordNum].intonation.substr(1, list[wordNum].intonation.length - 2),
+                    wordC: (memo !== null && memo.intonation !== '')
+                            ? memo.wordClass.split(', ')
+                            : list[wordNum].wordClass.split(', '),
                     mean: memo !== null && memo.meaning !== '' ? memo.meaning : list[wordNum].meaning,
                     explanation: memo !== null ? memo.explanation : (updateHskMarking === null ? list[wordNum].explanation : ''),
                     updateHskWordList: updateHskWordList
@@ -78,7 +82,7 @@ function HskWordDetail({ route, navigation }) {
         })
         setMarking(
             memo !== null ?
-            memo.vocabId !== 0 :
+            memo.vocabId !== 0 :    // 0이 아니어야 hsk 단어(0이면 단어장 단어)
             false
         )
         return () => {
@@ -256,7 +260,7 @@ const styles = StyleSheet.create({
         color: '#3E3A39',
         fontFamily: 'TmoneyRoundWindRegular',
         fontSize: width * 0.055,
-        lineHeight: 39,
+        lineHeight: width * 0.1,
         marginLeft: width * 0.035,
         marginTop: width * 0.02
     },
@@ -264,13 +268,13 @@ const styles = StyleSheet.create({
         color: '#8E8E8E',
         fontFamily: 'TmoneyRoundWindRegular',
         fontSize: width * 0.055,
-        lineHeight: 39,
+        lineHeight: width * 0.1,
         marginLeft: width * 0.035,
         marginTop: width * 0.02
     },
     editIcon: {
-        width: width * 0.08,
-        height: width * 0.08,
+        width: width > 500 ? width * 0.04 : width * 0.08,
+        height: width > 500 ? width * 0.04 : width * 0.08,
         marginTop: width * 0.028,
         marginBottom: width * 0.028,
         marginRight: width * 0.03

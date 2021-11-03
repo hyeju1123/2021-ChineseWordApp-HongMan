@@ -31,6 +31,15 @@ const AddVocabPage = ({ route, navigation }) => {
     const canvasRef = useRef()
 
     const addVocab = async () => {
+        if (wordObj.group === '') {
+            Alert.alert("그룹을 선택해주세요")
+            return
+        }
+        if (wordObj.hanzi === '') {
+            Alert.alert("단어를 입력해주세요")
+            return
+        }
+        
         let memberId = await AsyncStorage.getItem('memberId');
         let config = {
             word: wordObj.hanzi,
@@ -45,13 +54,30 @@ const AddVocabPage = ({ route, navigation }) => {
             res.post('/vocabWord/makeVocab', config)
             .then(res => {
                 Alert.alert('저장되었습니다.')
-                navigation.goBack()
+                setWordObj({...wordObj, 
+                            hanzi: '',
+                            pinyin: '', 
+                            meaning: '', 
+                            memo: ''
+                           })
+                setCheckedWordClass([])     
+                setCheckingWordClass(wcList)
+                // navigation.goBack()
             })
             .catch(e => console.log(e))
         })
     }
 
-    const addHskocab = async () => {
+    const addHskVocab = async () => {
+        if (wordObj.group === '') {
+            Alert.alert("그룹을 선택해주세요")
+            return
+        }
+        if (wordObj.hanzi === '') {
+            Alert.alert("단어를 입력해주세요")
+            return
+        }
+
         let memberId = await AsyncStorage.getItem('memberId');
         let body = {
             word: wordObj.hanzi,
@@ -63,7 +89,7 @@ const AddVocabPage = ({ route, navigation }) => {
             vocabGroupId: wordObj.groupVocabId
         }
         customAxios().then(res => {
-            res.post('/vocabWord/makeHskVocab', body, {params: { nonInserted: nonInsertedMemo, hskId: hskId, groupName: wordObj.group }})
+            res.post('/vocabWord/makeHskVocab', body, {params: { nonInserted: nonInsertedMemo, hskId: hskId }})
             .then(res => {
                 Alert.alert('저장되었습니다.')
                 navigation.goBack();
@@ -106,16 +132,18 @@ const AddVocabPage = ({ route, navigation }) => {
 
     useEffect(() => {
         navigation.setOptions({
+            headerTitle: '내 단어장에 추가',
+            headerTitleAlign: 'center',
             headerRight: () => (
                 <TouchableOpacity onPress={() => {
                     if (hskId === 0) addVocab();
-                    else addHskocab();
+                    else addHskVocab();
                 }}>
                     <Image style={styles.editIcon} source={Edit_White}/>
                 </TouchableOpacity>
             ),
         })
-    }, [addVocab, addHskocab, selectGroup])
+    }, [addVocab, addHskVocab, selectGroup])
 
     LogBox.ignoreLogs([
         'Non-serializable values were found in the navigation state',
@@ -132,7 +160,7 @@ const AddVocabPage = ({ route, navigation }) => {
                             <View style={styles.wordClassTextWrapper}>
                                 {
                                     wordObj.group === '' 
-                                    ? <Text style={styles.wordClassText}>그룹을 선택하세요</Text> 
+                                    ? <Text style={styles.wordClassText}>그룹을 선택하세요 (필수)</Text> 
                                     : <Text style={styles.wordClassText}>{wordObj.group}</Text> 
                                 }
                             </View>
@@ -143,7 +171,7 @@ const AddVocabPage = ({ route, navigation }) => {
                                 onChangeText={text => setWordObj({...wordObj, hanzi: text})}
                                 onFocus={() => {canvasRef.current.showCanvas(false); setShowWordClassInput(false);}}
                                 style={styles.textInputCard}
-                                placeholder="단어를 입력하세요"
+                                placeholder="단어를 입력하세요 (필수)"
                                 placeholderTextColor="#8E8E8E"
                             />
                             <TouchableOpacity activeOpacity={1} style={styles.pencilWrapper} onPress={() => {canvasRef.current.showCanvas(true); canvasRef.current.setPredictedOne(true); setShowWordClassInput(false);}}>
@@ -222,8 +250,8 @@ const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     editIcon: {
-        width: width * 0.08,
-        height: width * 0.08,
+        width: width > 500 ? width * 0.05 : width * 0.08,
+        height: width > 500 ? width * 0.05 : width * 0.08,
         marginTop: width * 0.028,
         marginBottom: width * 0.028,
         marginRight: width * 0.03
