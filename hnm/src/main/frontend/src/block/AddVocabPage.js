@@ -9,6 +9,7 @@ import CustomCanvasPage from './CustomCanvasPage';
 import HanziPencil from '../../images/module/pencil_h.png';
 import PinyinPencil from '../../images/module/pencil_e.png';
 import Edit_White from '../../images/module/edit_white.png';
+import CompleteIcon from '../../images/module/check_w.png';
 
 const AddVocabPage = ({ route, navigation }) => {
 
@@ -139,7 +140,7 @@ const AddVocabPage = ({ route, navigation }) => {
                     if (hskId === 0) addVocab();
                     else addHskVocab();
                 }}>
-                    <Image style={styles.editIcon} source={Edit_White}/>
+                    <Image style={styles.editIcon} source={CompleteIcon}/>
                 </TouchableOpacity>
             ),
         })

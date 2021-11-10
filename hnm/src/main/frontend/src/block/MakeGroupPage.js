@@ -3,7 +3,6 @@ import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, Button, Dimensi
 import { TextInput } from 'react-native-gesture-handler';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Edit_White from '../../images/module/edit_white.png';
 
 
 const MakeGroupPage = ({ route, navigation }) => {

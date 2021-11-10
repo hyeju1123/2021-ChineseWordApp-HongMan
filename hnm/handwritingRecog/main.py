@@ -4,6 +4,9 @@ from flask import Flask, request, render_template
 from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
+import tensorflow as tf
+from tensorflow_tts.inference import AutoProcessor
+from sound import init
 
 app = Flask(__name__)
 
@@ -64,7 +67,18 @@ def predict_hanzi():
 
         return ''.join(top10List)
 
+
+@app.route("/getAudio", methods=['POST'])
+def getAudio():
+    word = request.json
+    output = init(tacotron2, mb_melgan, processor, word)
+    return output
+
 if __name__ == '__main__':
     model = load_model('./pinyin_model.h5')
     hanzi_model = load_model('./hanzi_model.h5')
+
+    tacotron2 = tf.keras.models.load_model('tacotron2')
+    mb_melgan = tf.keras.models.load_model('mb_melgan')
+    processor = AutoProcessor.from_pretrained("tensorspeech/tts-tacotron2-baker-ch")
     app.run(host='0.0.0.0', port=8000, debug=True)
