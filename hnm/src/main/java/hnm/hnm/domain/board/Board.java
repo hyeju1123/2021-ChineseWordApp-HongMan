@@ -1,7 +1,5 @@
 package hnm.hnm.domain.board;
 
-import hnm.hnm.domain.words.DefaultMemo;
-import hnm.hnm.domain.words.PrivateWord;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,8 +2,6 @@ package hnm.hnm.domain.member;
 
 import hnm.hnm.domain.board.Board;
 import hnm.hnm.domain.board.Likes;
-import hnm.hnm.domain.words.DefaultMemo;
-import hnm.hnm.domain.words.PrivateWord;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,9 +33,6 @@ public class Member {
 
     private List<Authority> authorities = new ArrayList<>();
 
-    private List<PrivateWord> privateWords = new ArrayList<>();
-
-    private List<DefaultMemo> defaultMemos = new ArrayList<>();
 
     private List<Board> boards = new ArrayList<>();
 

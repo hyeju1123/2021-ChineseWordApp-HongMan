@@ -16,7 +16,6 @@
         <result column="IS_ACCOUNT_NON_LOCKED" property="isAccountNonLocked" />
         <result column="IS_CREDENTIALS_NON_EXPIRED" property="isCredentialsNonExpired" />
         <result column="IS_ENABLED" property="isEnabled" />
-<!--        <collection column="MEMBER_ID" property="privateWords" javaType="java.util.ArrayList"  ofType="PrivateWord" select="selectPrivateWordsList" />-->
     </resultMap>
 
     <insert id="insertMember" parameterType="member">
@@ -56,9 +55,7 @@
         FROM member
         WHERE EMAIL = #{email} AND EMAIL_TOKEN = #{emailToken}
     </select>
-    <select id="selectPrivateWordsList" parameterType="long" resultType="privateWord">
-        SELECT * FROM private_word WHERE MEMBER_ID = #{memberId}
-    </select>
+
     <select id="existsByEmail" parameterType="String" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM member WHERE EMAIL = #{email})
     </select>

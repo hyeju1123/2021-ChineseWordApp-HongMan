@@ -2,7 +2,6 @@ package hnm.hnm.controller.words;
 
 import hnm.hnm.domain.words.Hsk;
 import hnm.hnm.domain.words.Memo;
-import hnm.hnm.domain.words.PrivateWord;
 import hnm.hnm.service.words.HskWordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

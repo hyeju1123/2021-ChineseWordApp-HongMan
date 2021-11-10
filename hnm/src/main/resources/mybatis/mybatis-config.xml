@@ -13,10 +13,5 @@
         <typeAlias type="hnm.hnm.domain.words.VocabGroup" alias="vocabGroup" />
         <typeAlias type="hnm.hnm.domain.words.Vocab" alias="vocab" />
 
-        <typeAlias type="hnm.hnm.domain.words.PrivateWord" alias="privateWord" />
-        <typeAlias type="hnm.hnm.domain.words.DefaultWord" alias="defaultWord" />
-        <typeAlias type="hnm.hnm.domain.words.DefaultWordDay" alias="defaultWordDay" />
-        <typeAlias type="hnm.hnm.domain.words.DefaultMemo" alias="defaultMemo" />
-        <typeAlias type="hnm.hnm.domain.words.Meaning" alias="meaning" />
     </typeAliases>
 </configuration>
