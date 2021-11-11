@@ -25,51 +25,42 @@ const StartNavigation = () => {
                     component={StartPage} 
                     options={{
                         headerShown: false,
-                        // headerTitle: '',
-                        // headerStyle: {
-                        //     elevation: 0,     
-                        // },
                     }}
                 />
-                {/* <Stack.Screen 
-                    name="Splash" 
-                    component={Splash} 
-                /> */}
                 <Stack.Screen 
                     name="SignIn" 
                     component={SignIn} 
                     options={{
-                    headerTitle: '',
-                    headerTintColor: '#ffffff',
-                    headerStyle: {
-                        elevation: 0,
-                        backgroundColor: '#D14124',
-                        // height: 70
-                    }, 
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        }, 
                     }}
                 />
                 <Stack.Screen 
                     name="SignUp" 
                     component={SignUp} 
                     options={{
-                    headerTitle: '',
-                    headerTintColor: '#ffffff',
-                    headerStyle: {
-                        elevation: 0,
-                        backgroundColor: '#D14124',
-                    }
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        }
                     }}
                 />
                 <Stack.Screen 
                     name="EmailAuthPage" 
                     component={EmailAuthPage} 
                     options={{
-                    headerTitle: '',
-                    headerTintColor: '#ffffff',
-                    headerStyle: {
-                        elevation: 0,
-                        backgroundColor: '#D14124',
-                    }
+                        headerTitle: '',
+                        headerTintColor: '#ffffff',
+                        headerStyle: {
+                            elevation: 0,
+                            backgroundColor: '#D14124',
+                        }
                     }}
                 />
             </Stack.Navigator>

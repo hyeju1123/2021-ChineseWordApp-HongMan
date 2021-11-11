@@ -115,8 +115,10 @@ class AuthenticationService {
         try {
             let logout = await AsyncStorage.getItem('token')
             let snsType = await AsyncStorage.getItem('snsType');
-            if (snsType === 'google') await this.googleLogout();
-            if (snsType === 'naver') this.naverLogout();
+            // if (snsType === 'google') await this.googleLogout();
+            // if (snsType === 'naver') this.naverLogout();
+            await this.googleLogout();
+            this.naverLogout();
             console.log('snsType: ', snsType);
             console.log("logout ", logout)
             await AsyncStorage.removeItem('token');

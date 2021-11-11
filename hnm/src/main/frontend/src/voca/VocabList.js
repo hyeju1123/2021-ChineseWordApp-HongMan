@@ -3,10 +3,13 @@ import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimension
 import Splash from '../main/Splash';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { handleAlertOn } from '../_modules/alert';
 import Search from '../../images/module/search.png';
 import EditMenu from '../../images/module/menu_w.png';
 import Check from '../../images/module/check.png';
 import CheckedCheck from '../../images/module/checkedCheck.png';
+
 
 const VocabList = ({ route, navigation }) => {
 
@@ -18,6 +21,7 @@ const VocabList = ({ route, navigation }) => {
     const [updateMode, setUpdateMode] = useState(false);
     const [deleteState, setDeleteState] = useState(false);
     const [check, setCheck] = useState([]);
+    const dispatch = useDispatch();
 
     const getVocabList = async () => {
         setLoading(true)
@@ -37,20 +41,32 @@ const VocabList = ({ route, navigation }) => {
         })
     }
 
-    const deleteVocab = async () => {
-        
-        let memberId = await AsyncStorage.getItem('memberId');
+    const checkDelete = () => {
         let vocabIdList = check.filter((item) => {
             return item !== 0
         });
         let stringVocabIdList = vocabIdList.join(',')
-        console.log(stringVocabIdList)
+        if (stringVocabIdList.length === 0) {
+            dispatch(handleAlertOn('선택된 단어가 없습니다.', '삭제할 단어를 선택해주세요.', ()=>{} ));    
+        } else {
+            dispatch(handleAlertOn('삭제하시겠습니까?', '해당 단어는 삭제 후 복구 불가능합니다.', ()=>{deleteVocab(stringVocabIdList)} ));
+        }
+    }
+
+    const deleteVocab = async (stringVocabIdList) => {
+        
+        let memberId = await AsyncStorage.getItem('memberId');
+        // let vocabIdList = check.filter((item) => {
+        //     return item !== 0
+        // });
+        // let stringVocabIdList = vocabIdList.join(',')
+        // console.log(stringVocabIdList)
         let config = { params: { memberId: memberId, vocabIdList: stringVocabIdList }}
         
         customAxios().then(res => {
             res.post('/vocabWord/deleteVocabWord', null, config)
             .then(() => {
-                Alert.alert("삭제되었습니다.");
+                dispatch(handleAlertOn('삭제 성공!', '성공적으로 삭제되었습니다', ()=>{} ));
                 getVocabList();
             })
         })
@@ -77,18 +93,30 @@ const VocabList = ({ route, navigation }) => {
         setCheck(newCheck);
     }
 
-    const selectGroup = async (id, groupName) => {
-        
-        let memberId = await AsyncStorage.getItem('memberId');
+    const checkMove = (id, groupName) => {
         let vocabIdList = check.filter((item) => {
             return item !== 0
         });
-        let stringVocabIdList = vocabIdList.join(',');
+        let stringVocabIdList = vocabIdList.join(',')
+        if (stringVocabIdList.length === 0) {
+            dispatch(handleAlertOn('선택된 단어가 없습니다.', '이동할 단어를 먼저 선택해주세요.', ()=>{} ));    
+        } else {
+            dispatch(handleAlertOn(`'${groupName}'으로 이동하시겠습니까?`, '해당 단어들이 이동됩니다.', ()=>{selectGroup(id, stringVocabIdList)} ));
+        }
+    }
+
+    const selectGroup = async (id, stringVocabIdList) => {
+        
+        let memberId = await AsyncStorage.getItem('memberId');
+        // let vocabIdList = check.filter((item) => {
+        //     return item !== 0
+        // });
+        // let stringVocabIdList = vocabIdList.join(',');
         let config = { params: { memberId: memberId, vocabIdList: stringVocabIdList, groupId: id }}
         customAxios().then(res => {
             res.post('/vocabWord/moveVocabGroup', null, config)
             .then(() => {
-                Alert.alert("이동하였습니다.")
+                dispatch(handleAlertOn('이동 성공!', '성공적으로 이동하였습니다', ()=>{} ));
                 getVocabList();
             })
         })
@@ -150,7 +178,7 @@ const VocabList = ({ route, navigation }) => {
         const unsubscribe = navigation.addListener('focus', () => {
             getVocabList();
             setShowEditBox(false);
-            console.log('vocablist is mounted');
+            // console.log('vocablist is mounted');
         })
 
         return unsubscribe;
@@ -217,10 +245,10 @@ const VocabList = ({ route, navigation }) => {
                 <View style={styles.bottomUpdateBox}>
                     {
                         deleteState 
-                        ? <TouchableOpacity onPress={() => deleteVocab()}>
+                        ? <TouchableOpacity onPress={() => checkDelete()}>
                             <Text style={styles.bottomUpdateText}>삭제</Text>
                         </TouchableOpacity>
-                        : <TouchableOpacity onPress={() => {navigation.navigate('SelectGroupPage', {selectGroup: selectGroup})}}>
+                        : <TouchableOpacity onPress={() => {navigation.navigate('SelectGroupPage', {selectGroup: checkMove})}}>
                             <Text style={styles.bottomUpdateText}>그룹이동</Text>
                         </TouchableOpacity>
                     }

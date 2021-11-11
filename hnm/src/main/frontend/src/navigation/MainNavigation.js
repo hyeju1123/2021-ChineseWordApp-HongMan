@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, Alert, Image, TouchableOpacity } from 'react-native';
+import { Dimensions, Image, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { handleAlertOn } from '../_modules/alert';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 
 import MainPage from '../main/MainPage';
 import StudyNavigation from './StudyNavigation';
@@ -18,21 +20,7 @@ const MainNavigation = () => {
 
     const dispatch = useDispatch();
     const handleLogout = () => {
-        Alert.alert(
-          "Log out",
-          "로그아웃 하시겠습니까?",
-          [
-            {
-              text: "취소",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel"
-            },
-            {
-              text: "로그아웃",
-              onPress: () => dispatch(signOut())
-            }
-          ]
-        )
+        dispatch(handleAlertOn('로그아웃', '로그아웃 하시겠습니까?', ()=>{dispatch(signOut())}));
       }
 
     useEffect(() => {
@@ -57,43 +45,29 @@ const MainNavigation = () => {
                     name="Home" 
                     component={MainPage} 
                     options={{
-                    headerTitle: '',
-                    headerStyle: {
-                        elevation: 0
-                    },
-                    headerRight: () => (
-                        <TouchableOpacity onPress={handleLogout}>
-                            <Image 
-                                source={require('../../images/mainPage/menu.png')} 
-                                style={
-                                    availableDeviceWidth > 500 ?
-                                    {width: availableDeviceWidth * 0.05, height: availableDeviceWidth * 0.04, marginRight: availableDeviceWidth * 0.07} :
-                                    {width: availableDeviceWidth * 0.07, height: availableDeviceWidth * 0.07, marginRight: availableDeviceWidth * 0.07}
-                                }
-                            />
-                        </TouchableOpacity>
-                    ),
-                    // headerRight: () => (
-                    //     <TouchableOpacity onPress={testHello}>
-                    //     <Image 
-                    //         source={require('../../images/mainPage/plus.png')}
-                    //         style={{ width: 3, height: 14, marginRight: 16 }}
-                    //     />
-                    //     </TouchableOpacity>
-                    // )
+                        headerTitle: '',
+                        headerStyle: {
+                            elevation: 0
+                        },
+                        headerRight: () => (
+                            <TouchableOpacity onPress={handleLogout}>
+                                <Image 
+                                    source={require('../../images/mainPage/menu.png')} 
+                                    style={
+                                        availableDeviceWidth > 500 ?
+                                        {width: availableDeviceWidth * 0.05, height: availableDeviceWidth * 0.04, marginRight: availableDeviceWidth * 0.07} :
+                                        {width: availableDeviceWidth * 0.07, height: availableDeviceWidth * 0.07, marginRight: availableDeviceWidth * 0.07}
+                                    }
+                                />
+                            </TouchableOpacity>
+                        ),
                     }}
                 />
                 <Stack.Screen 
                     name="StudyNavigation" 
                     component={StudyNavigation} 
                     options={{
-                    // headerTitle: '',
-                    // headerTintColor: '#ffffff',
-                    // headerStyle: {
-                    //     elevation: 0,
-                    //     backgroundColor: '#D14124',
-                    // },
-                    headerShown: false
+                        headerShown: false
                     }}
                 />
                 <Stack.Screen 

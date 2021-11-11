@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { LogBox, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text, Image, TextInput, Alert } from 'react-native';
+import { LogBox, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text, Image, TextInput } from 'react-native';
 import Splash from '../main/Splash';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useDispatch } from 'react-redux';
+import { handleAlertOn } from '../_modules/alert';
 import Images from '../ImageIndex';
 import CustomCanvasPage from './CustomCanvasPage';
 import HanziPencil from '../../images/module/pencil_h.png';
 import PinyinPencil from '../../images/module/pencil_e.png';
-import Edit_White from '../../images/module/edit_white.png';
 import CompleteIcon from '../../images/module/check_w.png';
 
 const AddVocabPage = ({ route, navigation }) => {
@@ -28,16 +28,17 @@ const AddVocabPage = ({ route, navigation }) => {
         memo: explanation
 
     });
+    const dispatch = useDispatch();
 
     const canvasRef = useRef()
 
     const addVocab = async () => {
         if (wordObj.group === '') {
-            Alert.alert("그룹을 선택해주세요")
+            dispatch(handleAlertOn('그룹을 선택해주세요', '그룹 선택은 필수입니다.', ()=>{} ));
             return
         }
         if (wordObj.hanzi === '') {
-            Alert.alert("단어를 입력해주세요")
+            dispatch(handleAlertOn('단어를 입력해주세요', '단어 입력은 필수입니다.', ()=>{} ));
             return
         }
         
@@ -54,7 +55,7 @@ const AddVocabPage = ({ route, navigation }) => {
         customAxios().then(res => {
             res.post('/vocabWord/makeVocab', config)
             .then(res => {
-                Alert.alert('저장되었습니다.')
+                dispatch(handleAlertOn('저장 성공!', '이어서 저장해주세요.', ()=>{} ));
                 setWordObj({...wordObj, 
                             hanzi: '',
                             pinyin: '', 
@@ -71,11 +72,11 @@ const AddVocabPage = ({ route, navigation }) => {
 
     const addHskVocab = async () => {
         if (wordObj.group === '') {
-            Alert.alert("그룹을 선택해주세요")
+            dispatch(handleAlertOn('그룹을 선택해주세요', '그룹 선택은 필수입니다.', ()=>{} ));
             return
         }
         if (wordObj.hanzi === '') {
-            Alert.alert("단어를 입력해주세요")
+            dispatch(handleAlertOn('단어를 입력해주세요', '단어 입력은 필수입니다.', ()=>{} ));
             return
         }
 
@@ -92,7 +93,7 @@ const AddVocabPage = ({ route, navigation }) => {
         customAxios().then(res => {
             res.post('/vocabWord/makeHskVocab', body, {params: { nonInserted: nonInsertedMemo, hskId: hskId }})
             .then(res => {
-                Alert.alert('저장되었습니다.')
+                dispatch(handleAlertOn('저장 성공!', `'${wordObj.hanzi}'가 내 단어장에 저장되었습니다.`, ()=>{} ));
                 navigation.goBack();
                 navigation.goBack();
                 handleMarking(hskId, nonInsertedMemo)

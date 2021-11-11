@@ -7,9 +7,9 @@ import { Text,
          StyleSheet, 
          Dimensions, 
          ScrollView,
-         Image, 
-         Alert} from 'react-native';
+         Image  } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { handleAlertOn } from '../_modules/alert';
 import { signIn } from '../_modules/user';
 import AuthenticationService from './AuthenticationService';
 import googleLogo from '../../images/snsLogo/googleLogo.png';
@@ -36,7 +36,7 @@ function SignIn({ navigation }) {
         AuthenticationService.handleGoogleSignIn()
           .then(res => {
             if (res.error) {
-              Alert.alert("정보를 가져오는 데 실패했습니다.")
+              dispatch(handleAlertOn('로그인 실패!', '계정 정보를 가져오는 데 실패했습니다.', ()=>{} ));
               return
             }
             dispatch(signIn(res.email, '', type));
@@ -49,7 +49,7 @@ function SignIn({ navigation }) {
             dispatch(signIn(email, '', type));
           })
           .catch(e => {
-            Alert.alert("정보를 가져오는 데 실패했습니다.")
+            dispatch(handleAlertOn('로그인 실패!', '계정 정보를 가져오는 데 실패했습니다.', ()=>{} ));
             return
           })
       }

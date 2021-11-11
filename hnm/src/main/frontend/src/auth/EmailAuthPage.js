@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, 
-         TouchableOpacity, 
+import { TouchableOpacity, 
          ActivityIndicator,
          Text, 
          SafeAreaView, 
@@ -13,6 +12,7 @@ import emailLogo from '../../images/snsLogo/email.png';
 import customAxios from './customAxios';
 import { useDispatch } from 'react-redux';
 import { signIn } from '../_modules/user';
+import { handleAlertOn } from '../_modules/alert';
 
 function EmailAuthPage({ route }) {
 
@@ -40,12 +40,12 @@ function EmailAuthPage({ route }) {
                 if (res.data === true) {
                     dispatch(signIn(email, password, ''));
                 } else if (res.data === false) {
-                    Alert.alert("메일함에서 '메일 인증' 버튼을 눌러주세요!");
+                    dispatch(handleAlertOn("인증 미완료 상태입니다", "메일함에서 '메일 인증' 버튼을 눌러주세요!", ()=>{} ));
                 }
             })
             .catch(e => {
                 console.log('메일 인증 에러: ', e)
-                Alert.alert('인증에 실패하였습니다.')
+                dispatch(handleAlertOn("인증 실패!", "인증에 실패하였습니다.", ()=>{} ));
             })
         })
     }
@@ -56,20 +56,11 @@ function EmailAuthPage({ route }) {
             res.get('/mail/send', config)
             .then(res => {
                 setLoading(false)
-                Alert.alert("인증 메일을 재전송하였습니다.")
+                dispatch(handleAlertOn("인증 메일을 재전송하였습니다", "메일함에서 '메일 인증' 버튼을 눌러주세요!", ()=>{} ));
             })
             .catch(e => {
                 setLoading(false)
-                Alert.alert(
-                    "재전송 실패!",
-                    "'인증 메일 재전송'을 다시 눌러주세요.",
-                    [{
-                        text: "Cancel",
-                        onPress: () => console.log("Cancel Pressed"),
-                        style: "cancel"
-                    }],
-                    { cancelable: false }
-                )
+                dispatch(handleAlertOn("재전송 실패!", "'인증 메일 재전송'을 다시 눌러주세요.", ()=>{} ));
             })
         })
     }

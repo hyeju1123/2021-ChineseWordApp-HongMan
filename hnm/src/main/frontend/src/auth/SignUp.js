@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, 
-         Text, 
+import { Text, 
          TouchableOpacity, 
          TextInput, 
          View, 
@@ -13,6 +12,7 @@ import googleLogo from '../../images/snsLogo/googleLogo.png';
 import naverLogo from '../../images/snsLogo/naverLogo.png';
 import customAxios from '../auth/customAxios';
 import { signIn } from '../_modules/user';
+import { handleAlertOn } from '../_modules/alert';
 import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { iosKeys, androidKeys, googleClientId } from '../../ipConfig';
@@ -34,16 +34,7 @@ function SignUp({ navigation }) {
     const checkBlank = () => {
         let pattern = /\s/g
         if (email.match(pattern) || password.match(pattern) || email === '' || password === '') {
-            Alert.alert(
-                "회원가입 실패!",
-                "공백 없이 작성해주세요.",
-                [{
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                }],
-                { cancelable: false }
-            )
+            dispatch(handleAlertOn('회원가입 실패!', '공백 없이 작성해주세요.', ()=>{} ));
             return true;
         }
         return false;
@@ -51,16 +42,7 @@ function SignUp({ navigation }) {
 
     const checkPasswordLength = () => {
         if (password.length < 6) {
-            Alert.alert(
-                "회원가입 실패!",
-                "비밀번호는 6자리 이상이어야 합니다.",
-                [{
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                }],
-                { cancelable: false }
-            );
+            dispatch(handleAlertOn('회원가입 실패!', '비밀번호는 6자리 이상이어야 합니다.', ()=>{} ));
             return true;
         }
         return false;
@@ -68,16 +50,7 @@ function SignUp({ navigation }) {
 
     const checkPassword = () => {
         if (password !== checkPw) {
-            Alert.alert(
-                "회원가입 실패!",
-                "비밀번호가 일치하지 않습니다.",
-                [{
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                }],
-                { cancelable: false }
-            );
+            dispatch(handleAlertOn('회원가입 실패!', '비밀번호가 일치하지 않습니다.', ()=>{} ));
             return true;
         }
         return false;
@@ -85,16 +58,7 @@ function SignUp({ navigation }) {
     
     const checkDuplicateEmail = (message) => {
         if (message === 'Duplicate account') {
-            Alert.alert(
-                "회원가입 실패!",
-                "이미 존재하는 이메일입니다.",
-                [{
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                }],
-                { cancelable: false }
-            );
+            dispatch(handleAlertOn('회원가입 실패!', '이미 존재하는 이메일입니다.', ()=>{} ));
         }
     }
 
@@ -146,16 +110,17 @@ function SignUp({ navigation }) {
             AuthenticationService.handleGoogleSignIn()
                 .then(res => {
                     if (res.error) {
-                        Alert.alert("정보를 가져오는 데 실패했습니다.")
+                        dispatch(handleAlertOn('회원가입 실패!', '계정 정보를 가져오는 데 실패했습니다.', ()=>{} ));
                         return
                     }
                     const email = res.email;
                     AuthenticationService.executeJwtSignUpService(email, '', type)
-                        .then(res => {
+                        .then(async res => {
                             if (res.data.success === false) {
                                 checkDuplicateEmail(res.data.message);
+                                await AuthenticationService.googleLogout();
                             } else {
-                                Alert.alert('success');
+                                dispatch(handleAlertOn('회원가입 성공!', '', ()=>{} ));
                                 dispatch(signIn(email, '', type));
                             }
                         })
@@ -170,14 +135,15 @@ function SignUp({ navigation }) {
                     .then(res => {
                         if (res.data.success === false) {
                             checkDuplicateEmail(res.data.message);
+                            AuthenticationService.naverLogout();
                         } else {
-                            Alert.alert('success');
+                            dispatch(handleAlertOn('회원가입 성공!', '', ()=>{} ));
                             dispatch(signIn(email, '', type));
                         }
                     })
                 })
                 .catch(e => {
-                    Alert.alert("정보를 가져오는 데 실패했습니다.")
+                    dispatch(handleAlertOn('회원가입 실패!', '계정 정보를 가져오는 데 실패했습니다.', ()=>{} ));
                     return
                 })
         }

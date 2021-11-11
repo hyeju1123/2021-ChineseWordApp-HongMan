@@ -11,6 +11,8 @@ public class SignUpRequest {
     private String password;
     private String oauth;
 
+    public SignUpRequest() {}
+
     public SignUpRequest(String email, String password, String oauth) {
         this.email = email;
         this.password = password;
