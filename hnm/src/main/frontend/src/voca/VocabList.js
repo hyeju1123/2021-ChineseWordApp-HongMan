@@ -28,6 +28,7 @@ const VocabList = ({ route, navigation }) => {
         let memberId = await AsyncStorage.getItem('memberId');
         let config = { params: { memberId: memberId, groupId: groupId }}
         customAxios().then(res => {
+            res !== undefined &&
             res.get('/vocabWord/findVocabByGroup', config)
             .then(res => {
                 setWordList(res.data.reverse());
@@ -64,6 +65,7 @@ const VocabList = ({ route, navigation }) => {
         let config = { params: { memberId: memberId, vocabIdList: stringVocabIdList }}
         
         customAxios().then(res => {
+            res !== undefined &&
             res.post('/vocabWord/deleteVocabWord', null, config)
             .then(() => {
                 dispatch(handleAlertOn('삭제 성공!', '성공적으로 삭제되었습니다', ()=>{} ));
@@ -114,6 +116,7 @@ const VocabList = ({ route, navigation }) => {
         // let stringVocabIdList = vocabIdList.join(',');
         let config = { params: { memberId: memberId, vocabIdList: stringVocabIdList, groupId: id }}
         customAxios().then(res => {
+            res !== undefined &&
             res.post('/vocabWord/moveVocabGroup', null, config)
             .then(() => {
                 dispatch(handleAlertOn('이동 성공!', '성공적으로 이동하였습니다', ()=>{} ));

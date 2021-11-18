@@ -15,6 +15,7 @@ const HskWordPage = ({ route, navigation }) => {
         let memberId = await AsyncStorage.getItem('memberId');
         let config = { params: { hskLevel: level, theme: title, id: memberId }}
         customAxios().then(res => {
+            res !== undefined &&
             res.get('/hskWord/getWordsByLevel', config)
             .then(res => {
                 setWordList(res.data);

@@ -22,21 +22,21 @@ public class MemberService implements UserDetailsService {
         Member member = memberMapper.selectMemberByEmail(email);
 
         if (member == null) {
-            throw new UsernameNotFoundException("User not fount with email: " + email);
+            throw new UsernameNotFoundException("User not found with email: " + email);
         } else {
             return MemberPrincipal.create(member);
         }
 
     }
 
-    public UserDetails loadUserById(Long id) {
-        Member member = memberMapper.selectMemberById(id);
-        if (member == null) {
-            throw new UsernameNotFoundException("User not found with id: " + id);
-        } else {
-            return MemberPrincipal.create(member);
-        }
-    }
+//    public UserDetails loadUserById(Long id) {
+//        Member member = memberMapper.selectMemberById(id);
+//        if (member == null) {
+//            throw new UsernameNotFoundException("User not found with id: " + id);
+//        } else {
+//            return MemberPrincipal.create(member);
+//        }
+//    }
 
     public Boolean checkExistingEmail(String email) {
         if (memberMapper.existsByEmail(email)) {
@@ -54,6 +54,10 @@ public class MemberService implements UserDetailsService {
 
     public String getRefreshToken(Long memberId) {
         return memberMapper.selectRefreshToken(memberId);
+    }
+
+    public Member getRefreshTokenAndEmail(Long memberId) {
+        return memberMapper.selectRefreshTokenAndEmail(memberId);
     }
 
     public Member save(Member member, Authority authority) {

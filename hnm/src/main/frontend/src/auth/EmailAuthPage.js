@@ -30,6 +30,7 @@ function EmailAuthPage({ route }) {
 
     const confirmAndLogin = async () => {
         customAxios().then(res => {
+            res !== undefined &&
             res.get('/mail/checkMailAuth', {
                 params: {
                     email: email
@@ -53,6 +54,7 @@ function EmailAuthPage({ route }) {
     const resendEmail = () => {
         setLoading(true)
         customAxios().then(res => {
+            res !== undefined &&
             res.get('/mail/send', config)
             .then(res => {
                 setLoading(false)

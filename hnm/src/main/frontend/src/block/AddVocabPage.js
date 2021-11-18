@@ -53,6 +53,7 @@ const AddVocabPage = ({ route, navigation }) => {
             vocabGroupId: wordObj.groupVocabId
         }
         customAxios().then(res => {
+            res !== undefined &&
             res.post('/vocabWord/makeVocab', config)
             .then(res => {
                 dispatch(handleAlertOn('저장 성공!', '이어서 저장해주세요.', ()=>{} ));
@@ -91,6 +92,7 @@ const AddVocabPage = ({ route, navigation }) => {
             vocabGroupId: wordObj.groupVocabId
         }
         customAxios().then(res => {
+            res !== undefined &&
             res.post('/vocabWord/makeHskVocab', body, {params: { nonInserted: nonInsertedMemo, hskId: hskId }})
             .then(res => {
                 dispatch(handleAlertOn('저장 성공!', `'${wordObj.hanzi}'가 내 단어장에 저장되었습니다.`, ()=>{} ));

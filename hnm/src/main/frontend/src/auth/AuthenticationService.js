@@ -4,7 +4,6 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { NaverLogin, getProfile } from '@react-native-seoul/naver-login';
 
 import { LOCAL } from '../../ipConfig';
-import { Alert } from 'react-native';
 
 class AuthenticationService {
 
@@ -20,23 +19,19 @@ class AuthenticationService {
         });
     }
 
-    async registerSuccessfullLoginForJwt(email, token, memberId, snsType) {
+    async registerSuccessfullLoginForJwt(email, accessToken, refreshToken, memberId, snsType) {
         console.log("===registerSuccessfulLoginForJwt===")
 
-        console.log("token ", token);
         const stringId = JSON.stringify(memberId)
         let date = new Date();
-        date.setDate(date.getDate() + 7);
-        await AsyncStorage.setItem('token', token);
+        date.setDate(date.getDate() + 1);
+        await AsyncStorage.setItem('token', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
         await AsyncStorage.setItem('email', email);
         await AsyncStorage.setItem('memberId', stringId);
         await AsyncStorage.setItem('snsType', snsType);
         await AsyncStorage.setItem('jwtValidTime', JSON.stringify(date.getTime()));
         // this.setupAxiosInterceptors();
-    }
-
-    createJwtToken(token) {
-        return 'Bearer ' + token;
     }
 
     async checkJwtToken() {
@@ -46,19 +41,37 @@ class AuthenticationService {
         console.log('valid time: ', validTime)
         if (validTime < new Date()) {
             console.log('유효한 시간이 지났습니다.')
-            let memberId = await AsyncStorage.getItem('memberId')
-            let newToken = await axios.get(`${LOCAL}/auth/token/refresh`, { params:{ memberId: memberId } })
-            console.log(`새 토큰: `, newToken.data.message, `\n\n성공 여부: `, newToken.data.success)
-            if (newToken.data.success) {
-                let newValidTime= new Date();
-                newValidTime.setDate(newValidTime.getDate() + 7);
-                await AsyncStorage.setItem('token', newToken.data.message)
+            let memberId = await AsyncStorage.getItem('memberId');
+            let accessToken = await AsyncStorage.getItem('token');
+            let refreshToken = await AsyncStorage.getItem('refreshToken');
+            try {
+                let newToken = await axios.post(`${LOCAL}/auth/token/refresh`, 
+                    { accessToken, refreshToken }, 
+                    { params:{ memberId: memberId } 
+                })
+                console.log(newToken)
+                let newValidTime = new Date();
+                newValidTime.setDate(newValidTime.getDate() + 1);
+                await AsyncStorage.setItem('token', newToken.data.accessToken)
+                await AsyncStorage.setItem('refreshToken', newToken.data.refreshToken)
                 await AsyncStorage.setItem('jwtValidTime', JSON.stringify(newValidTime.getTime()))
                 return true;
-            } else {
-                Alert.alert("로그인 암호가 만료되었습니다. 다시 로그인해주세요.");
+            } catch (error) {
+                console.log(error)
                 return false;
             }
+            // let newToken = await axios.post(`${LOCAL}/auth/token/refresh`, { accessToken, refreshToken }, { params:{ memberId: memberId } })
+            // console.log(`새 토큰: `, newToken.data.message, `\n\n성공 여부: `, newToken.data.success)
+            // if (newToken.data.success) {
+            //     let newValidTime= new Date();
+            //     newValidTime.setDate(newValidTime.getDate() + 7);
+            //     await AsyncStorage.setItem('token', newToken.data.message)
+            //     await AsyncStorage.setItem('jwtValidTime', JSON.stringify(newValidTime.getTime()))
+            //     return true;
+            // } else {
+            //     Alert.alert("로그인 암호가 만료되었습니다. 다시 로그인해주세요.");
+            //     return false;
+            // }
             
         } else return true;
     }
@@ -122,8 +135,9 @@ class AuthenticationService {
             console.log('snsType: ', snsType);
             console.log("logout ", logout)
             await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('refreshToken');
             await AsyncStorage.removeItem('email');
-            await AsyncStorage.removeItem('stringId');
+            await AsyncStorage.removeItem('memberId');
             await AsyncStorage.removeItem('snsType');
             await AsyncStorage.removeItem('jwtValidTime');
             logout = await AsyncStorage.getItem('token')

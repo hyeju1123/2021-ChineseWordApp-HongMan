@@ -51,6 +51,7 @@ const UpdateVocabPage = ({ route, navigation }) => {
                 explanation: wordObj.memo,
             }
         customAxios().then(res => {
+            res !== undefined &&
             res.post('/hskWord/updateHskWord', config)
             .then(res => {
                 Alert.alert('수정되었습니다.')
@@ -85,6 +86,7 @@ const UpdateVocabPage = ({ route, navigation }) => {
                 explanation: wordObj.memo,
             }
         customAxios().then(res => {
+            res !== undefined &&
             res.post('/vocabWord/updateVocabWord', config)
             .then(res => {
                 Alert.alert('수정되었습니다.')       

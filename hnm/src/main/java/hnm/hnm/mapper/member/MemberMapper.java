@@ -24,6 +24,8 @@ public interface MemberMapper {
 
     String selectRefreshToken(Long id);
 
+    Member selectRefreshTokenAndEmail(Long id);
+
     String selectEmailToken(String email);
 
     String selectEmailByEmailToken(Member member);

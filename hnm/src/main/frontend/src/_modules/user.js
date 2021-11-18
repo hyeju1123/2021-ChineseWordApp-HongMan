@@ -29,7 +29,7 @@ export const signIn = (email, password, snsType) => async dispatch => {
             console.log('res.data: ', res.data)
             const data = res.data;
             if (data.emailAuth === true) {
-                AuthenticationService.registerSuccessfullLoginForJwt(email, data.accessToken, data.memberId, snsType);
+                AuthenticationService.registerSuccessfullLoginForJwt(email, data.token.accessToken, data.token.refreshToken, data.memberId, snsType);
                 dispatch({ type: SIGN_IN_SUCCESS, payload: res.data })
             } else if (data.emailAuth === false) {
                 dispatch(handleAlertOn('회원가입을 완료해주세요!', `등록한 메일함(${email})에서 메일 인증을 완료해주세요.`, ()=>{} ));
@@ -71,35 +71,40 @@ export default function user(state = initialState, action) {
     switch (action.type) {
         case RESTORE_TOKEN:
             return {
-                ...state.data,
+                // ...state.data,
+                ...state,
                 userToken: action.token,
                 isLoading: false,
                 error: null
             }
         case SIGN_IN:
             return {
-                ...state.data,
+                // ...state.data,
+                ...state,
                 userToken: null,
                 isLoading: true,
                 error: null,
             }    
         case SIGN_IN_SUCCESS:
             return {
-                ...state.data,
+                // ...state.data,
+                ...state,
                 userToken: action.payload.accessToken,
                 isLoading: false,
                 error: null
             }
         case SIGN_IN_ERROR:
             return {
-                ...state.data,
+                // ...state.data,
+                ...state,
                 error: action.error,
                 userToken: null,
                 isLoading: false
             }
         case SIGN_OUT:
             return {
-                ...state.data,
+                // ...state.data,
+                ...state,
                 isLoading: true,
                 error: null
             }
@@ -112,7 +117,8 @@ export default function user(state = initialState, action) {
             }
         case SIGN_OUT_ERROR:
             return {
-                ...state.data,
+                // ...state.data,
+                ...state,
                 isLoading: false,
                 error: action.error
             }

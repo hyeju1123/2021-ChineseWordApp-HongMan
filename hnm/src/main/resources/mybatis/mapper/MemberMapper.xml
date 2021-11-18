@@ -45,6 +45,11 @@
         FROM member
         WHERE MEMBER_ID = #{id}
     </select>
+    <select id="selectRefreshTokenAndEmail" parameterType="long" resultMap="memberResultMap">
+        SELECT EMAIL, REFRESH_TOKEN
+        FROM member
+        WHERE MEMBER_ID = #{id}
+    </select>
     <select id="selectEmailToken" parameterType="String" resultType="String">
         SELECT EMAIL_TOKEN
         FROM member

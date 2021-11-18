@@ -12,6 +12,7 @@ const HskThemePage = ({ route, navigation }) => {
     const getThemeList = () => {
         let config = { params: { hskLevel: level }}
         customAxios().then(res => {
+            res !== undefined &&
             res.get('/hskWord/getTheme', config)
             .then(res => {
                 setThemeList(res.data);

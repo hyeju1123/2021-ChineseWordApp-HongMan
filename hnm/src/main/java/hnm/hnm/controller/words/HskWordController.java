@@ -30,12 +30,6 @@ public class HskWordController {
 
     @PostMapping("/hskWord/updateHskWord")
     public void updateHskWord(@RequestBody Memo memo) {
-        System.out.println(memo.getMemberId());
-        System.out.println(memo.getHskId());
-        System.out.println(memo.getMeaning());
-        System.out.println(memo.getExplanation());
-        System.out.println(memo.getWordClass());
-        System.out.println(memo.getIntonation());
         hskWordService.updateHskWord(memo);
     }
 }

@@ -33,15 +33,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
             System.out.println("doFilterInternal: " + jwt);
 
-            if (StringUtils.hasText(jwt) && jwtTokenUtil.validateToken(jwt)) {
+            if (StringUtils.hasText(jwt) && jwtTokenUtil.validateToken(jwt, request)) {
 
                 System.out.println("jwtTokenUtil");
-                Long memberId = jwtTokenUtil.getMemberIdFromJWT(jwt);
+//                Long memberId = jwtTokenUtil.getMemberIdFromJWT(jwt);
+                String email = jwtTokenUtil.getEmailFromJWT(jwt);
 
-                UserDetails userDetails = memberService.loadUserById(memberId);
+                UserDetails userDetails = memberService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+                // 인증 정보가 일치함으로 context 에 인증정보를 저장하고 통과, filter 외부의 컨트롤러에서도 인증정보를 참조하기에 저장해두어야 한다.
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {

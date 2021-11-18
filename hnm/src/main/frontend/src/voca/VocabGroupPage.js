@@ -15,6 +15,7 @@ const VocabGroupPage = ({ navigation }) => {
         let memberId = await AsyncStorage.getItem('memberId');
         let config = { params: { memberId: memberId }}
         customAxios().then(res => {
+            res !== undefined &&
             res.get('/vocabWord/findGroup', config)
             .then(res => {
                 setGroupList(res.data);

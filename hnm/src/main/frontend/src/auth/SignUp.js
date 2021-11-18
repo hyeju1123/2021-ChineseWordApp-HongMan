@@ -91,6 +91,7 @@ function SignUp({ navigation }) {
                                 emailToken: res.data.message
                             }}
                             customAxios().then(res => {
+                                res !== undefined &&
                                 res.get('/mail/send', config)
                                 .then(res => {
                                     console.log('mail send: ', res.data);

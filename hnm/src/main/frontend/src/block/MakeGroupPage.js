@@ -13,6 +13,7 @@ const MakeGroupPage = ({ route, navigation }) => {
         let memberId = await AsyncStorage.getItem('memberId');
         let config = { name: name, memberId: memberId }
         customAxios().then(res => {
+            res !== undefined &&
             res.post('/vocabWord/makeGroup', config)
             .then(res => {
                 if (res.data === 'duplicated name') {
