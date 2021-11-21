@@ -74,4 +74,8 @@ public class MemberService implements UserDetailsService {
     public void emailCertifiedUpdate(String email) {
         memberMapper.updateEmailToken(email);
     }
+
+    public void emailTokenReIssuance(String email, String emailToken) {
+        memberMapper.updateEmailTokenByReissue(email, emailToken);
+    }
 }

@@ -4,6 +4,7 @@ import hnm.hnm.domain.member.Authority;
 import hnm.hnm.domain.member.Member;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,6 +32,8 @@ public interface MemberMapper {
     String selectEmailByEmailToken(Member member);
 
     void updateEmailToken(String email);
+
+    void updateEmailTokenByReissue(@Param("email") String email, @Param("emailToken") String emailToken);
 
     Boolean existsByEmail(String email);
 

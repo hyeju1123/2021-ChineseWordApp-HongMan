@@ -74,4 +74,11 @@
         SET EMAIL_TOKEN = 'Y'
         WHERE EMAIL = #{email}
     </update>
+
+    <!--    이메일 토큰 재발급-->
+    <update id="updateEmailTokenByReissue" parameterType="String">
+        UPDATE member
+        SET EMAIL_TOKEN = #{emailToken}
+        WHERE EMAIL = #{email}
+    </update>
 </mapper>

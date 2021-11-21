@@ -55,7 +55,11 @@ function EmailAuthPage({ route }) {
         setLoading(true)
         customAxios().then(res => {
             res !== undefined &&
-            res.get('/mail/send', config)
+            res.get('/mail/resend', {
+                params: {
+                    email: email
+                }
+            })
             .then(res => {
                 setLoading(false)
                 dispatch(handleAlertOn("인증 메일을 재전송하였습니다", "메일함에서 '메일 인증' 버튼을 눌러주세요!", ()=>{} ));

@@ -31,12 +31,6 @@ public class EmailService {
     public Boolean checkMailAuth(String mail) {
         String token = memberMapper.selectEmailToken(mail);
         System.out.println("mail: " + token.getClass().getName());
-        if (token.equals("Y")) {
-            System.out.println("true");
-            return true;
-        } else {
-            System.out.println("false");
-            return false;
-        }
+        return token.equals("Y");
     }
 }

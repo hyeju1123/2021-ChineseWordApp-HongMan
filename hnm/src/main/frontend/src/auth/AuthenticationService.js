@@ -95,7 +95,7 @@ class AuthenticationService {
                 }
                 this.getNaverUserProfile(token)
                     .then(res => {
-                        console.log('naver result: ', res.email)        
+                        console.log('naver result: ', res)        
                         resolve(res.email)
                     })
             })
@@ -103,6 +103,7 @@ class AuthenticationService {
     }
 
     getNaverUserProfile = async (token) => {
+        if (token === null) return { error: true }
         const profileResult = await getProfile(token.accessToken)
         if (profileResult.resultcode === '024') {
             return { error: true }

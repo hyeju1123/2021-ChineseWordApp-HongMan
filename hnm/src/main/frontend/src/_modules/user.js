@@ -71,7 +71,6 @@ export default function user(state = initialState, action) {
     switch (action.type) {
         case RESTORE_TOKEN:
             return {
-                // ...state.data,
                 ...state,
                 userToken: action.token,
                 isLoading: false,
@@ -79,7 +78,6 @@ export default function user(state = initialState, action) {
             }
         case SIGN_IN:
             return {
-                // ...state.data,
                 ...state,
                 userToken: null,
                 isLoading: true,
@@ -87,7 +85,6 @@ export default function user(state = initialState, action) {
             }    
         case SIGN_IN_SUCCESS:
             return {
-                // ...state.data,
                 ...state,
                 userToken: action.payload.accessToken,
                 isLoading: false,
@@ -95,7 +92,6 @@ export default function user(state = initialState, action) {
             }
         case SIGN_IN_ERROR:
             return {
-                // ...state.data,
                 ...state,
                 error: action.error,
                 userToken: null,
@@ -103,7 +99,6 @@ export default function user(state = initialState, action) {
             }
         case SIGN_OUT:
             return {
-                // ...state.data,
                 ...state,
                 isLoading: true,
                 error: null
@@ -117,7 +112,6 @@ export default function user(state = initialState, action) {
             }
         case SIGN_OUT_ERROR:
             return {
-                // ...state.data,
                 ...state,
                 isLoading: false,
                 error: action.error

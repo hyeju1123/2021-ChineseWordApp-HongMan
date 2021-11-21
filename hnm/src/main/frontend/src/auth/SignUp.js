@@ -93,10 +93,9 @@ function SignUp({ navigation }) {
                             customAxios().then(res => {
                                 res !== undefined &&
                                 res.get('/mail/send', config)
-                                .then(res => {
-                                    console.log('mail send: ', res.data);
-                                })
-                                .catch(e => console.log(e))
+                                .catch(() => 
+                                    dispatch(handleAlertOn("인증 메일 전송 실패!", "'인증 메일 재전송'을 눌러주세요.", ()=>{} ))
+                                )
                             })
                         }
                     })
