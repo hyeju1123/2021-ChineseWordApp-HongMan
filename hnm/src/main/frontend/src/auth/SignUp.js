@@ -82,10 +82,7 @@ function SignUp({ navigation }) {
                                 emailToken: res.data.message,
                                 password: password
                             })
-                            // setEmail('')
-                            // setPassword('')
-                            // setCheckPw('')
-                            // dispatch(loaded())
+                            
                             let config = { params: { 
                                 email: email,
                                 emailToken: res.data.message
@@ -99,9 +96,11 @@ function SignUp({ navigation }) {
                             })
                         }
                     })
-                    .catch(e => 
+                    .catch(e => {
                         console.log(e)
-                    )
+                        setLoading(false)
+                        dispatch(handleAlertOn("회원가입 실패!", "다시 시도해주세요.", ()=>{} ))
+                    })
         }
     }
 
@@ -114,7 +113,7 @@ function SignUp({ navigation }) {
                         return
                     }
                     const email = res.email;
-                    AuthenticationService.executeJwtSignUpService(email, '', type)
+                    AuthenticationService.executeJwtSignUpService(email, '', type)                    
                         .then(async res => {
                             if (res.data.success === false) {
                                 checkDuplicateEmail(res.data.message);
@@ -123,6 +122,10 @@ function SignUp({ navigation }) {
                                 dispatch(handleAlertOn('회원가입 성공!', '', ()=>{} ));
                                 dispatch(signIn(email, '', type));
                             }
+                        })
+                        .catch(async () => {
+                            await AuthenticationService.googleLogout();
+                            dispatch(handleAlertOn("회원가입 실패!", "다시 시도해주세요.", ()=>{} ))
                         })
                 })
         }
@@ -140,6 +143,10 @@ function SignUp({ navigation }) {
                             dispatch(handleAlertOn('회원가입 성공!', '', ()=>{} ));
                             dispatch(signIn(email, '', type));
                         }
+                    })
+                    .catch(() => {
+                        AuthenticationService.naverLogout();
+                        dispatch(handleAlertOn("회원가입 실패!", "다시 시도해주세요.", ()=>{} ))
                     })
                 })
                 .catch(e => {

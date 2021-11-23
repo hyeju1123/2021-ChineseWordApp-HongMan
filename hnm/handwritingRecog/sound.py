@@ -3,13 +3,15 @@ import tensorflow as tf
 import base64
 import io
 import numpy as np
-import matplotlib.pyplot as plt
 import soundfile as sf
 
 
-def init(tacotron2, mb_melgan, processor, word):
+def init(tacotron2, fastspeech2, mb_melgan, processor, word):
 
-    mels, alignment_history, audios = do_synthesis(processor, word, tacotron2, mb_melgan, "TACOTRON", "MB-MELGAN")
+    if len(word) == 1:
+        mels, audios = do_synthesis(processor, word, fastspeech2, mb_melgan, "FASTSPEECH2", "MB-MELGAN")
+    else:
+        mels, alignment_history, audios = do_synthesis(processor, word, tacotron2, mb_melgan, "TACOTRON", "MB-MELGAN")
 
     scaled = np.int16(audios/np.max(np.abs(audios)) * 23000)
     file_in_memory = io.BytesIO()
@@ -56,32 +58,3 @@ def do_synthesis(processor, input_text, text2mel_model, vocoder_model, text2mel_
     return mel_outputs.numpy(), alignment_history.numpy(), audio.numpy()
   else:
     return mel_outputs.numpy(), audio.numpy()
-
-def visualize_attention(alignment_history):
-  import matplotlib.pyplot as plt
-
-  fig = plt.figure(figsize=(8, 6))
-  ax = fig.add_subplot(111)
-  ax.set_title(f'Alignment steps')
-  im = ax.imshow(
-      alignment_history,
-      aspect='auto',
-      origin='lower',
-      interpolation='none')
-  fig.colorbar(im, ax=ax)
-  xlabel = 'Decoder timestep'
-  plt.xlabel(xlabel)
-  plt.ylabel('Encoder timestep')
-  plt.tight_layout()
-  plt.show()
-  plt.close()
-
-def visualize_mel_spectrogram(mels):
-  mels = tf.reshape(mels, [-1, 80]).numpy()
-  fig = plt.figure(figsize=(10, 8))
-  ax1 = fig.add_subplot(311)
-  ax1.set_title(f'Predicted Mel-after-Spectrogram')
-  im = ax1.imshow(np.rot90(mels), aspect='auto', interpolation='none')
-  fig.colorbar(mappable=im, shrink=0.65, orientation='horizontal', ax=ax1)
-  plt.show()
-  plt.close()

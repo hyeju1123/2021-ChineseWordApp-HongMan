@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 import tensorflow as tf
 from tensorflow_tts.inference import AutoProcessor
+from tensorflow_tts.inference import TFAutoModel
 from sound import init
 
 app = Flask(__name__)
@@ -71,14 +72,18 @@ def predict_hanzi():
 @app.route("/getAudio", methods=['POST'])
 def getAudio():
     word = request.json
-    output = init(tacotron2, mb_melgan, processor, word)
+    output = init(tacotron2, fastspeech2, mb_melgan, processor, word)
     return output
 
 if __name__ == '__main__':
     model = load_model('./pinyin_model.h5')
     hanzi_model = load_model('./hanzi_model.h5')
 
-    tacotron2 = tf.keras.models.load_model('tacotron2')
-    mb_melgan = tf.keras.models.load_model('mb_melgan')
+    # tacotron2 = tf.keras.models.load_model('tacotron2')
+    # mb_melgan = tf.keras.models.load_model('mb_melgan')
+    # fastspeech2 = tf.keras.models.load_model('fastspeech2')
+    tacotron2 = TFAutoModel.from_pretrained("tensorspeech/tts-tacotron2-baker-ch", name="tacotron2")
+    fastspeech2 = TFAutoModel.from_pretrained("tensorspeech/tts-fastspeech2-baker-ch", name="fastspeech2")
+    mb_melgan = TFAutoModel.from_pretrained("tensorspeech/tts-mb_melgan-baker-ch", name="mb_melgan")
     processor = AutoProcessor.from_pretrained("tensorspeech/tts-tacotron2-baker-ch")
     app.run(host='0.0.0.0', port=8000, debug=True)

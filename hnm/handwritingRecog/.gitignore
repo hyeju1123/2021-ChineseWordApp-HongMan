@@ -1,5 +1,6 @@
 TensorFlowTTS/
-hanzi_model.h5
-pinyin_model.h5
 mb_melgan/
 tacotron2/
+fastspeech2/
+hanzi_model.h5
+pinyin_model.h5
