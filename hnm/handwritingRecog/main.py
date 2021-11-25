@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
 import flask
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file
 from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
-import tensorflow as tf
-from tensorflow_tts.inference import AutoProcessor
-from tensorflow_tts.inference import TFAutoModel
-from sound import init
+import boto3
+from botocore.exceptions import BotoCoreError, ClientError
+import sys
+
 
 app = Flask(__name__)
+client = boto3.client('polly')
+
 
 @app.route("/")
 @app.route("/index")
 def index():
     return flask.render_template('index.html')
+
 
 @app.route("/predict", methods=['POST'])
 def make_prediction():
@@ -41,6 +44,7 @@ def make_prediction():
             top10List.append(charset[element])
 
         return ''.join(top10List)
+
 
 @app.route("/predictHanzi", methods=['POST'])
 def predict_hanzi():
@@ -72,18 +76,19 @@ def predict_hanzi():
 @app.route("/getAudio", methods=['POST'])
 def getAudio():
     word = request.json
-    output = init(tacotron2, fastspeech2, mb_melgan, processor, word)
-    return output
+    try:
+        response = client.synthesize_speech(Text=word,
+                                            OutputFormat="mp3",
+                                            VoiceId="Zhiyu")
+    except (BotoCoreError, ClientError) as error:
+        print(error)
+        sys.exit(-1)
+
+    return send_file(response.get("AudioStream"), "audio/mpeg")
+
 
 if __name__ == '__main__':
     model = load_model('./pinyin_model.h5')
     hanzi_model = load_model('./hanzi_model.h5')
 
-    # tacotron2 = tf.keras.models.load_model('tacotron2')
-    # mb_melgan = tf.keras.models.load_model('mb_melgan')
-    # fastspeech2 = tf.keras.models.load_model('fastspeech2')
-    tacotron2 = TFAutoModel.from_pretrained("tensorspeech/tts-tacotron2-baker-ch", name="tacotron2")
-    fastspeech2 = TFAutoModel.from_pretrained("tensorspeech/tts-fastspeech2-baker-ch", name="fastspeech2")
-    mb_melgan = TFAutoModel.from_pretrained("tensorspeech/tts-mb_melgan-baker-ch", name="mb_melgan")
-    processor = AutoProcessor.from_pretrained("tensorspeech/tts-tacotron2-baker-ch")
     app.run(host='0.0.0.0', port=8000, debug=True)

@@ -15,6 +15,7 @@ import { LOCAL_FLASK } from '../../ipConfig';
 import base64 from 'react-native-base64';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Buffer } from 'buffer'
 
 function QuizSample() {
 
@@ -41,29 +42,29 @@ function QuizSample() {
         axios.post(`${LOCAL_FLASK}/getAudio`, JSON.stringify(hanzi), {
             headers: {
                 'Content-Type': 'application/json',
-            }   
+            },
         }).then(res => {
             let time = new Date().getTime()
             let path = 'file://' + RNFS.DocumentDirectoryPath + `/${time}.wav`;
             
-            RNFS.writeFile(
-                path, 
-                res.data,
-                'base64'
-            ).then(() => {
-                console.log('success')
-                let sound = new Sound(path, null, (e) => {
-                    if (e) {
-                        console.log('error: ', e)
-                    } else {
-                        RNFS.unlink(path)
-                            .then(() => console.log('FILE DELETED'))
-                            .catch((e) => console.log(e.message))
-                    }
-                })
-                setAudio(sound)
-            })
-            .catch(e => console.log(e))
+            // RNFS.writeFile(
+            //     path, 
+            //     res.data,
+            //     'base64'
+            // ).then(() => {
+            //     console.log('success')
+            //     let sound = new Sound(path, null, (e) => {
+            //         if (e) {
+            //             console.log('error: ', e)
+            //         } else {
+            //             RNFS.unlink(path)
+            //                 .then(() => console.log('FILE DELETED'))
+            //                 .catch((e) => console.log(e.message))
+            //         }
+            //     })
+            //     setAudio(sound)
+            // })
+            // .catch(e => console.log(e))
             
 
             // let sound = new Sound(responseBlob, null, err => {
@@ -89,14 +90,17 @@ function QuizSample() {
         axios.post(`${LOCAL_FLASK}/getAudio`, JSON.stringify(character), {
             headers: {
                 'Content-Type': 'application/json',
-            }   
+            },
+            responseType: 'arraybuffer'   
         }).then(res => {
+            let buffer = Buffer.from(res.data, 'binary').toString('base64');
+            console.log('buffer:: ', buffer)
             let time = new Date().getTime()
-            let path = 'file://' + RNFS.DocumentDirectoryPath + `/${time}.wav`;
-            
+            let path = 'file://' + RNFS.DocumentDirectoryPath + `/${time}.mp3`;
+
             RNFS.writeFile(
                 path, 
-                res.data,
+                buffer,
                 'base64'
             ).then(() => {
                 console.log('success')
