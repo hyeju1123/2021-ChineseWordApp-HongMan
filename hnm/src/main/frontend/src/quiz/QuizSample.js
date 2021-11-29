@@ -9,7 +9,6 @@ import { View,
         SafeAreaView } from 'react-native';
 import Sound from 'react-native-sound';
 import * as RNFS from 'react-native-fs'
-import Next from '../../images/module/next.png';
 import axios from 'axios';
 import { LOCAL_FLASK } from '../../ipConfig';
 import base64 from 'react-native-base64';
@@ -25,66 +24,17 @@ function QuizSample() {
     
     const getHskWordsList = async () => {
         let memberId = await AsyncStorage.getItem('memberId');
-        let config = { params: { hskLevel: 1, theme: '표현', id: memberId }}
+        let config = { params: { hskLevel: 4, theme: '목표', id: memberId }}
         customAxios().then(res => {
             res !== undefined &&
             res.get('/hskWord/getWordsByLevel', config)
             .then(res => {
-                console.log(res.data);
                 setWordList(res.data);
             })
             .catch(e => console.log(e))
         })
     }
 
-    const getAudio = () => {
-        
-        axios.post(`${LOCAL_FLASK}/getAudio`, JSON.stringify(hanzi), {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(res => {
-            let time = new Date().getTime()
-            let path = 'file://' + RNFS.DocumentDirectoryPath + `/${time}.wav`;
-            
-            // RNFS.writeFile(
-            //     path, 
-            //     res.data,
-            //     'base64'
-            // ).then(() => {
-            //     console.log('success')
-            //     let sound = new Sound(path, null, (e) => {
-            //         if (e) {
-            //             console.log('error: ', e)
-            //         } else {
-            //             RNFS.unlink(path)
-            //                 .then(() => console.log('FILE DELETED'))
-            //                 .catch((e) => console.log(e.message))
-            //         }
-            //     })
-            //     setAudio(sound)
-            // })
-            // .catch(e => console.log(e))
-            
-
-            // let sound = new Sound(responseBlob, null, err => {
-            //     if (err) console.log('play failed:: ', err)
-            // })
-        })
-    }
-
-    // const getHskWordsList = async () => {
-    //     let memberId = await AsyncStorage.getItem('memberId');
-    //     let config = { params: { hskLevel: 4, theme: title, id: memberId }}
-    //     customAxios().then(res => {
-    //         res.get('/hskWord/getWordsByLevel', config)
-    //         .then(res => {
-    //             setWordList(res.data);
-    //             setLoading(false);
-    //         })
-    //         .catch(e => console.log(e))
-    //     })
-    // }
 
     const getHanziAudio = character => {
         axios.post(`${LOCAL_FLASK}/getAudio`, JSON.stringify(character), {
@@ -94,7 +44,6 @@ function QuizSample() {
             responseType: 'arraybuffer'   
         }).then(res => {
             let buffer = Buffer.from(res.data, 'binary').toString('base64');
-            console.log('buffer:: ', buffer)
             let time = new Date().getTime()
             let path = 'file://' + RNFS.DocumentDirectoryPath + `/${time}.mp3`;
 
@@ -111,9 +60,10 @@ function QuizSample() {
                         RNFS.unlink(path)
                             .then(() => console.log('FILE DELETED'))
                             .catch((e) => console.log(e.message))
+                        sound.play();
                     }
                 })
-                setAudio(sound)
+                // setAudio(sound)
                 // sound.play();
             })
             .catch(e => console.log(e))
@@ -166,9 +116,6 @@ function QuizSample() {
         // </View>
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => audio.play()}>
-                    <Image style={styles.firstIcon} source={Next} />
-                </TouchableOpacity>
                 <View style={styles.cardContainer}>
                     {renderCards}
                 </View>

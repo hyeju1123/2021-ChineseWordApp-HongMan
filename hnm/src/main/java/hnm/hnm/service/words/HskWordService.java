@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +37,13 @@ public class HskWordService {
 
     public void updateMemoInVocab(Memo memo) {
         hskWordMapper.updateMemoInVocab(memo);
+    }
+
+    public List<Map<String, Object>> getAllThemes() {
+        return hskWordMapper.selectAllThemes();
+    }
+
+    public List<Map<String, String>> getQuizHanzi(List<Map<String, Object>> levelAndTheme) {
+        return hskWordMapper.selectQuizHanzi(levelAndTheme);
     }
 }

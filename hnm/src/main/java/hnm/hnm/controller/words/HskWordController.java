@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -31,5 +32,20 @@ public class HskWordController {
     @PostMapping("/hskWord/updateHskWord")
     public void updateHskWord(@RequestBody Memo memo) {
         hskWordService.updateHskWord(memo);
+    }
+
+    @GetMapping("/hskWord/getAllThemes")
+    public List<Map<String, Object>> getAllThemes() {
+        return hskWordService.getAllThemes();
+    }
+
+    @PostMapping("/hskWord/getQuizHanzi")
+    public List<Map<String, String>> getQuizHanzi(@RequestBody List<Map<String, Object>> levelAndTheme) {
+
+        for (Map<String, Object> map : levelAndTheme) {
+            System.out.println(map.get("theme"));
+        }
+
+        return hskWordService.getQuizHanzi(levelAndTheme);
     }
 }

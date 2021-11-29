@@ -53,6 +53,25 @@
         WHERE hsk_id = #{hskId} AND member_id = #{memberId}
     </select>
 
+    <select id="selectAllThemes" resultType="map">
+        SELECT DISTINCT theme, level FROM hsk
+    </select>
+
+    <select id="selectQuizHanzi" resultType="map">
+        SELECT word, meaning
+        FROM hsk
+        WHERE theme in
+        <foreach item="item" index="index" collection="levelAndTheme"
+                 open="(" separator="," close=")">
+            #{item.theme}
+        </foreach>
+        AND level in
+        <foreach item="item" index="index" collection="levelAndTheme"
+                 open="(" separator="," close=")">
+            #{item.level}
+        </foreach>
+    </select>
+
     <!--hsk 단어를 단어장에 추가-->
     <insert id="insertHskIntoVocab" parameterType="memo">
         INSERT INTO memo(VOCAB_ID, HSK_ID, MEMBER_ID)
