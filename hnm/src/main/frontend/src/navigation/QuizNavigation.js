@@ -4,8 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import QuizTypePage from '../quiz/QuizTypePage';
 import ListeningTypePage from '../quiz/listening/ListeningTypePage';
 import ListeningHskThemePage from '../quiz/listening/ListeningHskThemePage';
-import ListeningQuizPage from '../quiz/listening/ListeningQuizPage'
-import QuizSample from '../quiz/QuizSample';
+import ListeningQuizPage from '../quiz/listening/ListeningQuizPage';
 
 const Stack = createStackNavigator();
 
@@ -57,18 +56,6 @@ const QuizNavigation = () => {
             <Stack.Screen 
                 name="ListeningQuizPage" 
                 component={ListeningQuizPage} 
-                options={{
-                    headerTitle: '',
-                    headerTintColor: '#ffffff',
-                    headerStyle: {
-                        elevation: 0,
-                        backgroundColor: '#D14124',
-                    }
-                }}
-            />
-            <Stack.Screen 
-                name="QuizSample" 
-                component={QuizSample} 
                 options={{
                     headerTitle: '',
                     headerTintColor: '#ffffff',

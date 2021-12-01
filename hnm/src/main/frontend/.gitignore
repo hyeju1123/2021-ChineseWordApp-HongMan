@@ -25,6 +25,7 @@ DerivedData
 
 # Android/IntelliJ
 #
+android/app/src/main/res/raw
 build/
 .idea
 .gradle

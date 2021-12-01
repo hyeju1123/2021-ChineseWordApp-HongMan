@@ -1,18 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native'
 import soundIcon from '../../../images/module/sound.png';
-import Next from '../../../images/module/next.png';
 import axios from 'axios';
 import * as RNFS from 'react-native-fs'
 import { LOCAL_FLASK } from '../../../ipConfig';
 import { Buffer } from 'buffer';
-import Sound from 'react-native-sound';
+import TrackPlayer from 'react-native-track-player';
 
 function ListeningQuizPage({ route, navigation }) {
 
+    Sound.setCategory('Playback');
     const [randomList, setRandomList] = useState([]);
     const [result, setResult] = useState({loading: false, state: true});
     let { wordNum, wordList, type } = route.params;
+    let tracks = [
+        {
+            id: 1,
+            url: '',
+            title: 'output'
+        }
+    ]
+
+    const setUpTrackPlayer = async () => {
+        try {
+          await TrackPlayer.setupPlayer();
+          await TrackPlayer.add(tracks);
+          console.log('Tracks added');
+        } catch (e) {
+          console.log(e);
+        }
+    };
 
     const makeRandomNum = (wordNum) => {
         let nums = [];
@@ -40,18 +57,9 @@ function ListeningQuizPage({ route, navigation }) {
             });
         }
     }
-    const goBackward = () => {
-        if (wordNum === 0) {
-            return
-        } else {
-            navigation.navigate('ListeningQuizPage', {
-                wordNum: wordNum - 1,
-                wordList: wordList
-            });
-        }
-    }
 
-    const getHanziAudio = character => {
+    const getHanziAudio = character => {    
+
         axios.post(`${LOCAL_FLASK}/getAudio`, JSON.stringify(character), {
             headers: {
                 'Content-Type': 'application/json',
@@ -67,16 +75,14 @@ function ListeningQuizPage({ route, navigation }) {
                 buffer,
                 'base64'
             ).then(() => {
-                let sound = new Sound(path, Sound.MAIN_BUNDLE, (e) => {
-                    if (e) {
-                        console.log('error: ', e)
-                    } else {
-                        sound.play();
-                        RNFS.unlink(path)
-                            .then(() => console.log('FILE DELETED'))
-                            .catch((e) => console.log(e.message))
-                    }
-                })
+                tracks[0].url = path
+                setUpTrackPlayer();
+                TrackPlayer.play();
+
+                RNFS.unlink(path)
+                    .then(() => console.log('FILE DELETED'))
+                    .catch((e) => console.log(e.message))
+                
             })
             .catch(e => console.log(e))
             
@@ -104,6 +110,8 @@ function ListeningQuizPage({ route, navigation }) {
         rn.splice(n, 0, wordNum)
         setRandomList([...rn])
         setResult({...result, loading: false})
+
+        // return () => TrackPlayer.destroy();
 
     }, [wordNum])
 
@@ -156,14 +164,6 @@ function ListeningQuizPage({ route, navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {/* <View style={styles.wordNavigation}>
-                        <TouchableOpacity onPress={goBackward}>
-                            <Image style={styles.previousIcon} source={Next} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={goForward}>
-                            <Image style={styles.nextIcon} source={Next} />
-                        </TouchableOpacity>
-                </View> */}
             </ScrollView>
         </SafeAreaView>
     )
@@ -188,7 +188,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         display: 'flex',
-        // justifyContent: 'center',
         alignItems: 'center'
     },
     result: {
