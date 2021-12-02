@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
+import { useSelector } from 'react-redux';
 
 import HskLevelPage from '../study/HskLevelPage';
 import HskThemePage from '../study/HskThemePage';
@@ -15,6 +16,18 @@ const Stack = createStackNavigator();
 
 const StudyNavigation = () => {
 
+    const color = useSelector(state => state.color.theme);
+    const headerSet = {
+        r: {
+            tint: '#FFFFFF',
+            back: '#D14124'
+        },
+        w: {
+            tint: '#000000',
+            back: '#FFFFFF'
+        }
+    }
+
     return (
         
         <Stack.Navigator
@@ -27,10 +40,10 @@ const StudyNavigation = () => {
                 component={HskLevelPage} 
                 options={{
                     headerTitle: '',
-                    headerTintColor: '#ffffff',
+                    headerTintColor: headerSet[color].tint,
                     headerStyle: {
                         elevation: 0,
-                        backgroundColor: '#D14124',
+                        backgroundColor: headerSet[color].back
                     }
                 }}
             />
@@ -39,10 +52,10 @@ const StudyNavigation = () => {
                 component={HskThemePage} 
                 options={{
                     headerTitle: '',
-                    headerTintColor: '#ffffff',
+                    headerTintColor: headerSet[color].tint,
                     headerStyle: {
                         elevation: 0,
-                        backgroundColor: '#D14124',
+                        backgroundColor: headerSet[color].back
                     }
                 }}
             />
@@ -51,10 +64,10 @@ const StudyNavigation = () => {
                 component={HskWordPage} 
                 options={{
                     headerTitle: '',
-                    headerTintColor: '#ffffff',
+                    headerTintColor: headerSet[color].tint,
                     headerStyle: {
                         elevation: 0,
-                        backgroundColor: '#D14124',
+                        backgroundColor: headerSet[color].back
                     }
                 }}
             />
@@ -63,10 +76,10 @@ const StudyNavigation = () => {
                 component={HskWordDetail} 
                 options={{
                     headerTitle: '',
-                    headerTintColor: '#ffffff',
+                    headerTintColor: headerSet[color].tint,
                     headerStyle: {
                         elevation: 0,
-                        backgroundColor: '#D14124',
+                        backgroundColor: headerSet[color].back
                     }
                 }}
             />
@@ -75,10 +88,10 @@ const StudyNavigation = () => {
                     component={MakeGroupPage} 
                     options={{
                         headerTitle: '',
-                        headerTintColor: '#ffffff',
+                        headerTintColor: headerSet[color].tint,
                         headerStyle: {
                             elevation: 0,
-                            backgroundColor: '#D14124',
+                            backgroundColor: headerSet[color].back
                         },
                     }}
             />
@@ -87,10 +100,10 @@ const StudyNavigation = () => {
                     component={AddVocabPage} 
                     options={{
                         headerTitle: '',
-                        headerTintColor: '#ffffff',
+                        headerTintColor: headerSet[color].tint,
                         headerStyle: {
                             elevation: 0,
-                            backgroundColor: '#D14124',
+                            backgroundColor: headerSet[color].back
                         },
                     }}
             />
@@ -99,10 +112,10 @@ const StudyNavigation = () => {
                     component={SelectGroupPage} 
                     options={{
                         headerTitle: '',
-                        headerTintColor: '#ffffff',
+                        headerTintColor: headerSet[color].tint,
                         headerStyle: {
                             elevation: 0,
-                            backgroundColor: '#D14124',
+                            backgroundColor: headerSet[color].back
                         },
                     }}
                 />
@@ -111,10 +124,10 @@ const StudyNavigation = () => {
                     component={UpdateVocabPage} 
                     options={{
                         headerTitle: '',
-                        headerTintColor: '#ffffff',
+                        headerTintColor: headerSet[color].tint,
                         headerStyle: {
                             elevation: 0,
-                            backgroundColor: '#D14124',
+                            backgroundColor: headerSet[color].back
                         },
                     }}
             />

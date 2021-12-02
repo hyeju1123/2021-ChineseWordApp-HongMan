@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { LogBox, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text } from 'react-native';
+import { LogBox, SafeAreaView, ScrollView, TouchableOpacity, View, Text } from 'react-native';
 import Splash from '../main/Splash';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './style/HskThemePageStyle';
+import { useSelector } from 'react-redux';
 
 const HskWordPage = ({ route, navigation }) => {
 
     const { title, level } = route.params;
     const [wordList, setWordList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [updatedList, setUpdatedList] = useState(false)
+    const [updatedList, setUpdatedList] = useState(false);
+    const color = useSelector(state => state.color.theme);
+    let theme =  {
+        r: '#D14124',
+        w: '#FFFFFF'
+    }
 
     const getHskWordsList = async () => {
         let memberId = await AsyncStorage.getItem('memberId');
@@ -65,10 +72,11 @@ const HskWordPage = ({ route, navigation }) => {
                 list: wordList,
                 wordNum: index,
                 memo: data.memo,
+                color: color,
                 updateHskWordList: updateHskWordsList,
                 updateHskMarking: updateHskMarking
             })}>
-                <View style={styles.card}>
+                <View style={[styles.hanziCard, color === 'w' && {borderColor: '#3E3A39', borderWidth: 0.5}]}>
                     <Text style={styles.hanziText}>{data.word}</Text>
                     <Text style={styles.intonationText}>{intonation}</Text>
                 </View>
@@ -96,7 +104,7 @@ const HskWordPage = ({ route, navigation }) => {
 
     return (
         loading ? <Splash navigation={navigation} /> :
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, {backgroundColor: theme[color]}]}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
                 <View style={styles.cardContainer}>
                     {renderCards}
@@ -105,44 +113,5 @@ const HskWordPage = ({ route, navigation }) => {
         </SafeAreaView>
     );
 };
-
-const width = Dimensions.get('window').width;
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        backgroundColor: '#D14124'
-    },
-    cardContainer: {
-        width: '85%',
-        marginTop: width * 0.03
-    },
-    card: {
-        backgroundColor: '#FFFFFF',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 15,
-        borderBottomRightRadius: 15,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: width * 0.05,
-        elevation: 8
-    },
-    hanziText: {
-        fontFamily: 'PingFangSCLight',
-        fontSize: width * 0.1,
-        color: '#3E3A39',
-        marginBottom: width * 0.01,
-        marginTop: width * 0.03,
-    },
-    intonationText: {
-        fontFamily: 'KoPubWorld Dotum Medium',
-        fontSize: width * 0.07,
-        color: '#8E8E8E',
-        marginBottom: width * 0.03
-    }
-});
 
 export default HskWordPage;

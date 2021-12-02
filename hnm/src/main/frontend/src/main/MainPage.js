@@ -1,5 +1,6 @@
  import React from 'react';
- import { StyleSheet, View, TouchableOpacity, StatusBar, SafeAreaView, ScrollView, Image } from 'react-native';
+ import { View, TouchableOpacity, StatusBar, SafeAreaView, ScrollView } from 'react-native';
+ import styles from './style/MainPageStyle';
  
  import MainPageCard from './MainPageCard';
  import Images from '../ImageIndex';
@@ -11,7 +12,6 @@
       <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent={true} />
       <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
       <View style={styles.cardContainer}>
-        {/* <Image source={Images.mainPage.newStudy} /> */}
           <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('StudyNavigation')}>
             <MainPageCard cardName={Images.mainPage.study} name="학습"  />
           </TouchableOpacity>
@@ -29,29 +29,6 @@
     </SafeAreaView>
   );
  };
- 
-const styles = StyleSheet.create({
-   container: {
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: '#ffffff'
-   },
-   cardContainer: {
-      width: '85%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
-      alignContent: 'center',
-      // marginTop: width > 500 ? width * 0.03 : width * 0.1,
-      backgroundColor: '#ffffff'
-      // borderColor: 'black',
-      // borderWidth: 5
-   }
- });
  
  export default MainPage;
  

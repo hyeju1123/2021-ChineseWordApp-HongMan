@@ -1,13 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text } from 'react-native';
+import { SafeAreaView, ScrollView, TouchableOpacity, View, Text } from 'react-native';
 import Splash from '../main/Splash';
+import { useSelector } from 'react-redux';
 import customAxios from '../auth/customAxios';
+import styles from './style/HskThemePageStyle';
 
 const HskThemePage = ({ route, navigation }) => {
 
     const { level } = route.params;
     const [themeList, setThemeList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const color = useSelector(state => state.color.theme);
+    let theme =  {
+        r: {
+            back: '#D14124',
+            big: '#BEBEBE',
+            small: '#FFFFFF',
+            text: '#655858'
+        },
+        w: {
+            back: '#FFFFFF',
+            big: '#AA351D',
+            small: '#D14124',
+            text: '#FFFFFF'
+        },
+    }
 
     const getThemeList = () => {
         let config = { params: { hskLevel: level }}
@@ -25,8 +42,10 @@ const HskThemePage = ({ route, navigation }) => {
     const renderCards = themeList.map((data, index) => {
         return (
             <TouchableOpacity activeOpacity={0.9} key={index} onPress={() => {navigation.navigate('HskWordPage', { title: data, level: level })}}>
-                <View style={styles.card}>
-                    <Text style={styles.cardText}>{data}</Text>
+                <View style={[styles.bottomCard, {backgroundColor: theme[color].big}]}>
+                    <View style={[styles.topCard, {backgroundColor: theme[color].small}]}>    
+                        <Text style={[styles.text, {color: theme[color].text}]}>{data}</Text>                
+                    </View>
                 </View>
             </TouchableOpacity>
         )
@@ -34,7 +53,7 @@ const HskThemePage = ({ route, navigation }) => {
 
     useEffect(() => {
         navigation.setOptions({
-            headerTitle: `HSK ${level}급 단어`,
+            headerTitle: `HSK ${level}급`,
             headerTitleAlign: 'center',
         })
         getThemeList();
@@ -42,7 +61,7 @@ const HskThemePage = ({ route, navigation }) => {
 
     return (
         loading ? <Splash navigation={navigation} /> :
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, {backgroundColor: theme[color].back}]}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
                 <View style={styles.cardContainer}>
                     {renderCards}
@@ -52,37 +71,5 @@ const HskThemePage = ({ route, navigation }) => {
     );
 };
 
-const width = Dimensions.get('window').width;
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        backgroundColor: '#D14124'
-    },
-    cardContainer: {
-        width: '85%',
-        marginTop: width * 0.02
-    },
-    card: {
-        backgroundColor: '#FFFFFF',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 15,
-        borderBottomRightRadius: 15,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: width * 0.05,
-        elevation: 8
-    },
-    cardText: {
-        fontFamily: 'TmoneyRoundWindExtraBold',
-        fontSize: width * 0.1,
-        color: '#655858',
-        marginTop: width * 0.03,
-        marginBottom: width * 0.03
-    }
-});
 
 export default HskThemePage;
