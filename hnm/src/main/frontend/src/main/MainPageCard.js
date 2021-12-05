@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, Text } from 'react-native';
-import styles from './style/MainPageCardStyle';
+import styles from './styles/MainPageCardStyle';
 
 const MainPageCard = (props) => {
     return (

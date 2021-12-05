@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, 
          ActivityIndicator,
          Text, 
          SafeAreaView, 
          View, 
-         StyleSheet, 
-         Dimensions, 
          ScrollView,
          Image } from 'react-native';
 import emailLogo from '../../images/snsLogo/email.png';
@@ -13,20 +11,14 @@ import customAxios from './customAxios';
 import { useDispatch } from 'react-redux';
 import { signIn } from '../_modules/user';
 import { handleAlertOn } from '../_modules/alert';
+import styles from './styles/EmailAuthPageStyle';
 
 function EmailAuthPage({ route }) {
-
-
-    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
 
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
-    const { email, emailToken, password } = route.params;
-    let config = { params: { 
-        email: email,
-        emailToken: emailToken
-    }}
+    const { email, password } = route.params;
 
     const confirmAndLogin = async () => {
         customAxios().then(res => {
@@ -71,17 +63,6 @@ function EmailAuthPage({ route }) {
         })
     }
 
-    useEffect(() => {
-        const updateLayout = () => {
-            setAvailableDeviceWidth(Dimensions.get('window').width);
-          }
-        Dimensions.addEventListener('change', updateLayout);
-      
-        return () => {
-            Dimensions.removeEventListener('change', updateLayout)
-        }
-    }, [])
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView alwaysBounceHorizontal={false} alwaysBounceVertical={false} bounces={false}>
@@ -89,8 +70,7 @@ function EmailAuthPage({ route }) {
                 <Text style={styles.loginText}>Sign Up</Text>
             </View>
             <View style={styles.contentsContainer}>
-                {/* <Image source={emailLogo} style={availableDeviceWidth > 350 ? styles.emailLogo : styles.smallEmailLogo} /> */}
-                <Image source={emailLogo} style={{width: availableDeviceWidth * 0.3, height: availableDeviceWidth * 0.3}} />
+                <Image source={emailLogo} style={styles.emailLogo} />
                 <Text style={styles.completeMent}>인증메일 발송완료</Text>
                 <Text style={styles.emailMent}>{email}</Text>
                 <Text style={styles.announcement}>위의 메일함에서 '메일 인증' 버튼을 눌러주세요.</Text>
@@ -115,104 +95,5 @@ function EmailAuthPage({ route }) {
         </SafeAreaView>
     )
 }
-
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#ffffff'
-    },
-    topBlock: {
-        width: '100%',
-        height: 140,
-        backgroundColor: '#D14124',
-        alignItems: 'center',
-        justifyContent: 'flex-end'
-    },
-    loginText: {
-        fontFamily: 'TmoneyRoundWindRegular',
-        color: 'white',
-        fontSize: width > 500 ? 60 : 40
-    },
-    contentsContainer: {        
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: '5%',
-        marginRight: '5%',
-        marginTop: width > 500 ? '10%' : '15%',
-        marginBottom: '8%'
-    },
-    emailLogo: {
-        width: width > 500 ? (width * 32) / 100 : (width * 40) / 100,
-        height: width > 500 ? (height * 20) / 100 : (height * 19.5) / 100,
-        marginRight: '0%',
-        marginBottom: width > 500 ? '2%' : '3.5%'
-    },
-    smallEmailLogo: {
-        width: (width * 32) / 100,
-        height: (height * 20) / 100,
-        marginBottom: '3.5%'
-    },
-    completeMent: {
-        fontFamily: 'TmoneyRoundWindRegular',
-        fontSize: width > 500 ? 30 : 25,
-        marginBottom: '8%'
-    },
-    emailMent: {
-        fontSize: width > 500 ? 25 : 17,
-        fontWeight: 'bold',
-        marginBottom: '2%'
-    }, 
-    announcement: {
-        fontFamily: 'TmoneyRoundWindRegular',
-        fontSize: width > 500 ? 25 : width * 0.039,
-        marginTop: '3%',
-        color: '#75787B'
-    },
-    bar: {
-        width: '100%',
-        height: 1,
-        backgroundColor: '#D14124',
-        marginTop: '10%',
-        marginBottom: '10%'
-    },
-    resendContainer: {
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    resendMent: {
-        fontFamily: 'TmoneyRoundWindRegular',
-        fontSize: width > 500 ? 25 : width * 0.039,
-        textDecorationLine: 'underline',
-        marginTop: '3%',
-        marginLeft: '2%'
-    },
-    confirmButton: {
-        width: (width * 50) / 100,
-        height: (height * 7) / 100,
-        borderColor: '#D14124',
-        borderWidth: 2,
-        borderRadius: width > 500 ? 40 : 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 10,
-        marginTop: 20
-    },
-    confirmMent: {
-        fontSize: width > 500 ? 30 : 20,
-        fontFamily: 'TmoneyRoundWindRegular',
-        color: '#D14124'
-    },
-    sendingContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center'
-    }
-})
-
 
 export default EmailAuthPage

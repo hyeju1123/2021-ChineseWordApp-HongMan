@@ -1,6 +1,6 @@
  import React from 'react';
  import { View, TouchableOpacity, StatusBar, SafeAreaView, ScrollView } from 'react-native';
- import styles from './style/MainPageStyle';
+ import styles from './styles/MainPageStyle';
  
  import MainPageCard from './MainPageCard';
  import Images from '../ImageIndex';

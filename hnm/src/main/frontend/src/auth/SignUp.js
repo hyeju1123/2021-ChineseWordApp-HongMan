@@ -3,8 +3,6 @@ import { Text,
          TouchableOpacity, 
          TextInput, 
          View, 
-         StyleSheet, 
-         Dimensions, 
          ScrollView,
          Image } from 'react-native';
 import AuthenticationService from './AuthenticationService';
@@ -17,12 +15,11 @@ import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { iosKeys, androidKeys, googleClientId } from '../../ipConfig';
 import Splash from '../main/Splash';
+import styles from './styles/SignInStyle';
 
 const initials = Platform.OS === "ios" ? iosKeys : androidKeys;
 
 function SignUp({ navigation }) {
-
-    const [availableDeviceWidth, setAvailableDeviceWidth] = useState(Dimensions.get('window').width)
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -162,14 +159,7 @@ function SignUp({ navigation }) {
           forceCodeForRefreshToken: true,
           offlineAccess: true
         })
-        const updateLayout = () => {
-            setAvailableDeviceWidth(Dimensions.get('window').width);
-          }
-        Dimensions.addEventListener('change', updateLayout);
-      
-        return () => {
-            Dimensions.removeEventListener('change', updateLayout)
-        }
+        
       }, [])
 
     return (
@@ -215,14 +205,14 @@ function SignUp({ navigation }) {
                     style={styles.signInButton}
                     onPress={() => {handleSnsSignUp('google')}}
                 >
-                    <Image source={googleLogo} style={availableDeviceWidth > 350 ? styles.googleLogo : styles.smallGoogleLogo} />
+                    <Image source={googleLogo} style={styles.googleLogo} />
                     <Text style={styles.signInText}>계정으로 가입</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.signInButton}
                     onPress={() => {handleSnsSignUp('naver')}}
                 >
-                    <Image source={naverLogo} style={availableDeviceWidth > 350 ? styles.naverLogo : styles.smallNaverLogo} />
+                    <Image source={naverLogo} style={styles.naverLogo} />
                     <Text style={styles.signInText}>계정으로 가입</Text>
                 </TouchableOpacity>
             </View>
@@ -231,114 +221,5 @@ function SignUp({ navigation }) {
     
     )
 }
-
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#ffffff'
-    },
-    topBlock: {
-        width: '100%',
-        height: 140,
-        backgroundColor: '#D14124',
-        alignItems: 'center',
-        justifyContent: 'flex-end'
-    },
-    loginText: {
-        fontFamily: 'TmoneyRoundWindRegular',
-        color: 'white',
-        fontSize: width > 500 ? 60 : 40
-    },
-    inputContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: '5%',
-        marginBottom: '5%'
-    }, 
-    input: {
-        width: (width * 80) / 100,
-        height: (height * 7) / 100,
-        borderColor: '#D14124',
-        paddingLeft: 20,
-        borderWidth: 2,
-        borderRadius: width > 500 ? 40 : 25,
-        marginTop: 20,
-        paddingBottom: '1%',
-        fontSize: width > 500 ? 27 : width * 0.035,
-        fontFamily: 'TmoneyRoundWindRegular',
-        color: '#D14124'
-    },
-    bar: {
-        width: width > 500 ? 50 : 30,
-        height: width > 500 ? 7 : 5,
-        backgroundColor: '#D14124',
-        borderRadius: 50,
-        marginTop: 70,
-        marginBottom: 30
-    },
-    button: {
-        width: (width * 81) / 100,
-        height: (height * 7) / 100,
-        backgroundColor: '#D14124',
-        borderRadius: width > 500 ? 43 : 28,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 10,
-        marginTop: 40
-    },
-    buttonText: {
-        fontSize: width > 500 ? 30 : 20,
-        fontFamily: 'TmoneyRoundWindRegular',
-        color: '#ffffff'
-    },
-    googleLogo: {
-        width: width > 500 ? (width * 18) / 100 : (width * 25) / 100,
-        height: width > 500 ? (height * 4) / 100 : (height * 4.2) / 100,
-        marginRight: width > 500 ? '5%' : '3%',
-        marginBottom: width > 500 ? '2%' : '3.5%'
-    },
-    smallGoogleLogo: {
-        width: (width * 20) / 100,
-        height: (height * 4.5) / 100,
-        marginRight: width > 500 ? '5%' : '3%',
-        marginBottom: width > 500 ? '2%' : '3.5%'
-    },
-    naverLogo: {
-        width: width > 500 ? (width * 19) / 100 : (width * 27) / 100,
-        height: width > 500 ? (height * 2.3) / 100 : (height * 2.5) / 100,
-        marginRight: width > 500 ? '5%' : '3%',
-        marginBottom: width > 500 ? '2%' : '3.5%'
-    },
-    smallNaverLogo: {
-        width: (width * 25) / 100,
-        height: (height * 3.2) / 100,
-        marginRight: width > 500 ? '5%' : '3%',
-        marginBottom: width > 500 ? '2%' : '3.5%'
-    },
-    signInButton: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: (width * 80) / 100,
-        height: (height * 7) / 100,
-        borderColor: '#D14124',
-        borderWidth: 2,
-        borderRadius: width > 500 ? 40 : 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 10,
-        marginTop: '3%'
-    },
-    signInText: {
-        fontSize: width > 500 ? 30 : 20,
-        fontFamily: 'TmoneyRoundWindRegular',
-        color: '#D14124'
-    },
-})
-
 
 export default SignUp

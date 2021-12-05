@@ -46,13 +46,12 @@ const handleSize = () => {
         return StyleSheet.create({
             ...commonPart,
             text: {
-                fontFamily: 'TmoneyRoundWindRegular',
+                ...commonPart.text,
                 fontSize: 32,
-                color: '#ffffff',
                 marginBottom: '-7%'
             },
             hskText: {
-                fontFamily: 'TmoneyRoundWindExtraBold',
+                ...commonPart.hskText,
                 fontSize: 65,
             }
         });

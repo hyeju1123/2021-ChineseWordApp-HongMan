@@ -48,10 +48,10 @@ const Root = () => {
           title={alert.title}
           message={alert.contents} 
           buttons={[
+              {text: 'OK',
+              func: alert.fc},
               {text: 'CANCEL',
               func: ()=>{}},
-              {text: 'OK',
-              func: alert.fc}
           ]}
         />
       }

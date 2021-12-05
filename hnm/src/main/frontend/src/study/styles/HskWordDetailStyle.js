@@ -16,8 +16,8 @@ const handleSize = () => {
             marginBottom: width * 0.3
         },
         editIcon: {
-            width: width > 500 ? width * 0.04 : width * 0.08,
-            height: width > 500 ? width * 0.04 : width * 0.08,
+            width: width * 0.08,
+            height: width * 0.08,
             marginTop: width * 0.028,
             marginBottom: width * 0.028,
             marginRight: width * 0.03
@@ -39,23 +39,29 @@ const handleSize = () => {
         wordText: {
             color: '#3E3A39',
             fontFamily: 'PingFangFCLight',
-            fontSize: width * 0.18
+            fontSize: width * 0.18,
+            marginLeft: width * 0.03,
+            marginRight: width * 0.03
         },
         intonationText: {
             fontFamily: 'KoPubWorld Dotum Bold',
             fontSize: width * 0.06,
+            marginLeft: width * 0.03,
+            marginRight: width * 0.03,
+            marginTop: width * 0.01,
+            marginBottom: width * 0.03
         },
         wordClassCard: {
             width: '100%',
             display: 'flex',
             flexDirection: 'row',
+            flexWrap: 'wrap',
             backgroundColor: '#ffffff',
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
             elevation: 10,
-            // marginBottom: width * 0.07,
             marginBottom: width * 0.04,
             paddingRight: width * 0.035,
             paddingTop: width * 0.015,
@@ -110,7 +116,6 @@ const handleSize = () => {
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
             elevation: 10,
-            // marginBottom: width * 0.07,
             marginBottom: width * 0.04,
             paddingRight: width * 0.035,
             paddingTop: width * 0.015,
@@ -158,27 +163,21 @@ const handleSize = () => {
     if (width > 500) {
         return StyleSheet.create({
             ...commonPart,
+            editIcon: {
+                ...commonPart.editIcon,
+                width: width * 0.04,
+                height: width * 0.04
+            },
             wordCard: {
-                display: 'flex',
-                width: '100%',
+                ...commonPart.wordCard,
                 minHeight: width * 0.35,
-                backgroundColor: '#ffffff',
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-                elevation: 10,
-                marginBottom: width * 0.04
             },
             wordText: {
-                color: '#3E3A39',
-                fontFamily: 'PingFangFCLight',
+                ...commonPart.wordText,
                 fontSize: width * 0.17
             },
             intonationText: {
-                fontFamily: 'KoPubWorld Dotum Bold',
+                ...commonPart.intonationText,
                 fontSize: width * 0.05,
             },
         });

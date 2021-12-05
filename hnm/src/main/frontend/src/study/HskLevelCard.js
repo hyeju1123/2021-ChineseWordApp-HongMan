@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity } from 'react-native';
-import styles from '../main/style/MainPageCardStyle';
+import { View, Text, TouchableOpacity } from 'react-native';
+import styles from '../main/styles/MainPageCardStyle';
 
 
 const HskLevelCard = (props) => {
@@ -31,32 +31,5 @@ const HskLevelCard = (props) => {
     );
   
 };
-
-const width = Dimensions.get('window').width;
-
-// const styles = StyleSheet.create({
-//     container: {
-//       backgroundColor: '#BEBEBE',
-//       borderTopLeftRadius: 10,
-//       borderTopRightRadius: 10,
-//       borderBottomLeftRadius: 10,
-//       borderBottomRightRadius: 10,
-//       marginBottom: width * 0.05,
-//     },
-//     smallContainer: {
-//         backgroundColor: '#ffffff',
-//         borderTopLeftRadius: 10,
-//         borderTopRightRadius: 10,
-//         borderBottomLeftRadius: 8,
-//         borderBottomRightRadius: 8,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//     },
-//     cardText: {
-//         color: '#655858',
-//         fontFamily: 'TmoneyRoundWindExtraBold',
-//         fontSize: width * 0.08 
-//     }
-// });
 
 export default HskLevelCard;

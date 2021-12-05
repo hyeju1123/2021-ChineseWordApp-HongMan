@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StatusBar, SafeAreaView, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import HskLevelCard from './HskLevelCard';
-import styles from '../main/style/MainPageStyle';
+import styles from '../main/styles/MainPageStyle';
 
 const HskLevelPage = ({ navigation }) => {
 

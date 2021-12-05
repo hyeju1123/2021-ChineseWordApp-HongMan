@@ -19,8 +19,8 @@ const handleSize = () => {
             minHeight: width * 0.2,
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
-            borderBottomLeftRadius: 10,
-            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 15,
+            borderBottomRightRadius: 15,
             marginBottom: width * 0.05,
             elevation: 8
         },
@@ -32,8 +32,8 @@ const handleSize = () => {
             justifyContent: 'center',
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
-            borderBottomLeftRadius: 10,
-            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 15,
+            borderBottomRightRadius: 15,
         },
         text: {
             fontFamily: 'TmoneyRoundWindExtraBold',
@@ -71,34 +71,32 @@ const handleSize = () => {
     if (width > 500) {
         return StyleSheet.create({
             ...commonPart,
+            bottomCard: {
+                ...commonPart.bottomCard,
+                marginBottom: width * 0.03
+            },
             text: {
-                fontFamily: 'TmoneyRoundWindExtraBold',
+                ...commonPart.text,
                 fontSize: 48,
             },
             hanziCard: {
-                width: '100%',
-                minHeight: width * 0.2,
-                backgroundColor: '#FFFFFF',
+                ...commonPart.hanziCard,
                 borderTopLeftRadius: 15,
                 borderTopRightRadius: 15,
                 borderBottomLeftRadius: 15,
                 borderBottomRightRadius: 15,
-                alignItems: 'center',
-                justifyContent: 'center',
                 marginBottom: width * 0.02,
                 elevation: 4
             },
             hanziText: {
-                fontFamily: 'PingFangSCLight',
+                ...commonPart.hanziText,
                 fontSize: width * 0.07,
-                color: '#3E3A39',
                 marginBottom: width * 0.01,
                 marginTop: width * 0.03,
             },
             intonationText: {
-                fontFamily: 'KoPubWorld Dotum Medium',
+                ...commonPart.intonationText,
                 fontSize: width * 0.04,
-                color: '#8E8E8E',
                 marginBottom: width * 0.03
             }               
         });

@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal, StyleSheet, Text, Pressable, View, Platform, Dimensions, Image } from "react-native";
 import Dumpling from '../../images/mainPage/newDumpling.png';
 
 function CustomAlert(props) {
-
-    // const [modalVisible, setModalVisible] = useState(props.visible);
 
     const AndroidButtonBox = () => {
         const buttonProps = props.buttons && props.buttons.length > 0 ? props.buttons : [{}]
@@ -111,9 +109,8 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     },
     androidAlertBox: {
-    //   width: '100%',
       width: width * 0.7,
-      minHeight: width * 0.65,
+      minHeight: width * 0.35,
       margin: 48,
       elevation: 24,
       borderRadius: 2,
@@ -148,6 +145,7 @@ const styles = StyleSheet.create({
         fontFamily: 'TmoneyRoundWindRegular',
         color: '#BEBEBE',
         textAlign: 'center',
+        fontSize: width * 0.035,
         lineHeight: width * 0.05
     },
     androidButtonGroup: {
@@ -162,6 +160,7 @@ const styles = StyleSheet.create({
     androidButtonText: {
         fontFamily: 'TmoneyRoundWindRegular',
         color: '#D14124',
+        fontSize: width * 0.03,
     }
 });
 

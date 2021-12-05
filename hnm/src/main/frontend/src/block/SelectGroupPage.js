@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, ScrollView, TouchableOpacity, View, Dimensions, Text, Image } from 'react-native';
 import Splash from '../main/Splash';
+import { useSelector } from 'react-redux';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MakeGroupPage from './MakeGroupPage';
 
 
 const SelectGroupPage = ({ navigation, route }) => {
@@ -10,6 +12,12 @@ const SelectGroupPage = ({ navigation, route }) => {
     let { selectGroup } = route.params;
     const [groupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [makingGroup, setMakingGroup] = useState(false);
+    const color = useSelector(state => state.color.theme);
+    let theme =  {
+        r: '#D14124',
+        w: '#FFFFFF'
+    }
 
     const getGroupList = async () => {
         let memberId = await AsyncStorage.getItem('memberId');
@@ -46,14 +54,20 @@ const SelectGroupPage = ({ navigation, route }) => {
     return (
         loading ? <Splash navigation={navigation} /> :
         <SafeAreaView style={styles.container}>
+            {
+                makingGroup && <MakeGroupPage hideFunction={setMakingGroup} />
+            }
             <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
                 <View style={styles.cardContainer}>
                     {renderCards}
                 </View>    
             </ScrollView>
-            <TouchableOpacity style={styles.plusButton} onPress={() => navigation.navigate('MakeGroupPage')}>
-                    <Text style={styles.plusButtonText}>+</Text>
-            </TouchableOpacity>
+            {
+                !makingGroup &&
+                <TouchableOpacity style={[styles.plusButton, color === 'w' && {borderWidth: 0.8, borderColor: '#3E3A39'}]} onPress={() => setMakingGroup(true)}>
+                    <Text style={[styles.plusButtonText, {color: color === 'r' ? '#D14124' : '#3E3A39'}]}>+</Text>
+                </TouchableOpacity>
+            }
         </SafeAreaView>
     );
 };

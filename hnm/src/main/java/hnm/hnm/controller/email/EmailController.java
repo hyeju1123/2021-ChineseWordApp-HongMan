@@ -5,6 +5,7 @@ import hnm.hnm.domain.member.Member;
 import hnm.hnm.service.email.EmailService;
 import hnm.hnm.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ public class EmailController {
     final EmailService emailService;
     final MemberService memberService;
     final JwtTokenUtil jwtTokenUtil;
+    @Value("${mailHost}") String host;
 
     @GetMapping("/mail/send")
     public void sendEmail(@RequestParam String email, @RequestParam String emailToken) throws MessagingException {
@@ -46,7 +48,7 @@ public class EmailController {
 
         if (notCertifiedMail != null) {
             memberService.emailCertifiedUpdate(member.getEmail());
-            response.sendRedirect("http://localhost:8080/auth/mail/success");
+            response.sendRedirect("http://" + host + ":8080/auth/mail/success");
         } else {
             String newEmailToken = jwtTokenUtil.generateEmailToken(member.getEmail());
             memberService.emailTokenReIssuance(member.getEmail(), newEmailToken);
@@ -85,7 +87,7 @@ public class EmailController {
                 "		감사합니다." +
                 "	</p>" +
                 "	<a style=\"color: #FFF; text-decoration: none; text-align: center;\"" +
-                "	href=\"http://localhost:8080/mail/certified?email=" + email + "&emailToken=" + emailToken + "\">" +
+                "	href=\"http://" + host + ":8080/mail/certified?email=" + email + "&emailToken=" + emailToken + "\">" +
                 "		<p" +
                 "			style=\"display: inline-block; width: 210px; height: 45px; margin: 30px 5px 40px; background: #D14124; line-height: 45px; vertical-align: middle; font-size: 16px;\">" +
                 "			메일 인증</p>" +

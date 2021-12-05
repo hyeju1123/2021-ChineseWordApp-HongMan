@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { LogBox, SafeAreaView, ScrollView, TouchableOpacity, View, Text } from 'react-native';
-import Splash from '../main/Splash';
+import SkeletonCard from '../skeleton/SkeletonCard';
 import customAxios from '../auth/customAxios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from './style/HskThemePageStyle';
+import styles from './styles/HskThemePageStyle';
 import { useSelector } from 'react-redux';
 
 const HskWordPage = ({ route, navigation }) => {
@@ -103,7 +103,7 @@ const HskWordPage = ({ route, navigation }) => {
     ])
 
     return (
-        loading ? <Splash navigation={navigation} /> :
+        loading ? <SkeletonCard /> :
         <SafeAreaView style={[styles.container, {backgroundColor: theme[color]}]}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}>
                 <View style={styles.cardContainer}>

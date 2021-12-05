@@ -7,7 +7,6 @@ import StartPage from '../main/StartPage';
 import SignIn from '../auth/SignIn';
 import SignUp from '../auth/SignUp';
 import EmailAuthPage from '../auth/EmailAuthPage';
-import Splash from '../main/Splash';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +18,7 @@ const StartNavigation = () => {
                 screenOptions={{
                     safeAreaInsets: {top: 25}
                 }}
-            >        
+            >
                 <Stack.Screen 
                     name="StartPage" 
                     component={StartPage} 
