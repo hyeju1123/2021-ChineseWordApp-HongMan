@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Splash from './main/Splash';
 import StartNavigation from './navigation/StartNaviation';
 import MainNavigation from './navigation/MainNavigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { restoreToken } from './_modules/user';
-import { handleAlertOff } from './_modules/alert';
+import {useDispatch, useSelector} from 'react-redux';
+import {restoreToken} from './_modules/user';
+import {handleAlertOff} from './_modules/alert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen';
 import CustomAlert from './block/CustomAlert';
 
 const Root = () => {
-
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
-  const alert = useSelector(state => state.alert);
-  // console.log("user: ", user);
-  // console.log("alert: ", alert)
+  const user = useSelector((state) => state.user);
+  const alert = useSelector((state) => state.alert);
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,35 +28,28 @@ const Root = () => {
         console.log(e);
       }
       dispatch(restoreToken(token));
-    }
+    };
     bootstrapAsync();
-  }, [])
+  }, []);
 
   if (user.isLoading) {
-    return <Splash />
+    return <Splash />;
   }
 
   return (
     <>
-      {
-        alert.visible &&
-        <CustomAlert 
+      {alert.visible && (
+        <CustomAlert
           offFunc={() => dispatch(handleAlertOff())}
           title={alert.title}
-          message={alert.contents} 
+          message={alert.contents}
           buttons={[
-              {text: 'OK',
-              func: alert.fc},
-              {text: 'CANCEL',
-              func: ()=>{}},
+            {text: 'OK', func: alert.fc},
+            {text: 'CANCEL', func: () => {}},
           ]}
         />
-      }
-      {
-        user.userToken === null ?  
-          <StartNavigation /> 
-        : <MainNavigation />
-      }
+      )}
+      {user.userToken === null ? <StartNavigation /> : <MainNavigation />}
     </>
     // <>
     // {
@@ -67,10 +57,10 @@ const Root = () => {
     //   <>
     //     {
     //       alert.visible &&
-    //       <CustomAlert 
+    //       <CustomAlert
     //         offFunc={() => dispatch(handleAlertOff())}
     //         title={alert.title}
-    //         message={alert.contents} 
+    //         message={alert.contents}
     //         buttons={[
     //             // {text: 'no'},
     //             {text: 'OK',
@@ -78,14 +68,13 @@ const Root = () => {
     //         ]}
     //       />
     //     }
-    //     <StartNavigation /> 
+    //     <StartNavigation />
     //   </>
     //   :
     //     <MainNavigation />
     // }
     // </>
-  )
+  );
 };
-
 
 export default Root;
