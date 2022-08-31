@@ -14,6 +14,7 @@ const Root = () => {
   const user = useSelector((state) => state.user);
   const alert = useSelector((state) => state.alert);
 
+  // 깃 확인
   useEffect(() => {
     setTimeout(() => {
       SplashScreen.hide();
