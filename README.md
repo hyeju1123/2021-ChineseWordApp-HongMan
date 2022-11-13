@@ -1,4 +1,4 @@
-### 🏮HongAndMan: 중국어 학습 어플리케이션🥟
+# 🏮HongAndMan: 중국어 학습 어플리케이션🥟
 
 - [Demo Video](https://drive.google.com/file/d/1mT-aZsE0Szs_zC4ierbF5weMzz8uJKOR/view?usp=sharing)
 - 개발⚙️: **전혜주**([hjjun1123@gmail.com](mailto:hjjun1123@gmail.com))
